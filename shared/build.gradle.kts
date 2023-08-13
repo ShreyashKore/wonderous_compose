@@ -36,6 +36,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
+                implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation("media.kamel:kamel-image:0.6.0")
@@ -44,6 +45,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
+                api("io.github.qdsfdhvh:image-loader:1.6.4")
+                api("io.github.oleksandrbalan:textflow:1.1.0")
+
+                implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
             }
         }
@@ -71,6 +76,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
+                implementation("io.ktor:ktor-client-java:$ktorVersion")
             }
         }
     }

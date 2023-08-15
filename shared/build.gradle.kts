@@ -59,6 +59,10 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.10.1")
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("com.google.accompanist:accompanist-permissions:0.29.2-rc")
+                implementation("com.google.android.gms:play-services-maps:18.1.0")
+                implementation("com.google.android.gms:play-services-location:21.0.1")
+                implementation("com.google.maps.android:maps-compose:2.11.2")
             }
         }
         val iosX64Main by getting

@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.application")
     id("org.jetbrains.compose")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
 }
 
 kotlin {
@@ -35,4 +36,9 @@ android {
     kotlin {
         jvmToolchain(11)
     }
+}
+
+secrets {
+    defaultPropertiesFileName = "local.properties"
+    propertiesFileName = "local.properties"
 }

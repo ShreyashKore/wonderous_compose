@@ -38,6 +38,7 @@ sealed class Wonder(
     val searchData: List<SearchData> = emptyList(),
     val searchSuggestions: List<String> = emptyList(),
 ) {
+    val gps get() = GpsPosition(lat, lng)
     val titleWithBreaks: String get() = title.replaceFirst(' ', '\n')
 }
 

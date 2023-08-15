@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -48,6 +49,7 @@ import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.composables.MapView
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
 
@@ -56,7 +58,7 @@ private val minImageHeight = 52.dp
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalResourceApi::class
+    ExperimentalResourceApi::class, ExperimentalStdlibApi::class
 )
 @Composable
 fun InfoScreen(
@@ -65,8 +67,8 @@ fun InfoScreen(
     val scrollState = rememberLazyListState()
     val infoTitle = derivedStateOf {
         when (scrollState.firstVisibleItemIndex) {
-            in 0..3 -> InfoSection.FactsAndHistory
-            in 3..4 -> InfoSection.Construction
+            in 0..<5 -> InfoSection.FactsAndHistory
+            in 5..<7 -> InfoSection.Construction
             else -> InfoSection.Location
         }
     }
@@ -224,7 +226,13 @@ fun InfoScreen(
             }
             item {
                 // Map
-                Spacer(Modifier.height(72.dp))
+                MapView(
+                    modifier = Modifier.padding(12.dp).height(360.dp),
+                    gps = wonder.gps,
+                    title = "Map",
+                    parentScrollEnableState = mutableStateOf(true),
+                )
+                Spacer(Modifier.height(200.dp))
             }
         }
     }
@@ -282,7 +290,7 @@ fun AnimatedDivider() {
     Box(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 36.dp)
+            .padding(horizontal = 16.dp, vertical = 72.dp)
             .height(12.dp)
             .background(Color.Cyan)
     )

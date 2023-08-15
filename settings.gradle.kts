@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "Wonderous Compose"
 
 include(":androidApp")
 include(":shared")

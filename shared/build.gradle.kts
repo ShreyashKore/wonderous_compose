@@ -23,6 +23,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
+            binaryOption("bundleId", "com.shreyashkore.wonderouscompose")
             baseName = "shared"
             isStatic = true
         }
@@ -84,7 +85,7 @@ kotlin {
 
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.myapplication.common"
+    namespace = "com.shreyashkore.common"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")

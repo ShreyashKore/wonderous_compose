@@ -45,6 +45,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
                 api("io.github.qdsfdhvh:image-loader:1.6.4")
                 api("io.github.oleksandrbalan:textflow:1.1.0")
@@ -94,6 +95,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
 
     defaultConfig {
         minSdk = (findProperty("android.minSdk") as String).toInt()

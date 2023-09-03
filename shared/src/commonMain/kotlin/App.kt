@@ -8,11 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import models.Wonders
 import ui.screens.InfoScreen
+import ui.theme.Typography
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun App() {
-    MaterialTheme {
+    MaterialTheme(
+        typography = Typography
+    ) {
         Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally

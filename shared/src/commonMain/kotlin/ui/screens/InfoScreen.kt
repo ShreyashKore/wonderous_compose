@@ -39,8 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -126,13 +124,14 @@ fun InfoScreen(
                         Divider(Modifier.padding(8.dp).weight(1f))
                         Text(
                             wonder.subTitle,
-                            style = TextStyle()
+                            style = MaterialTheme.typography.titleSmall
                         )
                         Divider(Modifier.padding(8.dp).weight(1f))
                     }
                     Text(
                         wonder.title,
-                        style = MaterialTheme.typography.displayMedium.copy(textAlign = TextAlign.Center)
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center
                     )
                     Text(
                         wonder.regionTitle,
@@ -186,7 +185,10 @@ fun InfoScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        val textStyle = TextStyle(fontSize = 42.sp, textAlign = TextAlign.Center)
+                        val textStyle = MaterialTheme.typography.displayLarge.copy(
+                            fontSize = 42.sp,
+                            textAlign = TextAlign.Center
+                        )
                         Text(
                             wonder.pullQuote1Top,
                             style = textStyle,
@@ -227,7 +229,9 @@ fun InfoScreen(
             item {
                 // Map
                 MapView(
-                    modifier = Modifier.padding(12.dp).height(360.dp),
+                    modifier = Modifier
+                        .padding(12.dp).height(320.dp)
+                        .clip(RoundedCornerShape(4.dp)),
                     gps = wonder.gps,
                     title = "Map",
                     parentScrollEnableState = mutableStateOf(true),
@@ -246,7 +250,7 @@ fun InfoText(
     Text(
         text,
         modifier = modifier.padding(horizontal = 12.dp),
-        style = TextStyle(fontSize = 18.sp, lineHeight = 28.sp, lineBreak = LineBreak.Paragraph)
+        style = MaterialTheme.typography.bodyLarge
     )
 }
 

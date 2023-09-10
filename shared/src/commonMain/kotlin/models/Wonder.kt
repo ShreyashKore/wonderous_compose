@@ -63,7 +63,10 @@ data object ChichenItza : Wonder(
     pullQuote1Author = "",
     pullQuote2 = "The Maya and Toltec vision of the world and the universe is revealed in their stone monuments and artistic works.",
     pullQuote2Author = "UNESCO",
+    callout1 = "The site exhibits a multitude of architectural styles, reminiscent of styles seen in central Mexico and of the Puuc and Chenes styles of the Northern Maya lowlands.",
+    callout2 = "The city comprised an area of at least 1.9 sq miles (5 sq km) of densely clustered architecture.",
     videoId = "Q6eBJjdca14",
+    videoCaption = "“Ancient Maya 101 | National Geographic.” Youtube, uploaded by National Geographic.",
     events = mapOf(),
     unsplashCollectionId = "SUK0tuMnLLw"
 )

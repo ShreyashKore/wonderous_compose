@@ -49,9 +49,7 @@ fun CompassDivider(
             Divider(
                 color = linesColor ?: MaterialTheme.colorScheme.primary,
                 thickness = 1.dp,
-                modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterEnd).graphicsLayer(
-                    rotationX = if (isExpanded) 0f else 1f
-                )
+                modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterEnd)
             )
         }
         Spacer(modifier = Modifier.width(8.dp))

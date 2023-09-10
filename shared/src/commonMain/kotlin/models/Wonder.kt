@@ -50,6 +50,8 @@ data object ChichenItza : Wonder(
     title = "Chichen Itza",
     subTitle = "The Great Mayan City",
     regionTitle = "Yucatan, Mexico",
+    startYr = 550,
+    endYr = 1550,
     historyInfo1 = "Chichen Itza was a powerful regional capital controlling north and central Yucatán. The earliest hieroglyphic date discovered at Chichen Itza is equivalent to 832 CE, while the last known date was recorded in the Osario temple in 998 CE.\nDominating the North Platform of Chichen Itza is the famous Temple of Kukulcán. The temple was identified by the first Spaniards to see it, as El Castillo (\"the castle\"), and it regularly is referred to as such. The temple was identified by the first Spaniards to see it, as El Castillo (\"the castle\"), and it regularly is referred to as such.",
     historyInfo2 = "The city was thought to have the most diverse population in the Maya world, a factor that could have contributed to this architectural variety.",
     constructionInfo1 = "The structures of Chichen Itza were built from precisely chiseled limestone blocks that fit together perfectly without the mortar. Many of these stone buildings were originally painted in red, green, blue and purple colors depending on the availability of the pigments.\nThe stepped pyramid El Castillo stands about 98 feet (30 m) high and consists of a series of nine square terraces, each approximately 8.4 feet (2.57 m) high, with a 20 foot (6 m) high temple upon the summit.",
@@ -59,6 +61,8 @@ data object ChichenItza : Wonder(
     pullQuote1Top = "The Beauty Between",
     pullQuote1Bottom = "the Heavens and the Underworld",
     pullQuote1Author = "",
+    pullQuote2 = "The Maya and Toltec vision of the world and the universe is revealed in their stone monuments and artistic works.",
+    pullQuote2Author = "UNESCO",
     videoId = "Q6eBJjdca14",
     events = mapOf(),
     unsplashCollectionId = "SUK0tuMnLLw"

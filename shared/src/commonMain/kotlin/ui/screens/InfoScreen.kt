@@ -1,5 +1,6 @@
 package ui.screens
 
+import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideIn
@@ -9,7 +10,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +50,7 @@ import org.jetbrains.compose.resources.painterResource
 import ui.composables.MapView
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
+import utils.StringUtils
 
 private val maxImageHeight = 400.dp
 private val minImageHeight = 52.dp
@@ -72,22 +73,40 @@ fun InfoScreen(
     }
 
     val titleAlpha by derivedStateOf {
-        1 - (scrollState.firstItemScrollProgress * 1.5f).coerceAtMost(1f)
+        1 - scrollState.firstItemScrollProgress
     }
 
     val titleTranslationY by derivedStateOf {
-        scrollState.firstItemScrollProgress * 200
+        scrollState.firstItemScrollProgress * 300
     }
 
     val imageHeight by derivedStateOf {
-        minImageHeight + (maxImageHeight - minImageHeight) * (1 - scrollState.scrollProgressFor(1))
+        minImageHeight + (maxImageHeight - minImageHeight) * (1.5f - scrollState.scrollProgressFor(
+            1
+        ))
     }
 
     val imageAlpha by derivedStateOf {
         1.4f - scrollState.scrollProgressFor(1)
     }
 
-    Scaffold {
+    val pullQuote1TopOffset by derivedStateOf {
+        scrollState.scrollProgressFor(4) * 600
+    }
+
+    Scaffold(
+        topBar = {
+//            Text(
+//                "VH Size : ${scrollState.layoutInfo.viewportSize}\n" +
+//                        "Image H : $imageHeight\n" +
+//                        "PP 0 : ${pullQuote1TopOffset}\n" +
+//                        "SS 0 : ${scrollState.scrollProgressFor(0)}\n" +
+//                        "SS 1 : ${scrollState.scrollProgressFor(1)}\n" +
+//                        "SS 2 : ${scrollState.scrollProgressFor(2)}\n" +
+//                        "SS 3 : ${scrollState.scrollProgressFor(3)}\n"
+//            )
+        }
+    ) {
         Column {
             Image(
                 painterResource("images/chichen_itza/chichen.png"),
@@ -135,8 +154,19 @@ fun InfoScreen(
                     )
                     Text(
                         wonder.regionTitle,
-                        textAlign = TextAlign.Center
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center,
                     )
+                    CompassDivider(
+                        Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                        isExpanded = true
+                    )
+                    Text(
+                        StringUtils.formatYr(wonder.startYr) + " to " + StringUtils.formatYr(wonder.endYr),
+                        style = MaterialTheme.typography.labelMedium,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(16.dp))
                 }
             }
             item {
@@ -181,23 +211,25 @@ fun InfoScreen(
                         contentScale = ContentScale.Crop
                     )
                     Column(
-                        Modifier.height(800.dp).fillMaxWidth().padding(24.dp),
+                        Modifier.height(500.dp).fillMaxWidth().padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
                     ) {
-                        val textStyle = MaterialTheme.typography.displayLarge.copy(
+                        val textStyle = MaterialTheme.typography.displaySmall.copy(
                             fontSize = 42.sp,
                             textAlign = TextAlign.Center
                         )
                         Text(
                             wonder.pullQuote1Top,
                             style = textStyle,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.graphicsLayer {
+                                translationY = pullQuote1TopOffset
+                            }
                         )
+                        Spacer(Modifier.weight(1f))
                         Text(
                             wonder.pullQuote1Bottom,
                             style = textStyle,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.fillParentMaxHeight(0.3f)
                         )
                     }
                 }
@@ -209,7 +241,10 @@ fun InfoScreen(
                 )
             }
             item {
-                AnimatedDivider()
+                CompassDivider(
+                    Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
+                    isExpanded = scrollState.firstVisibleItemIndex == 4
+                )
             }
             item {
                 InfoText(wonder.constructionInfo1)
@@ -218,10 +253,20 @@ fun InfoScreen(
                 InfoText(wonder.constructionInfo2)
             }
             item {
-                AnimatedDivider()
+                CompassDivider(
+                    Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
+                    isExpanded = scrollState.firstVisibleItemIndex == 7
+                )
             }
             item {
                 InfoText(wonder.locationInfo1)
+            }
+            item {
+                Quote(
+                    text = wonder.pullQuote2,
+                    author = wonder.pullQuote2Author,
+                    modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
+                )
             }
             item {
                 InfoText(wonder.locationInfo2)
@@ -290,14 +335,19 @@ fun InfoTitle(
 
 
 @Composable
-fun AnimatedDivider() {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 72.dp)
-            .height(12.dp)
-            .background(Color.Cyan)
-    )
+fun Quote(
+    text: String,
+    author: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("\"", fontSize = 100.sp)
+        Text(text, fontSize = 24.sp)
+        Text(author, fontSize = 16.sp)
+    }
 }
 
 enum class InfoSection(val title: String) {

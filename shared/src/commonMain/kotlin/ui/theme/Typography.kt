@@ -48,7 +48,8 @@ val YesevaOne
 val Typography
     @Composable get() = Typography(
         displayLarge = TextStyle(fontFamily = Raleway, fontSize = 72.sp),
-        displayMedium = TextStyle(fontFamily = Raleway, fontSize = 56.sp),
+        displayMedium = TextStyle(fontFamily = Raleway, fontSize = 62.sp),
+        displaySmall = TextStyle(fontFamily = Cinzel, fontSize = 56.sp),
         titleLarge = TextStyle(fontFamily = YesevaOne, fontSize = 52.sp),
         titleMedium = TextStyle(fontFamily = YesevaOne, fontSize = 28.sp),
         titleSmall = TextStyle(fontFamily = TenorSans, fontSize = 18.sp),

@@ -13,6 +13,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,9 +31,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +43,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -60,9 +66,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import models.ChichenItza
 import models.ChristRedeemer
+import models.Colosseum
+import models.GreatWall
+import models.MachuPicchu
+import models.Petra
+import models.PyramidsGiza
+import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.ImagePaths
 import ui.composables.MapView
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
@@ -78,9 +91,13 @@ private val minImageHeight = 52.dp
     ExperimentalResourceApi::class, ExperimentalStdlibApi::class, ExperimentalMaterial3Api::class
 )
 @Composable
-fun InfoScreen(
+fun EditorialScreen(
     wonder: Wonder
 ) {
+    var currentSelected by remember {
+        mutableStateOf(0)
+    }
+
     val scrollState = rememberLazyListState()
     val infoTitle by derivedStateOf {
         when (scrollState.firstVisibleItemIndex) {
@@ -127,6 +144,13 @@ fun InfoScreen(
 //                        "SS 2 : ${scrollState.scrollProgressFor(2)}\n" +
 //                        "SS 3 : ${scrollState.scrollProgressFor(3)}\n"
 //            )
+        },
+        bottomBar = {
+            AppBar(
+                selected = currentSelected,
+                onSelected = { currentSelected = it },
+                onClickHome = {},
+            )
         }
     ) {
         val bgTransition = scrollState.firstItemScrollProgress
@@ -531,9 +555,73 @@ val Wonder.bgColor
     get() = when (this) {
         ChichenItza -> Color.fromHex("#14341C")
         ChristRedeemer -> Color.fromHex("#2B6961")
+        Colosseum -> Color.fromHex("#14341C")
+        GreatWall -> Color.fromHex("#14341C")
+        MachuPicchu -> Color.fromHex("#14341C")
+        Petra -> Color.fromHex("#14341C")
+        PyramidsGiza -> Color.fromHex("#14341C")
+        TajMahal -> Color.fromHex("#14341C")
     }
-
 
 fun Color.Companion.fromHex(hex: String) = Color(
     ("ff" + hex.removePrefix("#").lowercase()).toLong(16)
 )
+
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+private fun AppBar(
+    selected: Int,
+    onSelected: (Int) -> Unit,
+    onClickHome: () -> Unit,
+) {
+    Box(
+        Modifier.fillMaxWidth()
+            .height(76.dp)
+    ) {
+        Box(Modifier.padding(top = 12.dp).fillMaxSize().background(Color.White))
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Icon(
+                painterResource("${ImagePaths.common}/tab-editorial.png"),
+                contentDescription = "home",
+                Modifier.size(72.dp)
+                    .clip(CircleShape)
+                    .padding(2.dp)
+                    .clip(CircleShape)
+                    .background(Color.Blue)
+                    .clickable {
+                        onClickHome()
+                    }
+            )
+            Row(
+                Modifier.fillMaxWidth().height(64.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                AppBarIcon("editorial", selected = selected == 0, onClick = { onSelected(0) })
+                AppBarIcon("photos", selected = selected == 1, onClick = { onSelected(1) })
+                AppBarIcon("artifacts", selected = selected == 2, onClick = { onSelected(2) })
+                AppBarIcon("timeline", selected = selected == 3, onClick = { onSelected(3) })
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun AppBarIcon(
+    icon: String,
+    selected: Boolean = false,
+    onClick: () -> Unit
+) {
+    val iconImgPath = "${ImagePaths.common}/tab-${icon}${if (selected) "-active" else ""}.png"
+    Icon(
+        painterResource(iconImgPath),
+        contentDescription = icon,
+        modifier = Modifier.size(32.dp).clickable(onClick = onClick),
+        tint = MaterialTheme.colorScheme.primary
+    )
+}

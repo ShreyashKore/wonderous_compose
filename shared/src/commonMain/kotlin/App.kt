@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import models.Wonders
-import ui.screens.InfoScreen
+import ui.screens.EditorialScreen
 import ui.theme.Typography
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -21,7 +21,7 @@ fun App() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalPager(Wonders.size) {
-                InfoScreen(Wonders[it])
+                EditorialScreen(Wonders[it])
             }
         }
     }

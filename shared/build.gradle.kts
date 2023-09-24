@@ -52,6 +52,7 @@ kotlin {
 
                 implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("co.touchlab:kermit:2.0.0-RC5")
             }
         }
         val androidMain by getting {

@@ -21,11 +21,11 @@ val Raleway
         font("Raleway", "Raleway-Regular", FontWeight.Normal, FontStyle.Normal),
         font("Raleway", "Raleway-Italic", FontWeight.Normal, FontStyle.Italic),
         font("Raleway", "Raleway-Medium", FontWeight.Medium, FontStyle.Normal),
-        font("Raleway", "Raleway-Mediumitalic", FontWeight.Medium, FontStyle.Italic),
-        font("Raleway", "Raleway-Extrabold", FontWeight.ExtraBold, FontStyle.Normal),
-        font("Raleway", "Raleway-Extrabolditalic", FontWeight.ExtraBold, FontStyle.Italic),
+        font("Raleway", "Raleway-MediumItalic", FontWeight.Medium, FontStyle.Italic),
+        font("Raleway", "Raleway-ExtraBold", FontWeight.ExtraBold, FontStyle.Normal),
+        font("Raleway", "Raleway-ExtraBoldItalic", FontWeight.ExtraBold, FontStyle.Italic),
         font("Raleway", "Raleway-Bold", FontWeight.Bold, FontStyle.Normal),
-        font("Raleway", "Raleway-Bolditalic", FontWeight.Bold, FontStyle.Italic),
+        font("Raleway", "Raleway-BoldItalic", FontWeight.Bold, FontStyle.Italic),
     )
 
 val MaShanZheng

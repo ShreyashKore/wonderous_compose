@@ -1,5 +1,6 @@
 package data
 
+import co.touchlab.kermit.Logger
 import platform.Platform
 import platform.platform
 
@@ -12,7 +13,10 @@ data class UnsplashPhotoData(
     fun getUnsplashUrl(size: Int): String = "$url?q=90&fm=jpg&w=$size&fit=max"
 
     companion object {
-        fun getSelfHostedUrl(id: String, targetSize: UnsplashPhotoSize): String {
+        fun getSelfHostedUrl(
+            id: String,
+            targetSize: UnsplashPhotoSize = UnsplashPhotoSize.MED
+        ): String {
             var size = when (targetSize) {
                 UnsplashPhotoSize.MED -> 400
                 UnsplashPhotoSize.LARGE -> 800
@@ -23,7 +27,7 @@ data class UnsplashPhotoData(
                 size *= 2
             }
 
-            return "https://wonderous.info/unsplash/$id-$size.jpg"
+            return "https://wonderous.info/unsplash/$id-$size.jpg".also { Logger.i(it) }
         }
 
         val photosByCollectionId = mapOf(

@@ -13,7 +13,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,20 +29,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -75,7 +68,6 @@ import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
 import ui.composables.MapView
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
@@ -94,10 +86,6 @@ private val minImageHeight = 52.dp
 fun EditorialScreen(
     wonder: Wonder
 ) {
-    var currentSelected by remember {
-        mutableStateOf(0)
-    }
-
     val scrollState = rememberLazyListState()
     val infoTitle by derivedStateOf {
         when (scrollState.firstVisibleItemIndex) {
@@ -133,286 +121,266 @@ fun EditorialScreen(
         scrollState.scrollProgressFor(10)
     }
 
-    Scaffold(
-        topBar = {
-//            Text(
-//                "VH Size : ${scrollState.layoutInfo.viewportSize}\n" +
-//                        "Image H : $imageHeight\n" +
-//                        "PP 0 : ${pullQuote1TopOffset}\n" +
-//                        "SS 0 : ${scrollState.scrollProgressFor(0)}\n" +
-//                        "SS 1 : ${scrollState.scrollProgressFor(1)}\n" +
-//                        "SS 2 : ${scrollState.scrollProgressFor(2)}\n" +
-//                        "SS 3 : ${scrollState.scrollProgressFor(3)}\n"
-//            )
-        },
-        bottomBar = {
-            AppBar(
-                selected = currentSelected,
-                onSelected = { currentSelected = it },
-                onClickHome = {},
-            )
-        }
+    val bgTransition = scrollState.firstItemScrollProgress
+    Column(
+        Modifier
+            .background(SolidColor(wonder.bgColor), alpha = bgTransition)
     ) {
-        val bgTransition = scrollState.firstItemScrollProgress
-        Column(
+        Image(
+            painterResource("images/chichen_itza/chichen.png"),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(280.dp)
+                .zIndex(0.1f)
+                .graphicsLayer {
+                    scaleX = 1.6f
+                    scaleY = 1.6f
+                    translationY = -100.dp.toPx()
+                },
+            contentDescription = null,
+            alignment = Alignment.BottomCenter,
+        )
+        Box(
             Modifier
-                .background(SolidColor(wonder.bgColor), alpha = bgTransition)
-        ) {
-            Image(
-                painterResource("images/chichen_itza/chichen.png"),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
+                .scale(1.2f)
+                .fillMaxWidth()
+                .weight(1f)
+                .background(wonder.bgColor)
+        )
+    }
+    LazyColumn(state = scrollState) {
+        // 0
+        item {
+            Column(
+                Modifier.fillMaxWidth()
+                    .padding(top = 300.dp, bottom = 16.dp)
                     .zIndex(0.1f)
                     .graphicsLayer {
-                        scaleX = 1.6f
-                        scaleY = 1.6f
-                        translationY = -100.dp.toPx()
+                        alpha = titleAlpha
+                        translationY = titleTranslationY
                     },
-                contentDescription = null,
-                alignment = Alignment.BottomCenter,
-            )
-            Box(
-                Modifier
-                    .scale(1.2f)
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(wonder.bgColor)
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val onPrimaryColor = MaterialTheme.colorScheme.onPrimary
+                Row(
+                    Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Divider(Modifier.weight(1f))
+                    Text(
+                        wonder.subTitle,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = onPrimaryColor
+                    )
+                    Divider(Modifier.weight(1f))
+                }
+                Text(
+                    wonder.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    color = onPrimaryColor
+                )
+                Text(
+                    wonder.regionTitle,
+                    style = MaterialTheme.typography.titleSmall,
+                    textAlign = TextAlign.Center,
+                    color = onPrimaryColor
+                )
+                CompassDivider(
+                    Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                    isExpanded = scrollState.firstVisibleItemScrollOffset < 100
+                )
+                Text(
+                    StringUtils.formatYr(wonder.startYr) + " to " + StringUtils.formatYr(
+                        wonder.endYr
+                    ),
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.Center,
+                    color = onPrimaryColor
+                )
+            }
+        }
+        // 1
+        item {
+            Box(Modifier.height(maxImageHeight)) {
+                Image(
+                    painterResource("images/chichen_itza/photo-1.jpg"),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(imageHeight)
+                        .alpha(imageAlpha)
+                        .clip(RoundedCornerShape(topStart = 100.dp, topEnd = 100.dp)),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                )
+            }
+        }
+        // 2
+        stickyHeader {
+            InfoTitle(
+                infoSection = infoTitle
             )
         }
-        LazyColumn(state = scrollState) {
-            // 0
-            item {
+        // 3
+        surfaceItem {
+            InfoText(
+                wonder.historyInfo1,
+                Modifier.padding(top = 16.dp, bottom = 24.dp)
+            )
+        }
+        // 4
+        surfaceItem {
+            Box(
+                Modifier.padding(16.dp)
+            ) {
+                val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
+                Image(
+                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    modifier = Modifier.fillMaxWidth()
+                        .height(500.dp)
+                        .border(1.dp, Color.Blue, shape)
+                        .padding(8.dp)
+                        .alpha(pullQuote1Progress * 2 + 0.6f)
+                        .clip(shape),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    colorFilter = ColorFilter.tint(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        BlendMode.Color
+                    )
+                )
                 Column(
-                    Modifier.fillMaxWidth()
-                        .padding(top = 300.dp, bottom = 16.dp)
-                        .zIndex(0.1f)
-                        .graphicsLayer {
-                            alpha = titleAlpha
-                            translationY = titleTranslationY
-                        },
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    Modifier.height(500.dp).fillMaxWidth().padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    val onPrimaryColor = MaterialTheme.colorScheme.onPrimary
-                    Row(
-                        Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Divider(Modifier.weight(1f))
-                        Text(
-                            wonder.subTitle,
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = onPrimaryColor
-                        )
-                        Divider(Modifier.weight(1f))
-                    }
-                    Text(
-                        wonder.title,
-                        style = MaterialTheme.typography.titleLarge,
+                    val textStyle = MaterialTheme.typography.displaySmall.copy(
+                        fontSize = 36.sp,
                         textAlign = TextAlign.Center,
-                        color = onPrimaryColor
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        wonder.regionTitle,
-                        style = MaterialTheme.typography.titleSmall,
-                        textAlign = TextAlign.Center,
-                        color = onPrimaryColor
-                    )
-                    CompassDivider(
-                        Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                        isExpanded = scrollState.firstVisibleItemScrollOffset < 100
+                        wonder.pullQuote1Top,
+                        style = textStyle,
+                        modifier = Modifier.graphicsLayer {
+                            translationY =
+                                pullQuote1Progress * -1000
+                        }
                     )
                     Text(
-                        StringUtils.formatYr(wonder.startYr) + " to " + StringUtils.formatYr(
-                            wonder.endYr
-                        ),
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center,
-                        color = onPrimaryColor
+                        wonder.pullQuote1Bottom,
+                        style = textStyle,
                     )
                 }
             }
-            // 1
-            item {
-                Box(Modifier.height(maxImageHeight)) {
-                    Image(
-                        painterResource("images/chichen_itza/photo-1.jpg"),
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .height(imageHeight)
-                            .alpha(imageAlpha)
-                            .clip(RoundedCornerShape(topStart = 100.dp, topEnd = 100.dp)),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                    )
-                }
-            }
-            // 2
-            stickyHeader {
-                InfoTitle(
-                    infoSection = infoTitle
+        }
+        // 5
+        surfaceItem {
+            Column {
+                CallOut(
+                    wonder.callout1
                 )
-            }
-            // 3
-            surfaceItem {
                 InfoText(
-                    wonder.historyInfo1,
-                    Modifier.padding(top = 16.dp, bottom = 24.dp)
+                    wonder.historyInfo2,
+                    Modifier.padding(top = 16.dp)
                 )
             }
-            // 4
-            surfaceItem {
-                Box(
-                    Modifier.padding(16.dp)
-                ) {
-                    val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
-                    Image(
-                        painterResource("images/chichen_itza/photo-2.jpg"),
-                        modifier = Modifier.fillMaxWidth()
-                            .height(500.dp)
-                            .border(1.dp, Color.Blue, shape)
-                            .padding(8.dp)
-                            .alpha(pullQuote1Progress * 2 + 0.6f)
-                            .clip(shape),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        colorFilter = ColorFilter.tint(
-                            MaterialTheme.colorScheme.primaryContainer,
-                            BlendMode.Color
-                        )
-                    )
-                    Column(
-                        Modifier.height(500.dp).fillMaxWidth().padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        val textStyle = MaterialTheme.typography.displaySmall.copy(
-                            fontSize = 36.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            wonder.pullQuote1Top,
-                            style = textStyle,
-                            modifier = Modifier.graphicsLayer {
-                                translationY =
-                                    pullQuote1Progress * -1000
-                            }
-                        )
-                        Text(
-                            wonder.pullQuote1Bottom,
-                            style = textStyle,
-                        )
-                    }
-                }
-            }
-            // 5
-            surfaceItem {
-                Column {
-                    CallOut(
-                        wonder.callout1
-                    )
-                    InfoText(
-                        wonder.historyInfo2,
-                        Modifier.padding(top = 16.dp)
-                    )
-                }
 
+        }
+        // 6
+        surfaceItem {
+            CompassDivider(
+                Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
+                isExpanded = scrollState.firstVisibleItemIndex in 4..5
+            )
+        }
+        // 7
+        surfaceItem {
+            InfoText(wonder.constructionInfo1)
+        }
+        // 8
+        surfaceItem {
+            Column {
+                YouTubeThumbnail(wonder.videoId, wonder.videoCaption)
+                CallOut(wonder.callout2)
             }
-            // 6
-            surfaceItem {
-                CompassDivider(
-                    Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
-                    isExpanded = scrollState.firstVisibleItemIndex in 4..5
+        }
+        // 9
+        surfaceItem {
+            InfoText(wonder.constructionInfo2)
+        }
+        // 10
+        surfaceItem {
+            Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
+                Image(
+                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.TopEnd)
+                        .zIndex(1f).height(400.dp)
+                        .fillMaxWidth(0.8f)
+                        .graphicsLayer {
+                            translationY = slidingImageProgress * 500
+                        }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
+                )
+                Image(
+                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    contentDescription = null,
+                    modifier = Modifier.align(Alignment.BottomStart)
+                        .zIndex(1f)
+                        .graphicsLayer {
+                            translationY = -(slidingImageProgress * 400)
+                        }.clip(
+                            RoundedCornerShape(
+                                bottomStartPercent = 100,
+                                bottomEndPercent = 100
+                            )
+                        ).height(300.dp)
+                        .fillMaxWidth(0.6f)
                 )
             }
-            // 7
-            surfaceItem {
-                InfoText(wonder.constructionInfo1)
-            }
-            // 8
-            surfaceItem {
-                Column {
-                    YouTubeThumbnail(wonder.videoId, wonder.videoCaption)
-                    CallOut(wonder.callout2)
-                }
-            }
-            // 9
-            surfaceItem {
-                InfoText(wonder.constructionInfo2)
-            }
-            // 10
-            surfaceItem {
-                Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
-                    Image(
-                        painterResource("images/chichen_itza/photo-2.jpg"),
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.TopEnd)
-                            .zIndex(1f).height(400.dp)
-                            .fillMaxWidth(0.8f)
-                            .graphicsLayer {
-                                translationY = slidingImageProgress * 500
-                            }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
-                    )
-                    Image(
-                        painterResource("images/chichen_itza/photo-2.jpg"),
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.BottomStart)
-                            .zIndex(1f)
-                            .graphicsLayer {
-                                translationY = -(slidingImageProgress * 400)
-                            }.clip(
-                                RoundedCornerShape(
-                                    bottomStartPercent = 100,
-                                    bottomEndPercent = 100
-                                )
-                            ).height(300.dp)
-                            .fillMaxWidth(0.6f)
-                    )
-                }
-            }
-            // 11
-            surfaceItem {
-                CompassDivider(
-                    Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
-                    isExpanded = scrollState.firstVisibleItemIndex == 10
-                )
-            }
-            // 12
-            surfaceItem {
-                InfoText(wonder.locationInfo1)
-            }
-            // 13
-            surfaceItem {
-                Quote(
-                    text = wonder.pullQuote2,
-                    author = wonder.pullQuote2Author,
-                    modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
-                )
-            }
-            // 14
-            surfaceItem {
-                InfoText(wonder.locationInfo2)
-            }
-            // 15
-            surfaceItem {
-                // Map
-                MapView(
-                    modifier = Modifier
-                        .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
-                        .height(320.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    gps = wonder.gps,
-                    title = "Map",
-                    parentScrollEnableState = mutableStateOf(true),
-                )
-            }
+        }
+        // 11
+        surfaceItem {
+            CompassDivider(
+                Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
+                isExpanded = scrollState.firstVisibleItemIndex == 10
+            )
+        }
+        // 12
+        surfaceItem {
+            InfoText(wonder.locationInfo1)
+        }
+        // 13
+        surfaceItem {
+            Quote(
+                text = wonder.pullQuote2,
+                author = wonder.pullQuote2Author,
+                modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
+            )
+        }
+        // 14
+        surfaceItem {
+            InfoText(wonder.locationInfo2)
+        }
+        // 15
+        surfaceItem {
+            // Map
+            MapView(
+                modifier = Modifier
+                    .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
+                    .height(320.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                gps = wonder.gps,
+                title = "Map",
+                parentScrollEnableState = mutableStateOf(true),
+            )
         }
     }
 }
+
 
 fun LazyListScope.surfaceItem(
     modifier: Modifier = Modifier,
@@ -566,62 +534,3 @@ val Wonder.bgColor
 fun Color.Companion.fromHex(hex: String) = Color(
     ("ff" + hex.removePrefix("#").lowercase()).toLong(16)
 )
-
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-private fun AppBar(
-    selected: Int,
-    onSelected: (Int) -> Unit,
-    onClickHome: () -> Unit,
-) {
-    Box(
-        Modifier.fillMaxWidth()
-            .height(76.dp)
-    ) {
-        Box(Modifier.padding(top = 12.dp).fillMaxSize().background(Color.White))
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Icon(
-                painterResource("${ImagePaths.common}/tab-editorial.png"),
-                contentDescription = "home",
-                Modifier.size(72.dp)
-                    .clip(CircleShape)
-                    .padding(2.dp)
-                    .clip(CircleShape)
-                    .background(Color.Blue)
-                    .clickable {
-                        onClickHome()
-                    }
-            )
-            Row(
-                Modifier.fillMaxWidth().height(64.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                AppBarIcon("editorial", selected = selected == 0, onClick = { onSelected(0) })
-                AppBarIcon("photos", selected = selected == 1, onClick = { onSelected(1) })
-                AppBarIcon("artifacts", selected = selected == 2, onClick = { onSelected(2) })
-                AppBarIcon("timeline", selected = selected == 3, onClick = { onSelected(3) })
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun AppBarIcon(
-    icon: String,
-    selected: Boolean = false,
-    onClick: () -> Unit
-) {
-    val iconImgPath = "${ImagePaths.common}/tab-${icon}${if (selected) "-active" else ""}.png"
-    Icon(
-        painterResource(iconImgPath),
-        contentDescription = icon,
-        modifier = Modifier.size(32.dp).clickable(onClick = onClick),
-        tint = MaterialTheme.colorScheme.primary
-    )
-}

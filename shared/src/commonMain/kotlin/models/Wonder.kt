@@ -68,7 +68,14 @@ data object ChichenItza : Wonder(
     callout2 = "The city comprised an area of at least 1.9 sq miles (5 sq km) of densely clustered architecture.",
     videoId = "Q6eBJjdca14",
     videoCaption = "“Ancient Maya 101 | National Geographic.” Youtube, uploaded by National Geographic.",
-    events = mapOf(),
+    events = mapOf(
+        600 to "Chichen Itza rises to regional prominence toward the end of the Early Classic period",
+        832 to "The earliest hieroglyphic date discovered at Chichen Itza",
+        998 to "Last known date recorded in the Osario temple",
+        1100 to "Chichen Itza declines as a regional center",
+        1527 to "Invaded by Spanish Conquistador Francisco de Montejo",
+        1535 to "All Spanish are driven from the Yucatán Peninsula",
+    ),
     unsplashCollectionId = "SUK0tuMnLLw"
 )
 

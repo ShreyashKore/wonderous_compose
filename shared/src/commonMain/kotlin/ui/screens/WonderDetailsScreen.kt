@@ -53,7 +53,7 @@ fun WonderDetailsScreen(
             0 -> EditorialScreen(wonder = wonder)
             1 -> PhotoGallery(wonder = wonder)
             2 -> ArtifactCarouselScreen(wonder = wonder)
-            3 -> WonderEvents(wonder = wonder)
+            3 -> WonderEvents(wonder = wonder, navigateToTimeline)
         }
     }
 }

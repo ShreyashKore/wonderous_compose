@@ -7,7 +7,7 @@ object StringUtils {
         return "${formattedYr}${getYrSuffix(yr)}"
     }
 
-    private fun getYrSuffix(yr: Int): String {
+    fun getYrSuffix(yr: Int): String {
         return if (yr < 0) yearBCE else yearCE
     }
 

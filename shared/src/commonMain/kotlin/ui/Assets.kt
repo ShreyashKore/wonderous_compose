@@ -31,6 +31,22 @@ val Wonder.assetPath: String
         ChristRedeemer -> "${ImagePaths.root}/christ_the_redeemer"
     }
 
+fun Wonder.getAssetPath(name: String): String {
+    return "$assetPath/$name"
+}
+
+val Wonder.mainImageName: String
+    get() = when (this) {
+        ChichenItza -> "chichen.png"
+        ChristRedeemer -> "redeemer.png"
+        Colosseum -> "colosseum.png"
+        GreatWall -> "great-wall.png"
+        MachuPicchu -> "machu-picchu.png"
+        Petra -> "petra.png"
+        PyramidsGiza -> "pyramids.png"
+        TajMahal -> "taj-mahal.png"
+    }
+
 val Wonder.homeBtn: String
     get() = "${this.assetPath}/wonder-button.png"
 

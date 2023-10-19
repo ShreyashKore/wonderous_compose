@@ -43,8 +43,8 @@ sealed class Wonder(
 }
 
 val Wonders = listOf(
-    ChichenItza, PyramidsGiza, GreatWall, Petra, Colosseum,
-    MachuPicchu, TajMahal, ChristRedeemer,
+    GreatWall, Petra, Colosseum, ChichenItza, MachuPicchu,
+    TajMahal, ChristRedeemer, PyramidsGiza,
 )
 
 data object ChichenItza : Wonder(
@@ -76,6 +76,7 @@ data object ChichenItza : Wonder(
         1527 to "Invaded by Spanish Conquistador Francisco de Montejo",
         1535 to "All Spanish are driven from the Yucatán Peninsula",
     ),
+    searchData = ChichenItzaSearchData,
     unsplashCollectionId = "SUK0tuMnLLw"
 )
 

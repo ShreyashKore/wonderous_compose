@@ -15,6 +15,18 @@ object ImagePaths {
     const val root = "images"
     const val common = "images/common"
 
+    val collectibles = "$root/collectibles"
+    val particle = "$common/particle-21x23.png"
+    val ribbonEnd = "$common/ribbon-end.png"
+
+    val textures = "$common/texture"
+    val icons = "$common/icons"
+
+    val roller1 = "$textures/roller-1-white.gif"
+    val roller2 = "$textures/roller-2-white.gif"
+
+    val appLogo = "$common/app-logo.png"
+    val appLogoPlain = "$common/app-logo-plain.png"
 }
 
 

@@ -39,3 +39,8 @@ val Wonder.fgColor: Color
 
 val Color.colorFilter: ColorFilter
     get() = ColorFilter.tint(this, BlendMode.SrcIn)
+
+
+fun Color.Companion.fromHex(hex: String) = Color(
+    ("ff" + hex.removePrefix("#").lowercase()).toLong(16)
+)

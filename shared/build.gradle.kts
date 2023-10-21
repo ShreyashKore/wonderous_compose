@@ -53,6 +53,8 @@ kotlin {
                 implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("co.touchlab:kermit:2.0.0-RC5")
+
+                implementation("com.github.skydoves:orbital:0.2.4")
             }
         }
         val androidMain by getting {
@@ -108,4 +110,7 @@ android {
     kotlin {
         jvmToolchain(11)
     }
+}
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }

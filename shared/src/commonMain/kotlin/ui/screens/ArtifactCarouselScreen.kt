@@ -180,7 +180,7 @@ fun ArtifactCarouselScreen(
                 contentColor = Color.White
             )
         ) {
-            Text("BROWSE ALL ARTIFACTS")
+            Text("BROWSE ALL ARTIFACTS", Modifier.padding(12.dp))
         }
 
         Spacer(Modifier.height(80.dp))

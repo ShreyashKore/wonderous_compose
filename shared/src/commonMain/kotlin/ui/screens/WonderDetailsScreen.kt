@@ -1,6 +1,9 @@
 package ui.screens
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,6 +33,8 @@ import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
+import ui.getAssetPath
+import ui.theme.bgColor
 
 
 @OptIn(
@@ -39,10 +45,15 @@ fun WonderDetailsScreen(
     onPressHome: () -> Unit,
     wonder: Wonder,
 ) {
-    var currentSelected by remember { mutableStateOf(1) }
+    var currentSelected by remember { mutableStateOf(0) }
+
+    val navigateToTimeline = remember {
+        { }
+    }
     Scaffold(
         bottomBar = {
             AppBar(
+                wonder = wonder,
                 selected = currentSelected,
                 onSelected = { currentSelected = it },
                 onPressHome = onPressHome
@@ -62,12 +73,14 @@ fun WonderDetailsScreen(
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun AppBar(
+    wonder: Wonder,
     selected: Int,
     onSelected: (Int) -> Unit,
     onPressHome: () -> Unit,
 ) {
     Box(
-        Modifier.fillMaxWidth()
+        Modifier
+            .fillMaxWidth()
             .height(76.dp)
     ) {
         Box(Modifier.padding(top = 12.dp).fillMaxSize().background(Color.White))
@@ -75,14 +88,13 @@ private fun AppBar(
             Modifier.fillMaxWidth().padding(horizontal = 12.dp),
             verticalAlignment = Alignment.Bottom
         ) {
-            Icon(
-                painterResource("${ImagePaths.common}/tab-editorial.png"),
+            Image(
+                painterResource(wonder.getAssetPath("wonder-button.png")),
                 contentDescription = "home",
-                Modifier.size(72.dp)
+                modifier = Modifier.size(80.dp)
+                    .border(BorderStroke(width = 6.dp, Color.White), CircleShape)
                     .clip(CircleShape)
-                    .padding(2.dp)
-                    .clip(CircleShape)
-                    .background(Color.Blue)
+                    .background(wonder.bgColor)
                     .clickable {
                         onPressHome()
                     }
@@ -109,10 +121,14 @@ private fun AppBarIcon(
     onClick: () -> Unit
 ) {
     val iconImgPath = "${ImagePaths.common}/tab-${icon}${if (selected) "-active" else ""}.png"
-    Icon(
-        painterResource(iconImgPath),
-        contentDescription = icon,
-        modifier = Modifier.size(32.dp).clickable(onClick = onClick),
-        tint = MaterialTheme.colorScheme.primary
-    )
+    IconButton(
+        onClick = onClick
+    ) {
+        Icon(
+            painterResource(iconImgPath),
+            contentDescription = icon,
+            modifier = Modifier.size(28.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
 }

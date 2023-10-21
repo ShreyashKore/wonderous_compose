@@ -42,9 +42,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
@@ -57,14 +57,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import models.ChichenItza
-import models.ChristRedeemer
-import models.Colosseum
-import models.GreatWall
-import models.MachuPicchu
-import models.Petra
-import models.PyramidsGiza
-import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -72,7 +64,11 @@ import ui.composables.MapView
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
+import ui.getAssetPath
+import ui.mainImageName
 import ui.theme.Cinzel
+import ui.theme.bgColor
+import ui.theme.fgColor
 import utils.StringUtils
 
 private val maxImageHeight = 400.dp
@@ -121,23 +117,23 @@ fun EditorialScreen(
         scrollState.scrollProgressFor(10)
     }
 
-    val bgTransition = scrollState.firstItemScrollProgress
     Column(
         Modifier
-            .background(SolidColor(wonder.bgColor), alpha = bgTransition)
+            .background(wonder.fgColor)
+            .drawWithContent {
+                val bgTransition = scrollState.firstItemScrollProgress
+                drawContent()
+                drawRect(SolidColor(wonder.bgColor), alpha = bgTransition)
+            }
     ) {
         Image(
-            painterResource("images/chichen_itza/chichen.png"),
+            painterResource(wonder.getAssetPath(wonder.mainImageName)),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(280.dp)
-                .zIndex(0.1f)
-                .graphicsLayer {
-                    scaleX = 1.6f
-                    scaleY = 1.6f
-                    translationY = -100.dp.toPx()
-                },
+                .zIndex(0.1f),
             contentDescription = null,
+            contentScale = ContentScale.FillHeight,
             alignment = Alignment.BottomCenter,
         )
         Box(
@@ -205,7 +201,7 @@ fun EditorialScreen(
         item {
             Box(Modifier.height(maxImageHeight)) {
                 Image(
-                    painterResource("images/chichen_itza/photo-1.jpg"),
+                    painterResource(wonder.getAssetPath("photo-1.jpg")),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
@@ -237,10 +233,10 @@ fun EditorialScreen(
             ) {
                 val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
                 Image(
-                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    painterResource(wonder.getAssetPath("photo-2.jpg")),
                     modifier = Modifier.fillMaxWidth()
                         .height(500.dp)
-                        .border(1.dp, Color.Blue, shape)
+                        .border(1.dp, MaterialTheme.colorScheme.primary, shape)
                         .padding(8.dp)
                         .alpha(pullQuote1Progress * 2 + 0.6f)
                         .clip(shape),
@@ -316,8 +312,9 @@ fun EditorialScreen(
         surfaceItem {
             Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
                 Image(
-                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    painterResource(wonder.getAssetPath("photo-2.jpg")),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.TopEnd)
                         .zIndex(1f).height(400.dp)
                         .fillMaxWidth(0.8f)
@@ -326,8 +323,9 @@ fun EditorialScreen(
                         }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
                 )
                 Image(
-                    painterResource("images/chichen_itza/photo-2.jpg"),
+                    painterResource(wonder.getAssetPath("photo-2.jpg")),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.align(Alignment.BottomStart)
                         .zIndex(1f)
                         .graphicsLayer {
@@ -517,20 +515,3 @@ enum class InfoSection(val title: String, val imageName: String) {
 }
 
 val InfoSection.imagePath get() = "images/common/$imageName"
-
-
-val Wonder.bgColor
-    get() = when (this) {
-        ChichenItza -> Color.fromHex("#14341C")
-        ChristRedeemer -> Color.fromHex("#2B6961")
-        Colosseum -> Color.fromHex("#14341C")
-        GreatWall -> Color.fromHex("#14341C")
-        MachuPicchu -> Color.fromHex("#14341C")
-        Petra -> Color.fromHex("#14341C")
-        PyramidsGiza -> Color.fromHex("#14341C")
-        TajMahal -> Color.fromHex("#14341C")
-    }
-
-fun Color.Companion.fromHex(hex: String) = Color(
-    ("ff" + hex.removePrefix("#").lowercase()).toLong(16)
-)

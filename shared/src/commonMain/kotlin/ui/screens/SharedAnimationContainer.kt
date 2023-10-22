@@ -1,12 +1,12 @@
 package ui.screens
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.pager.rememberPagerState
@@ -41,33 +41,30 @@ fun SharedAnimationContainer(
     println("PagerState ${pagerState.currentPage} ${pagerState.settledPage}")
     val scope = rememberCoroutineScope()
 
-    AnimatedContent(
-        targetState = swipeableState.currentValue,
-        transitionSpec = {
-            fadeIn(tween(200)) + slideIntoContainer(AnimatedContentScope.SlideDirection.Up) with
-                    fadeOut(tween()) + slideOutOfContainer(AnimatedContentScope.SlideDirection.Down)
-        },
-    ) {
-        when (it) {
-            SharedScreen.Home -> HomeScreen(
-                currentWonder = currentWonder,
-                pagerState = pagerState,
-                swipeableState = swipeableState,
-                openDetailScreen = {
-                    scope.launch {
-                        swipeableState.animateTo(SharedScreen.Details)
-                    }
-                }
-            )
 
-            SharedScreen.Details -> WonderDetailsScreen(
-                wonder = currentWonder,
-                onPressHome = {
-                    scope.launch {
-                        swipeableState.animateTo(SharedScreen.Home)
-                    }
-                },
-            )
+    HomeScreen(
+        currentWonder = currentWonder,
+        pagerState = pagerState,
+        swipeableState = swipeableState,
+        openDetailScreen = {
+            scope.launch {
+                swipeableState.animateTo(SharedScreen.Details)
+            }
         }
+    )
+
+    AnimatedVisibility(
+        visible = swipeableState.currentValue == SharedScreen.Details,
+        enter = fadeIn(tween(200)) + slideInVertically(initialOffsetY = { it }),
+        exit = fadeOut(tween()) + slideOutVertically(targetOffsetY = { it }),
+    ) {
+        WonderDetailsScreen(
+            wonder = currentWonder,
+            onPressHome = {
+                scope.launch {
+                    swipeableState.animateTo(SharedScreen.Home)
+                }
+            },
+        )
     }
 }

@@ -61,7 +61,7 @@ fun WonderDetailsScreen(
         }
     ) {
         when (currentSelected) {
-            0 -> EditorialScreen(wonder = wonder)
+            0 -> EditorialScreen(wonder = wonder, onPressHome)
             1 -> PhotoGallery(wonder = wonder)
             2 -> ArtifactCarouselScreen(wonder = wonder)
             3 -> WonderEvents(wonder = wonder, navigateToTimeline)

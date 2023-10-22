@@ -38,16 +38,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -80,8 +85,23 @@ private val minImageHeight = 52.dp
 )
 @Composable
 fun EditorialScreen(
-    wonder: Wonder
+    wonder: Wonder,
+    openHomeScreen: () -> Unit,
 ) {
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (available.y > 15 && source == NestedScrollSource.Drag) {
+                    openHomeScreen()
+                }
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
     val scrollState = rememberLazyListState()
     val infoTitle by derivedStateOf {
         when (scrollState.firstVisibleItemIndex) {
@@ -144,7 +164,7 @@ fun EditorialScreen(
                 .background(wonder.bgColor)
         )
     }
-    LazyColumn(state = scrollState) {
+    LazyColumn(modifier = Modifier.nestedScroll(nestedScrollConnection), state = scrollState) {
         // 0
         item {
             Column(

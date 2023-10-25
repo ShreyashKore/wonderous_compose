@@ -1,5 +1,9 @@
 package ui.screens
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,43 +21,61 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import models.ChichenItza
+import models.ChristRedeemer
+import models.Colosseum
+import models.GreatWall
+import models.MachuPicchu
+import models.Petra
+import models.PyramidsGiza
+import models.TajMahal
 import models.Wonder
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import ui.getAssetPath
+import ui.theme.fgColor
+import utils.StringUtils.getYrSuffix
+import utils.dashedBorder
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-val maxDuration = 100
+val from = -3000
+val to = 2200
+val maxDuration = to - from
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TimeLineScreen(
     selectedWonder: Wonder? = null
 ) = BoxWithConstraints {
     val scrollState = rememberScrollState()
 
-    val mainLineHeight = 50.dp * maxDuration
+    val mainLineHeight = maxDuration.dp
     val mainLineHeightPx = with(LocalDensity.current) {
         mainLineHeight.toPx()
     }
     val density = LocalDensity.current
     val padding = maxHeight / 2
 
-    val paddingPx = with(LocalDensity.current) {
-        padding.roundToPx()
-    }
 
     val scroll by remember {
         derivedStateOf {
@@ -68,22 +91,52 @@ fun TimeLineScreen(
 
     fun getScrollFraction() = scrollFraction
 
+    val yearInt = (getScrollFraction() * maxDuration - 3000).roundToInt()
+    val yearSuffix = getYrSuffix(yearInt)
 
     Box(
-        Modifier.verticalScroll(scrollState).padding(vertical = padding).height(mainLineHeight)
+        Modifier.verticalScroll(scrollState)
+            .padding(vertical = padding)
+            .height(mainLineHeight)
             .background(Color.Blue.copy(alpha = 0.2f))
     ) {
 
         Row {
             Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
-                TimeStrip(24, {}, maxDuration)
+                TimeStrip(
+                    yearInt, {
+                        println("HITTTT $it")
+                    }, range = from..to, step = 100
+                )
             }
             LineGroup(::getScrollFraction, Modifier.weight(4f))
         }
 
-        Box(Modifier.fillMaxWidth().offset { IntOffset(0, scroll) }
-            .background(Color.Red.copy(alpha = 0.2f))) {
-            Text("$scrollFraction")
+        Column(
+            Modifier.fillMaxWidth()
+                .offset { IntOffset(0, scrollState.value) },
+            horizontalAlignment = Alignment.End
+        ) {
+
+            Row(
+                Modifier.padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "${yearInt.absoluteValue}",
+                    fontSize = 24.sp
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    yearSuffix,
+                    fontSize = 16.sp
+                )
+
+            }
+            Spacer(
+                Modifier.fillMaxWidth().height(1.dp)
+                    .dashedBorder(BorderStroke(1.dp, Color.White), on = 8.dp, off = 8.dp)
+            )
         }
     }
 
@@ -96,61 +149,132 @@ fun TimeLineScreen(
     ) {
 
         val badgeWidth = 20.dp
+
+        LineGroup(::getScrollFraction, Modifier.padding(horizontal = 12.dp))
         Box(Modifier.offset {
             val maxWidth = maxWidth - 40.dp
             val offset = getScrollFraction() * maxWidth.roundToPx()
             val offset2 = getScrollFraction() * (maxWidth - badgeWidth).roundToPx()
             IntOffset(0, offset2.roundToInt())
-        }.background(Color.Green).fillMaxWidth().height(badgeWidth))
-        LineGroup(::getScrollFraction, Modifier)
+        }.border(1.dp, Color.White).fillMaxWidth().height(badgeWidth))
     }
+
+    AnimatedContent(
+        eventDataList.firstOrNull { it.time == yearInt }
+    ) { event ->
+        if (event == null) {
+            Spacer(Modifier)
+        } else {
+            Box(Modifier.padding(30.dp).background(Color.Magenta)) {
+                Text(event.description)
+            }
+        }
+    }
+
 }
 
 @Composable
-fun LineGroup(getScrollFraction: () -> Float, modifier: Modifier = Modifier) {
+fun LineGroup(
+    getScrollFraction: () -> Float,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier.fillMaxSize()
+        modifier.fillMaxSize(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Box(Modifier.weight(1f).fillMaxHeight()) {
-            Line(from = 0, 100, maxDuration, Color.Magenta, getScrollFraction)
+            WonderLine(
+                wonder = PyramidsGiza,
+                getScrollFraction
+            )
+            WonderLine(
+                wonder = GreatWall,
+                getScrollFraction
+            )
+            WonderLine(
+                wonder = ChristRedeemer,
+                getScrollFraction
+            )
         }
+        Spacer(Modifier.weight(.2f))
         Box(Modifier.weight(1f).fillMaxHeight()) {
-            Line(from = 30, 50, maxDuration, Color.Blue, getScrollFraction)
+            WonderLine(
+                wonder = Petra,
+                getScrollFraction,
+            )
+            WonderLine(
+                wonder = MachuPicchu,
+                getScrollFraction,
+            )
         }
+        Spacer(Modifier.weight(.2f))
         Box(Modifier.weight(1f).fillMaxHeight()) {
-            Line(from = 0, 20, maxDuration, Color.Red, getScrollFraction)
-            Line(from = 25, 60, maxDuration, Color.Green, getScrollFraction)
-        }
-        Box(Modifier.weight(1f).fillMaxHeight()) {
-            Line(from = 80, 100, maxDuration, Color.Yellow, getScrollFraction)
+            WonderLine(
+                wonder = Colosseum,
+                getScrollFraction,
+            )
+            WonderLine(
+                wonder = ChichenItza,
+                getScrollFraction,
+            )
+            WonderLine(
+                wonder = TajMahal,
+                getScrollFraction,
+            )
         }
     }
 }
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun WonderLine(
+    wonder: Wonder,
+    getScroll: () -> Float,
+) {
+    Line(
+        from = wonder.startYr,
+        to = wonder.endYr,
+        rangeStart = -3000,
+        rangeEnd = 2200,
+        getScroll = getScroll,
+        modifier = Modifier.background(
+            color = wonder.fgColor, shape = RoundedCornerShape(percent = 100),
+        )
+    ) {
+        Image(
+            painterResource(wonder.getAssetPath("flattened.jpg")),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .padding(6.dp)
+                .fillMaxSize()
+                .clip(CircleShape)
+        )
+    }
+}
+
 
 @Composable
 fun TimeStrip(
     currentYear: Int,
     onHitEvent: (EventData) -> Unit,
-    totalTime: Int,
+    range: IntRange,
+    step: Int,
 ) = BoxWithConstraints {
-    LaunchedEffect(currentYear) {
-        val event = eventDataList.firstOrNull { it.time == currentYear }
-        if (event != null) {
-            onHitEvent(event)
-        }
-    }
+    val i = range.step(step)
     Row(Modifier.fillMaxSize()) {
         LazyColumn(
             Modifier.weight(1f).fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            items(200) {
-                Box(Modifier.background(Color.Yellow).height(1.dp).width(5.dp))
+            items(i.count()) {
+                Text("${i.elementAt(it).absoluteValue}")
             }
         }
         Column(Modifier.weight(1f)) {
             eventDataList.map {
-                val offset = this@BoxWithConstraints.maxHeight * it.time.toFloat() / totalTime
+                val offset =
+                    this@BoxWithConstraints.maxHeight * (it.time.toFloat() + 3000) / (range.last - range.first)
                 Box(Modifier.offset(y = offset).background(Color.Yellow)) {
                     Text(it.description)
                 }
@@ -166,8 +290,8 @@ data class EventData(
 )
 
 val eventDataList = listOf(
-    EventData(12, "Event 0"),
-    EventData(23, "Event 23"),
+    EventData(-3000, "Event 0"),
+    EventData(-2700, "Event 23"),
     EventData(34, "Event 34"),
     EventData(55, "Event 55"),
 )
@@ -177,38 +301,42 @@ val eventDataList = listOf(
 fun Line(
     from: Int,
     to: Int,
-    total: Int,
-    color: Color,
+    rangeStart: Int,
+    rangeEnd: Int,
     getScroll: () -> Float,
-    outlineOnly: Boolean = true,
+    modifier: Modifier = Modifier,
+    content: @Composable (() -> Unit)? = null,
 ) = BoxWithConstraints {
-    val thumbSize = 100.dp
+    val totalRange = rangeEnd - rangeStart
+    val unitDistance = maxHeight / totalRange
+
+    val minSpace = maxOf(100, (maxWidth / unitDistance).toInt())
 
     val range = to - from
-    val fromFraction = from / total.toFloat()
-    val toFraction = to / total.toFloat()
-    val fraction = range.toFloat() / total
-    val startOffset = maxHeight * (from.toFloat() / total)
-    val endOffset = (maxHeight * (to.toFloat() / total))
-    val fractionHeight = maxHeight * fraction
-    val thumbEndOffset = fractionHeight - thumbSize
-    val fullHeight = maxHeight
-    println("BoxConstraints $fullHeight")
+    val safeFrom = (if (range < minSpace) from - (minSpace - range) / 2 else from) - rangeStart
+    val safeRange = maxOf(range, minSpace)
 
+
+    val fromFraction = safeFrom / totalRange.toFloat()
+    val fraction = safeRange.toFloat() / totalRange
+    val startOffset = unitDistance * safeFrom.toFloat()
+    val fractionHeight = unitDistance * safeRange
+    val thumbSize = maxOf(maxWidth, minOf(fractionHeight, unitDistance * 200))
+    val thumbEndOffset = fractionHeight - thumbSize
     Box(
-        Modifier.fillMaxWidth().fillMaxHeight(fraction).offset(y = startOffset).run {
-            if (outlineOnly) border(
-                color = color, width = 2.dp, shape = RoundedCornerShape(percent = 100)
-            ) else background(
-                color = color, shape = RoundedCornerShape(percent = 100),
-            )
-        },
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(fraction)
+            .offset(y = startOffset) then modifier,
     ) {
-        if (!outlineOnly) {
-            Box(Modifier.width(100.dp).height(thumbSize).offset {
+        if (content != null) {
+            Box(Modifier.fillMaxWidth().height(thumbSize).offset {
                 val scroll = ((getScroll() - fromFraction) / fraction).coerceIn(0f, 1f)
+                println("SCROLLL ${scroll}")
                 IntOffset(0, lerp(0, thumbEndOffset.roundToPx(), scroll))
-            }.background(Color.Cyan))
+            }) {
+                content()
+            }
         }
     }
 }

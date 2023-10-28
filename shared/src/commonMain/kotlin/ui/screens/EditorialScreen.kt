@@ -3,11 +3,12 @@ package ui.screens
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -19,16 +20,17 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,35 +46,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import models.ChichenItza
+import models.MachuPicchu
+import models.PyramidsGiza
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.composables.CircularText
 import ui.composables.MapView
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
 import ui.getAssetPath
 import ui.mainImageName
+import ui.theme.B612Mono
 import ui.theme.Cinzel
 import ui.theme.bgColor
+import ui.theme.caption
 import ui.theme.fgColor
 import utils.StringUtils
 
@@ -96,6 +108,7 @@ fun EditorialScreen(
                 source: NestedScrollSource
             ): Offset {
                 if (available.y > 15 && source == NestedScrollSource.Drag) {
+                    // We are detecting overscroll on top
                     openHomeScreen()
                 }
                 return super.onPostScroll(consumed, available, source)
@@ -219,6 +232,12 @@ fun EditorialScreen(
         }
         // 1
         item {
+            val shape = when (wonder) {
+                MachuPicchu, ChichenItza, PyramidsGiza ->
+                    CutCornerShape(topStart = 100.dp, topEnd = 100.dp)
+
+                else -> RoundedCornerShape(topStart = 100.dp, topEnd = 100.dp)
+            }
             Box(Modifier.height(maxImageHeight)) {
                 Image(
                     painterResource(wonder.getAssetPath("photo-1.jpg")),
@@ -227,7 +246,7 @@ fun EditorialScreen(
                         .fillMaxWidth()
                         .height(imageHeight)
                         .alpha(imageAlpha)
-                        .clip(RoundedCornerShape(topStart = 100.dp, topEnd = 100.dp)),
+                        .clip(shape),
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                 )
@@ -236,6 +255,7 @@ fun EditorialScreen(
         // 2
         stickyHeader {
             InfoTitle(
+                wonderColor = wonder.bgColor,
                 infoSection = infoTitle
             )
         }
@@ -249,22 +269,22 @@ fun EditorialScreen(
         // 4
         surfaceItem {
             Box(
-                Modifier.padding(16.dp)
+                Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 48.dp)
             ) {
                 val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
                 Image(
                     painterResource(wonder.getAssetPath("photo-2.jpg")),
                     modifier = Modifier.fillMaxWidth()
                         .height(500.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.primary, shape)
+                        .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
                         .padding(8.dp)
                         .alpha(pullQuote1Progress * 2 + 0.6f)
                         .clip(shape),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     colorFilter = ColorFilter.tint(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        BlendMode.Color
+                        Color(0xFFBEABA1),
+                        BlendMode.ColorBurn
                     )
                 )
                 Column(
@@ -276,7 +296,7 @@ fun EditorialScreen(
                         fontSize = 36.sp,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = caption,
                     )
                     Text(
                         wonder.pullQuote1Top,
@@ -429,37 +449,73 @@ fun InfoText(
 @OptIn(ExperimentalAnimationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun InfoTitle(
+    wonderColor: Color,
     infoSection: InfoSection
 ) {
+    val tweenForTitle = tween<Float>(durationMillis = 500)
+    val angle by animateFloatAsState(
+        when (infoSection) {
+            InfoSection.FactsAndHistory -> 0f
+            InfoSection.Construction -> 360f
+            InfoSection.Location -> 720f
+        },
+        animationSpec = tween(1000)
+    )
+
     Box(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.secondaryContainer),
+        modifier = Modifier.fillMaxWidth().background(wonderColor),
         contentAlignment = Alignment.BottomCenter,
     ) {
         Box(Modifier.background(MaterialTheme.colorScheme.surface).height(42.dp).fillMaxWidth())
 
-        Column(
+        Box(
             Modifier
+                .height(120.dp)
+                .width(240.dp)
                 .background(
                     MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100),
-                ).padding(top = 16.dp, bottom = 16.dp)
-                .fillMaxWidth(0.7f),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                ),
+            contentAlignment = Alignment.Center,
         ) {
-            val tweenForInfo = tween<IntOffset>(durationMillis = 500)
-            val tweenForTitle = tween<Float>(durationMillis = 500)
+
             AnimatedContent(
+                modifier = Modifier
+                    .drawWithContent {
+                        val path = Path().apply {
+                            lineTo(0f, size.height)
+                            lineTo(size.width, size.height)
+                            lineTo(size.width, 0f)
+                            lineTo(0f, 0f)
+                            close()
+                        }
+                        clipPath(
+                            path
+                        ) {
+                            this@drawWithContent.drawContent()
+                        }
+                    }.padding(top = 20.dp).layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
+                        layout(constraints.maxWidth, constraints.maxHeight) {
+                            placeable.placeRelative(
+                                (constraints.maxWidth - placeable.width) / 2,
+                                constraints.maxHeight / 2 - placeable.height / 2 + 40.dp.roundToPx(),
+                                0f
+                            )
+                        }
+                    }.wrapContentSize(unbounded = true),
                 targetState = infoSection,
-                transitionSpec = {
-                    val c = initialState.compareTo(targetState)
-                    slideIn(tweenForInfo) { IntOffset(it.width * c, 0) } with
-                            slideOut(tweenForInfo) { IntOffset(-it.width * c, 0) }
-                },
+                transitionSpec = { fadeIn() with fadeOut() },
             ) {
-                Text(it.title, textAlign = TextAlign.Center, fontSize = 20.sp)
+                CircularText(
+                    text = it.title.toCharArray().map { it.toString() },
+                    radius = 100.dp,
+                    textStyle = TextStyle(fontSize = 14.sp, fontFamily = B612Mono),
+                    modifier = Modifier.rotate(angle)
+                )
             }
-            Spacer(Modifier.height(12.dp))
             AnimatedContent(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
                 targetState = infoSection,
                 transitionSpec = {
                     scaleIn(tweenForTitle) with scaleOut(tweenForTitle)
@@ -529,9 +585,9 @@ private fun Quote(
 
 
 enum class InfoSection(val title: String, val imageName: String) {
-    FactsAndHistory("Facts & History", "history.png"),
-    Construction("Construction", "construction.png"),
-    Location("Location", "geography.png")
+    FactsAndHistory("FACTS & HISTORY", "history.png"),
+    Construction("CONSTRUCTION", "construction.png"),
+    Location("LOCATION", "geography.png")
 }
 
 val InfoSection.imagePath get() = "images/common/$imageName"

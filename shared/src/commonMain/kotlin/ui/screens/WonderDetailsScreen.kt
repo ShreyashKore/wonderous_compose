@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.getAssetPath
-import ui.theme.bgColor
+import ui.theme.fgColor
 
 
 @OptIn(
@@ -91,16 +91,18 @@ private fun AppBar(
             Image(
                 painterResource(wonder.getAssetPath("wonder-button.png")),
                 contentDescription = "home",
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier
                     .border(BorderStroke(width = 6.dp, Color.White), CircleShape)
+                    .size(80.dp)
+                    .padding(6.dp)
                     .clip(CircleShape)
-                    .background(wonder.bgColor)
+                    .background(wonder.fgColor)
                     .clickable {
                         onPressHome()
                     }
             )
             Row(
-                Modifier.fillMaxWidth().height(64.dp),
+                Modifier.weight(1f).height(64.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {

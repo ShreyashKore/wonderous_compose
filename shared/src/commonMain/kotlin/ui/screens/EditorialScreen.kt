@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -45,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
@@ -52,9 +54,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -84,7 +84,6 @@ import ui.mainImageName
 import ui.theme.B612Mono
 import ui.theme.Cinzel
 import ui.theme.bgColor
-import ui.theme.caption
 import ui.theme.fgColor
 import utils.StringUtils
 
@@ -116,70 +115,59 @@ fun EditorialScreen(
         }
     }
     val scrollState = rememberLazyListState()
-    val infoTitle by derivedStateOf {
-        when (scrollState.firstVisibleItemIndex) {
-            in 0..<5 -> InfoSection.FactsAndHistory
-            in 5..<10 -> InfoSection.Construction
-            else -> InfoSection.Location
-        }
-    }
 
-    val titleAlpha by derivedStateOf {
-        1 - scrollState.firstItemScrollProgress
-    }
-
-    val titleTranslationY by derivedStateOf {
-        scrollState.firstItemScrollProgress * 300
-    }
-
-    val imageHeight by derivedStateOf {
-        minImageHeight + (maxImageHeight - minImageHeight) * (1.5f - scrollState.scrollProgressFor(
-            1
-        ))
-    }
-
-    val imageAlpha by derivedStateOf {
-        1.6f - scrollState.scrollProgressFor(1)
-    }
-
-    val pullQuote1Progress by derivedStateOf {
-        (0.45f - scrollState.scrollProgressFor(4)).coerceAtLeast(0f)
-    }
-
-    val slidingImageProgress by derivedStateOf {
-        scrollState.scrollProgressFor(10)
-    }
-
-    Column(
+    // background and hero image
+    Box(
         Modifier
             .background(wonder.fgColor)
             .drawWithContent {
-                val bgTransition = scrollState.firstItemScrollProgress
+                val bgAlpha = scrollState.firstItemScrollProgress
                 drawContent()
-                drawRect(SolidColor(wonder.bgColor), alpha = bgTransition)
+                drawRect(SolidColor(wonder.bgColor), alpha = bgAlpha)
             }
     ) {
+        Column {
+            Image(
+                painterResource(wonder.bgTexture),
+                contentDescription = null,
+                modifier = Modifier.height(250.dp).scale(3f),
+                colorFilter = ColorFilter.tint(wonder.bgTextureColor)
+            )
+            Box(
+                Modifier
+                    .scale(1.2f)
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(wonder.bgColor)
+            )
+        }
         Image(
             painterResource(wonder.getAssetPath(wonder.mainImageName)),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(280.dp)
+                .padding(top = 10.dp)
                 .zIndex(0.1f),
             contentDescription = null,
             contentScale = ContentScale.FillHeight,
             alignment = Alignment.BottomCenter,
         )
-        Box(
-            Modifier
-                .scale(1.2f)
-                .fillMaxWidth()
-                .weight(1f)
-                .background(wonder.bgColor)
-        )
     }
     LazyColumn(modifier = Modifier.nestedScroll(nestedScrollConnection), state = scrollState) {
         // 0
         item {
+            val titleAlpha by remember {
+                derivedStateOf {
+                    1 - scrollState.firstItemScrollProgress
+                }
+            }
+
+            val titleTranslationY by remember {
+                derivedStateOf {
+                    scrollState.firstItemScrollProgress * 300
+                }
+            }
+
             Column(
                 Modifier.fillMaxWidth()
                     .padding(top = 300.dp, bottom = 16.dp)
@@ -232,6 +220,19 @@ fun EditorialScreen(
         }
         // 1
         item {
+            val imageAlpha by remember {
+                derivedStateOf {
+                    1.6f - scrollState.scrollProgressFor(1)
+                }
+            }
+            val imageHeight by remember {
+                derivedStateOf {
+                    minImageHeight + (maxImageHeight - minImageHeight) * (1.5f - scrollState.scrollProgressFor(
+                        1
+                    ))
+                }
+            }
+
             val shape = when (wonder) {
                 MachuPicchu, ChichenItza, PyramidsGiza ->
                     CutCornerShape(topStart = 100.dp, topEnd = 100.dp)
@@ -254,6 +255,16 @@ fun EditorialScreen(
         }
         // 2
         stickyHeader {
+            val infoTitle by remember {
+                derivedStateOf {
+                    when (scrollState.firstVisibleItemIndex) {
+                        in 0..<5 -> InfoSection.FactsAndHistory
+                        in 5..<10 -> InfoSection.Construction
+                        else -> InfoSection.Location
+                    }
+                }
+            }
+
             InfoTitle(
                 wonderColor = wonder.bgColor,
                 infoSection = infoTitle
@@ -268,50 +279,18 @@ fun EditorialScreen(
         }
         // 4
         surfaceItem {
-            Box(
-                Modifier.padding(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 48.dp)
-            ) {
-                val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
-                Image(
-                    painterResource(wonder.getAssetPath("photo-2.jpg")),
-                    modifier = Modifier.fillMaxWidth()
-                        .height(500.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
-                        .padding(8.dp)
-                        .alpha(pullQuote1Progress * 2 + 0.6f)
-                        .clip(shape),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    colorFilter = ColorFilter.tint(
-                        Color(0xFFBEABA1),
-                        BlendMode.ColorBurn
-                    )
-                )
-                Column(
-                    Modifier.height(500.dp).fillMaxWidth().padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    val textStyle = MaterialTheme.typography.displaySmall.copy(
-                        fontSize = 36.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        color = caption,
-                    )
-                    Text(
-                        wonder.pullQuote1Top,
-                        style = textStyle,
-                        modifier = Modifier.graphicsLayer {
-                            translationY =
-                                pullQuote1Progress * -1000
-                        }
-                    )
-                    Text(
-                        wonder.pullQuote1Bottom,
-                        style = textStyle,
-                    )
+            val pullQuote1Progress by remember {
+                derivedStateOf {
+                    (0.45f - scrollState.scrollProgressFor(4)).coerceAtLeast(0f)
                 }
             }
+
+            PullQuote1(
+                bgImage = wonder.getAssetPath("photo-2.jpg"),
+                pullQuote1Top = wonder.pullQuote1Top,
+                pullQuote1Bottom = wonder.pullQuote1Bottom,
+                pullQuote1Progress = pullQuote1Progress,
+            )
         }
         // 5
         surfaceItem {
@@ -350,35 +329,16 @@ fun EditorialScreen(
         }
         // 10
         surfaceItem {
-            Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
-                Image(
-                    painterResource(wonder.getAssetPath("photo-2.jpg")),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                        .zIndex(1f).height(400.dp)
-                        .fillMaxWidth(0.8f)
-                        .graphicsLayer {
-                            translationY = slidingImageProgress * 500
-                        }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
-                )
-                Image(
-                    painterResource(wonder.getAssetPath("photo-2.jpg")),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.align(Alignment.BottomStart)
-                        .zIndex(1f)
-                        .graphicsLayer {
-                            translationY = -(slidingImageProgress * 400)
-                        }.clip(
-                            RoundedCornerShape(
-                                bottomStartPercent = 100,
-                                bottomEndPercent = 100
-                            )
-                        ).height(300.dp)
-                        .fillMaxWidth(0.6f)
-                )
+            val parallaxProgress by remember {
+                derivedStateOf {
+                    scrollState.scrollProgressFor(10)
+                }
             }
+            ParallaxImages(
+                parallaxProgress = parallaxProgress,
+                topImagePath = wonder.getAssetPath("photo-3.jpg"),
+                bottomImagePath = wonder.getAssetPath("photo-4.jpg"),
+            )
         }
         // 11
         surfaceItem {
@@ -419,7 +379,9 @@ fun EditorialScreen(
     }
 }
 
-
+/**
+ * Helper [LazyListScope] item with background color applied as surface
+ */
 fun LazyListScope.surfaceItem(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit
@@ -445,21 +407,23 @@ fun InfoText(
     )
 }
 
-
+/**
+ * Top rotating title to indicate current section
+ */
 @OptIn(ExperimentalAnimationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun InfoTitle(
     wonderColor: Color,
     infoSection: InfoSection
 ) {
-    val tweenForTitle = tween<Float>(durationMillis = 500)
-    val angle by animateFloatAsState(
+    val tween = tween<Float>(durationMillis = 1000)
+    val circularTextAngle by animateFloatAsState(
         when (infoSection) {
             InfoSection.FactsAndHistory -> 0f
             InfoSection.Construction -> 360f
             InfoSection.Location -> 720f
         },
-        animationSpec = tween(1000)
+        animationSpec = tween
     )
 
     Box(
@@ -481,20 +445,8 @@ fun InfoTitle(
 
             AnimatedContent(
                 modifier = Modifier
-                    .drawWithContent {
-                        val path = Path().apply {
-                            lineTo(0f, size.height)
-                            lineTo(size.width, size.height)
-                            lineTo(size.width, 0f)
-                            lineTo(0f, 0f)
-                            close()
-                        }
-                        clipPath(
-                            path
-                        ) {
-                            this@drawWithContent.drawContent()
-                        }
-                    }.padding(top = 20.dp).layout { measurable, constraints ->
+                    .clipToBounds() // Clipper for CircularText
+                    .padding(top = 20.dp).layout { measurable, constraints ->
                         val placeable = measurable.measure(constraints)
                         layout(constraints.maxWidth, constraints.maxHeight) {
                             placeable.placeRelative(
@@ -505,20 +457,21 @@ fun InfoTitle(
                         }
                     }.wrapContentSize(unbounded = true),
                 targetState = infoSection,
-                transitionSpec = { fadeIn() with fadeOut() },
+                transitionSpec = { fadeIn(tween) with fadeOut(tween) },
             ) {
                 CircularText(
-                    text = it.title.toCharArray().map { it.toString() },
+                    text = it.title.toCharArray()
+                        .map { it.toString() }, // Circular Text needs individual letters (graphemes)
                     radius = 100.dp,
                     textStyle = TextStyle(fontSize = 14.sp, fontFamily = B612Mono),
-                    modifier = Modifier.rotate(angle)
+                    modifier = Modifier.rotate(circularTextAngle)
                 )
             }
             AnimatedContent(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
                 targetState = infoSection,
                 transitionSpec = {
-                    scaleIn(tweenForTitle) with scaleOut(tweenForTitle)
+                    scaleIn(tween) with scaleOut(tween)
                 }
             ) {
                 Image(
@@ -583,6 +536,99 @@ private fun Quote(
     }
 }
 
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun PullQuote1(
+    bgImage: String,
+    pullQuote1Top: String,
+    pullQuote1Bottom: String,
+    pullQuote1Progress: Float,
+) {
+    Box(
+        Modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 48.dp)
+            .height(500.dp)
+    ) {
+        val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
+        Image(
+            painterResource(bgImage),
+            modifier = Modifier.fillMaxSize()
+                .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
+                .padding(8.dp)
+                .alpha(pullQuote1Progress * 2 + 0.6f)
+                .clip(shape),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            colorFilter = ColorFilter.tint(
+                Color(0xFFBEABA1),
+                BlendMode.ColorBurn
+            )
+        )
+        Column(
+            Modifier.fillMaxSize().padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            val textStyle = MaterialTheme.typography.displaySmall.copy(
+                fontSize = 36.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+            )
+            Text(
+                pullQuote1Top,
+                style = textStyle,
+                modifier = Modifier.graphicsLayer {
+                    translationY =
+                        pullQuote1Progress * -1000
+                }
+            )
+            Text(
+                pullQuote1Bottom,
+                style = textStyle,
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun ParallaxImages(
+    parallaxProgress: Float,
+    topImagePath: String,
+    bottomImagePath: String,
+) {
+    Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
+        Image(
+            painterResource(topImagePath),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.align(Alignment.TopEnd)
+                .zIndex(1f).height(400.dp)
+                .fillMaxWidth(0.8f)
+                .graphicsLayer {
+                    translationY = parallaxProgress * 500
+                }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
+        )
+        Image(
+            painterResource(bottomImagePath),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.align(Alignment.BottomStart)
+                .zIndex(1f)
+                .graphicsLayer {
+                    translationY = -(parallaxProgress * 400)
+                }.clip(
+                    RoundedCornerShape(
+                        bottomStartPercent = 100,
+                        bottomEndPercent = 100
+                    )
+                ).height(300.dp)
+                .fillMaxWidth(0.6f)
+        )
+    }
+}
 
 enum class InfoSection(val title: String, val imageName: String) {
     FactsAndHistory("FACTS & HISTORY", "history.png"),

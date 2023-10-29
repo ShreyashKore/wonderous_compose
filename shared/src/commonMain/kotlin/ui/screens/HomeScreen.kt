@@ -428,8 +428,9 @@ fun WonderIllustrationBg(
         ) = AnimatedVisibility(
             currentWonder == wonder,
             modifier = modifier,
-            enter = slideIn { IntOffset(maxWidthPx, 0) } + fadeIn(),
-            exit = slideOut { IntOffset(-maxWidthPx, 0) } + fadeOut(),
+            enter = slideIn(tween(2500, delayMillis = 600)) { IntOffset(maxWidthPx, 0) } +
+                    fadeIn(tween(1500, delayMillis = 500)),
+            exit = slideOut(tween(1500)) { IntOffset(-maxWidthPx, 0) } + fadeOut(tween(1000)),
         ) {
             Image(
                 painterResource(ImagePaths.common + "/" + "cloud-white.png"),
@@ -464,9 +465,6 @@ fun WonderIllustrationBg(
             )
         }
     }
-    for (w in Wonders) {
-        Clouds(w)
-    }
 
     AnimatedContent(
         wonder,
@@ -477,6 +475,7 @@ fun WonderIllustrationBg(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(wonder.bgTextureColor),
+            modifier = Modifier.fillMaxSize().scale(1.5f)
         )
     }
 
@@ -484,8 +483,8 @@ fun WonderIllustrationBg(
         CelestialBody(
             wonder = w,
         )
+        Clouds(w)
     }
-
 
 }
 
@@ -563,19 +562,19 @@ private val Wonder.fractionalScale
     }
 
 
-private val Wonder.bgTextureColor
+val Wonder.bgTextureColor
     get() = when (this) {
         ChichenItza -> Color(0xffDC762A)
         ChristRedeemer -> Color(0xffFAE5C8)
         Colosseum -> Color(0xFFFFFFFF)
-        GreatWall -> Color(0xff688750)
+        GreatWall -> Color(0xff8fad78)
         MachuPicchu -> Color(0xff688750)
         Petra -> Color(0xFF444B9B)
         PyramidsGiza -> Color(0xFF797FD8)
         TajMahal -> Color(0xFFC96454)
     }
 
-private val Wonder.bgTexture
+val Wonder.bgTexture
     get() = when (this) {
         ChristRedeemer, Colosseum, MachuPicchu, Petra -> ImagePaths.roller1
         ChichenItza, GreatWall, PyramidsGiza, TajMahal -> ImagePaths.roller2

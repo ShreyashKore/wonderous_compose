@@ -11,6 +11,11 @@ import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.pow
 
+/**
+ * Naive implementation of Layout which arranges the [text] on a circular path.
+ *
+ * To avoid separating graphemes; we just force user to pass [text] as list of graphemes
+ */
 @Composable
 fun CircularText(
     text: List<String>,
@@ -35,11 +40,9 @@ fun CircularText(
         val textWidthAvg = (textWidth / placeables.size).toInt()
         layout(diameterPx.toInt(), diameterPx.toInt()) {
             var x = -textWidthMid + textWidthAvg / 2
-            println("XXXXX =======")
             placeables.forEach { placeable ->
                 val y = (radiusPx.pow(2) - x.pow(2)).pow(.5f)
                 val angle = radiansToDegrees(atan((x) / y))
-                println("XXXXXX $x $y $angle")
                 placeable.placeRelativeWithLayer(
                     (x - placeable.width / 2f).toInt() + radiusPx.toInt(),
                     radiusPx.toInt() - y.toInt()
@@ -48,8 +51,6 @@ fun CircularText(
                 }
                 x += (if (evenWidth) textWidthAvg else placeable.width)
             }
-            println("XXXXX ======= XXX")
-
         }
     }
 

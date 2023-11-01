@@ -34,7 +34,8 @@ fun SharedAnimationContainer(
     initialWonder: Wonder = ChichenItza,
     openHomeScreen: Boolean = true
 ) = BoxWithConstraints {
-    val pagerState = rememberPagerState(initialPage = Wonders.indexOf(initialWonder) * 100_000)
+    val pagerState = rememberPagerState(initialPage = Wonders.indexOf(initialWonder) * 100_000,
+        pageCount = { Int.MAX_VALUE })
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
 
     val swipeableState = rememberSwipeableState(SharedScreen.Home)

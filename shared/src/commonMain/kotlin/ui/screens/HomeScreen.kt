@@ -124,7 +124,6 @@ fun HomeScreen(
 
         HorizontalPager(
             state = pagerState,
-            pageCount = Int.MAX_VALUE,
             beyondBoundsPageCount = 1,
             pageSpacing = 1000.dp, // large enough number to avoid overlap
             modifier = Modifier.fillMaxSize().padding(top = 80.dp),

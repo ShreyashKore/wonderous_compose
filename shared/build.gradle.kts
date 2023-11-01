@@ -7,6 +7,10 @@ plugins {
 }
 val ktorVersion = "2.3.2"
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
+}
+
 kotlin {
     androidTarget()
 
@@ -27,8 +31,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        extraSpecAttributes["resources"] =
-            "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
     }
 
     sourceSets {
@@ -59,25 +61,17 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api("androidx.activity:activity-compose:1.7.2")
+                api("androidx.activity:activity-compose:1.8.0")
                 api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.10.1")
+                api("androidx.core:core-ktx:1.12.0")
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("com.google.accompanist:accompanist-permissions:0.29.2-rc")
-                implementation("com.google.android.gms:play-services-maps:18.1.0")
+                implementation("com.google.android.gms:play-services-maps:18.2.0")
                 implementation("com.google.android.gms:play-services-location:21.0.1")
                 implementation("com.google.maps.android:maps-compose:2.11.2")
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
         val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
@@ -110,7 +104,4 @@ android {
     kotlin {
         jvmToolchain(11)
     }
-}
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
-    kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }

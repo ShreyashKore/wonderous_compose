@@ -71,7 +71,12 @@ fun ArtifactCarouselScreen(
 ) {
     val artifacts = remember(wonder) { HighlightData.forWonder(wonder) }
 
-    val pagerState = rememberPagerState(initialPage = Int.MAX_VALUE / 2)
+    val pagerState = rememberPagerState(
+        initialPage = Int.MAX_VALUE / 2,
+        initialPageOffsetFraction = 0f,
+        pageCount = { Int.MAX_VALUE }
+    )
+
     val currentArtifact = artifacts[pagerState.currentPage % artifacts.size]
     // background
     Box(Modifier.fillMaxSize()) {
@@ -128,7 +133,6 @@ fun ArtifactCarouselScreen(
 
         HorizontalPager(
             modifier = Modifier.height(300.dp),
-            pageCount = Int.MAX_VALUE,
             state = pagerState,
             contentPadding = PaddingValues(
                 horizontal = 100.dp

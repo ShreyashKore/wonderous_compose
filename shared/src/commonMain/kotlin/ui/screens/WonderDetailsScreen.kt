@@ -1,9 +1,14 @@
 package ui.screens
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,25 +38,25 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.getAssetPath
+import ui.screens.WonderDetailsDest.*
+import ui.theme.black
 import ui.theme.fgColor
+import ui.theme.white
 
 
-@OptIn(
-    ExperimentalMaterial3Api::class
-)
 @Composable
 fun WonderDetailsScreen(
     onPressHome: () -> Unit,
     wonder: Wonder,
 ) {
-    var currentSelected by remember { mutableStateOf(0) }
+    var currentSelected by remember { mutableStateOf(Editorial) }
 
     val navigateToTimeline = remember {
         { }
     }
     Scaffold(
         bottomBar = {
-            AppBar(
+            BottomBar(
                 wonder = wonder,
                 selected = currentSelected,
                 onSelected = { currentSelected = it },
@@ -60,30 +64,54 @@ fun WonderDetailsScreen(
             )
         }
     ) {
-        when (currentSelected) {
-            0 -> EditorialScreen(wonder = wonder, onPressHome)
-            1 -> PhotoGallery(wonder = wonder)
-            2 -> ArtifactCarouselScreen(wonder = wonder)
-            3 -> WonderEvents(wonder = wonder, navigateToTimeline)
+        AnimatedContent(
+            currentSelected,
+            transitionSpec = {
+                fadeIn() togetherWith fadeOut()
+            },
+        ) { currentSelected ->
+            when (currentSelected) {
+                Editorial -> EditorialScreen(wonder = wonder, onPressHome)
+                PhotoGallery -> PhotoGallery(wonder = wonder)
+                ArtifactCarousel -> ArtifactCarouselScreen(wonder = wonder)
+                WonderEvents -> WonderEvents(wonder = wonder, navigateToTimeline)
+            }
         }
     }
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
+@OptIn(ExperimentalResourceApi::class, ExperimentalStdlibApi::class)
 @Composable
-private fun AppBar(
+private fun BottomBar(
     wonder: Wonder,
-    selected: Int,
-    onSelected: (Int) -> Unit,
+    selected: WonderDetailsDest,
+    onSelected: (WonderDetailsDest) -> Unit,
     onPressHome: () -> Unit,
 ) {
+    val isBgTransparent = selected == PhotoGallery
+    val bgColor by animateColorAsState(
+        targetValue = if (isBgTransparent) Color.Transparent else white,
+        animationSpec = tween(500)
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (isBgTransparent) Color.White else black,
+        animationSpec = tween(500)
+    )
+    val wonderBtnBorderWidth by animateDpAsState(
+        targetValue = if (isBgTransparent) 2.dp else 6.dp,
+        animationSpec = tween(800)
+    )
     Box(
         Modifier
             .fillMaxWidth()
-            .height(76.dp)
+            .height(82.dp)
     ) {
-        Box(Modifier.padding(top = 12.dp).fillMaxSize().background(Color.White))
+
+        Box(
+            Modifier.padding(top = 12.dp).fillMaxSize()
+                .background(bgColor)
+        )
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 12.dp),
             verticalAlignment = Alignment.Bottom
@@ -92,24 +120,29 @@ private fun AppBar(
                 painterResource(wonder.getAssetPath("wonder-button.png")),
                 contentDescription = "home",
                 modifier = Modifier
-                    .border(BorderStroke(width = 6.dp, Color.White), CircleShape)
-                    .size(80.dp)
-                    .padding(6.dp)
+                    .size(76.dp)
+                    .background(white, CircleShape)
+                    .padding(wonderBtnBorderWidth)
                     .clip(CircleShape)
                     .background(wonder.fgColor)
                     .clickable {
                         onPressHome()
                     }
+
             )
             Row(
                 Modifier.weight(1f).height(64.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                AppBarIcon("editorial", selected = selected == 0, onClick = { onSelected(0) })
-                AppBarIcon("photos", selected = selected == 1, onClick = { onSelected(1) })
-                AppBarIcon("artifacts", selected = selected == 2, onClick = { onSelected(2) })
-                AppBarIcon("timeline", selected = selected == 3, onClick = { onSelected(3) })
+                entries.map { destination ->
+                    AppBarIcon(
+                        destination.icon,
+                        selected = selected == destination,
+                        unSelectedColor = contentColor,
+                        onClick = { onSelected(destination) },
+                    )
+                }
             }
         }
     }
@@ -120,17 +153,26 @@ private fun AppBar(
 private fun AppBarIcon(
     icon: String,
     selected: Boolean = false,
+    unSelectedColor: Color,
     onClick: () -> Unit
 ) {
-    val iconImgPath = "${ImagePaths.common}/tab-${icon}${if (selected) "-active" else ""}.png"
+    val iconImgPath = "${ImagePaths.common}/3.0x/tab-${icon}${if (selected) "-active" else ""}.png"
+    val iconTint = if (selected) MaterialTheme.colorScheme.primary else unSelectedColor
     IconButton(
         onClick = onClick
     ) {
         Icon(
             painterResource(iconImgPath),
             contentDescription = icon,
-            modifier = Modifier.size(28.dp),
-            tint = MaterialTheme.colorScheme.primary
+            modifier = Modifier.size(26.dp),
+            tint = iconTint
         )
     }
+}
+
+private enum class WonderDetailsDest(val title: String, val icon: String) {
+    Editorial("Editorial", "editorial"),
+    PhotoGallery("Photo Gallery", "photos"),
+    ArtifactCarousel("Artifact Carousel", "artifacts"),
+    WonderEvents("Wonder Events", "timeline")
 }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -49,8 +51,10 @@ import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.flattened
 import ui.theme.TenorSans
+import ui.theme.accent2
 import ui.theme.black
 import ui.theme.greyStrong
+import ui.theme.offWhite
 import ui.theme.white
 import utils.StringUtils.getYrSuffix
 import kotlin.math.absoluteValue
@@ -66,14 +70,20 @@ fun WonderEvents(
 ) = BoxWithConstraints(Modifier.background(black)) {
     val wonderEvents = wonder.events
 
-    val bgHeight = maxHeight * 0.6f
-    val sheetHeight = maxHeight * 0.4f
+    val bgHeight = maxHeight * 0.55f
+    val sheetHeight = maxHeight * 0.45f
 
-    val maxWidth = maxWidth
     BottomSheetScaffold(
         containerColor = black,
+        sheetContainerColor = black,
         sheetPeekHeight = sheetHeight,
-        sheetDragHandle = null,
+        sheetDragHandle = {
+            BottomSheetDefaults.DragHandle(
+                shape = MaterialTheme.shapes.large,
+                height = 4.dp,
+                color = accent2
+            )
+        },
         sheetContent = {
             LazyColumn(Modifier.background(black)) {
                 items(wonderEvents.toList()) { item ->
@@ -95,6 +105,7 @@ fun WonderEvents(
             modifier = Modifier.height(bgHeight).padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            // Wonder Image with Title
             Box(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.BottomCenter
@@ -107,7 +118,7 @@ fun WonderEvents(
                         .clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
                         .drawWithContent {
                             val gradient =
-                                Brush.verticalGradient(listOf(Color.Transparent, Color.Black))
+                                Brush.verticalGradient(listOf(Color.Transparent, black))
                             drawContent()
                             drawRect(gradient)
                         },
@@ -117,14 +128,16 @@ fun WonderEvents(
                 )
                 Text(
                     wonder.title,
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = offWhite,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
             SmallTimeLine(
-                modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(4.dp))
-                    .background(greyStrong).padding(vertical = 10.dp).fillMaxWidth().height(80.dp)
+                highLightedWonder = wonder,
+                modifier = Modifier
+                    .height(80.dp).fillMaxWidth()
             )
         }
     }
@@ -145,8 +158,8 @@ fun WonderEvents(
     Box(
         Modifier
             .zIndex(10f)
-            .padding(bottom = 80.dp)
             .background(black)
+            .padding(bottom = 80.dp)
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
     ) {

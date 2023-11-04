@@ -50,3 +50,10 @@ fun Offset.normalizedDirection(): Offset {
 fun Offset.roundToIntOffset() = IntOffset(
     x.roundToInt(), y.roundToInt()
 )
+
+
+fun extrapolate(start1: Float, end1: Float, start2: Float, end2: Float, x: Float): Float {
+    val slope = (end2 - start2) / (end1 - start1)
+    val y = start2 + (slope * (x - start1))
+    return y
+}

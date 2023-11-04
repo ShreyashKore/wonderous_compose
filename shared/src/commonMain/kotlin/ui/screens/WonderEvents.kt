@@ -2,10 +2,12 @@ package ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,11 +20,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,34 +39,48 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
+import ui.flattened
+import ui.theme.TenorSans
+import ui.theme.black
+import ui.theme.greyStrong
+import ui.theme.white
 import utils.StringUtils.getYrSuffix
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
+@OptIn(
+    ExperimentalResourceApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun WonderEvents(
     wonder: Wonder,
     navigateToTimeLine: () -> Unit,
-) = BoxWithConstraints {
+) = BoxWithConstraints(Modifier.background(black)) {
     val wonderEvents = wonder.events
 
     val bgHeight = maxHeight * 0.6f
     val sheetHeight = maxHeight * 0.4f
 
+    val maxWidth = maxWidth
     BottomSheetScaffold(
+        containerColor = black,
         sheetPeekHeight = sheetHeight,
+        sheetDragHandle = null,
         sheetContent = {
-            LazyColumn {
+            LazyColumn(Modifier.background(black)) {
                 items(wonderEvents.toList()) { item ->
-                    EventCard(
+                    TimelineEventCard(
                         year = item.first,
                         text = item.second,
+                        darkMode = true,
                         modifier = Modifier
                             .padding(horizontal = 20.dp, vertical = 10.dp),
                     )
@@ -82,7 +100,7 @@ fun WonderEvents(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Image(
-                    painterResource("images/chichen_itza/flattened.jpg"),
+                    painterResource(wonder.flattened),
                     modifier = Modifier
                         .fillMaxWidth(0.65f)
                         .fillMaxHeight()
@@ -94,16 +112,20 @@ fun WonderEvents(
                             drawRect(gradient)
                         },
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillWidth,
                     alignment = Alignment.BottomCenter,
                 )
                 Text(
                     wonder.title,
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
-            Box(Modifier.background(Color.Red).height(120.dp).fillMaxWidth())
+            SmallTimeLine(
+                modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(4.dp))
+                    .background(greyStrong).padding(vertical = 10.dp).fillMaxWidth().height(80.dp)
+            )
         }
     }
 
@@ -111,25 +133,33 @@ fun WonderEvents(
         modifier = Modifier.padding(12.dp).align(Alignment.TopEnd),
         onClick = navigateToTimeLine,
     ) {
-        Box(Modifier.clip(CircleShape).background(MaterialTheme.colorScheme.surface)) {
+        Box(Modifier.clip(CircleShape).background(black)) {
             Icon(
                 painterResource("${ImagePaths.common}/tab-timeline.png"),
                 contentDescription = "Open Timeline",
                 modifier = Modifier.padding(8.dp).size(28.dp),
+                tint = white
             )
         }
     }
     Box(
         Modifier
             .zIndex(10f)
-            .background(MaterialTheme.colorScheme.surface)
+            .padding(bottom = 80.dp)
+            .background(black)
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
     ) {
         Button(
             onClick = navigateToTimeLine,
+            colors = ButtonDefaults.filledTonalButtonColors(
+                containerColor = greyStrong,
+                contentColor = white
+            ),
+            contentPadding = PaddingValues(16.dp),
+            shape = RoundedCornerShape(4.dp),
             modifier = Modifier
-                .padding(bottom = 100.dp, start = 20.dp, end = 20.dp, top = 20.dp)
+                .padding(vertical = 20.dp, horizontal = 20.dp)
                 .fillMaxWidth()
         ) {
             Text("OPEN GLOBAL TIMELINE")
@@ -138,58 +168,64 @@ fun WonderEvents(
 
 }
 
+
 @Composable
-private fun EventCard(
-    year: Int,
-    text: String,
-    modifier: Modifier,
+fun TimelineEventCard(
+    year: Int, text: String,
+    darkMode: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
+    val backgroundColor = if (darkMode) greyStrong else white
+    val contentColor = if (darkMode) white else black
+
     Card(
         modifier = modifier,
-        backgroundColor = Color.Gray,
-        contentColor = Color.White,
-        elevation = 4.dp,
+        colors = CardDefaults.cardColors(backgroundColor, contentColor),
+        elevation = CardDefaults.cardElevation(0.dp),
     ) {
-        Row(Modifier.height(IntrinsicSize.Min).padding(8.dp)) {
-            Column(Modifier.width(80.dp)) {
-                Text("${year.absoluteValue}")
-                Text(getYrSuffix(year))
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min)
+                .padding(10.dp)
+        ) {
+            // Date
+            Column(
+                modifier = Modifier
+                    .width(75.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    text = "${year.absoluteValue}",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.W400,
+                        lineHeight = 24.sp,
+                        fontFamily = TenorSans
+                    )
+                )
+                Text(
+                    text = getYrSuffix(year),
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontFamily = TenorSans,
+                    )
+                )
             }
-            Divider(Modifier.padding(horizontal = 8.dp).width(2.dp).fillMaxHeight())
-            Text(text)
+
+            // Divider
+            Divider(
+                modifier = Modifier
+                    .width(1.dp)
+                    .fillMaxHeight()
+                    .padding(horizontal = 8.dp),
+            )
+
+            // Text content
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    lineHeight = 20.sp
+                )
+            )
         }
     }
+
 }
-
-
-/*
-val padding = 300.dp
-val startYear = -3000
-val endYear = 2200
-val totalYearRange = endYear - startYear
-
-val totalYearRangeInPx = totalYearRange * 200
-
-val scrollState = rememberScrollState()
-val scope = rememberCoroutineScope()
-
-fun jumpToYear(year: Int, animate: Boolean = false) {
-    val yearRatio = (year - startYear) / totalYearRange.toFloat()
-    val maxScroll = 4000f // Calculate
-    val newPos = yearRatio * maxScroll
-    scope.launch {
-        if (animate) scrollState.animateScrollTo(newPos.toInt())
-        else scrollState.scrollTo(newPos.toInt())
-    }
-}
-
-
-    Box(Modifier.fillMaxWidth().verticalScroll(scrollState)) {
-        Row {
-            Box(Modifier.background(Color.Red))
-            Box(Modifier.background(Color.Blue))
-            Box(Modifier.background(Color.Yellow))
-            Box(Modifier.background(Color.Green))
-        }
-    }
-*/

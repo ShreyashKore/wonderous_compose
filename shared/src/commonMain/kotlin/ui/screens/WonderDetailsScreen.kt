@@ -47,13 +47,11 @@ import ui.theme.white
 @Composable
 fun WonderDetailsScreen(
     onPressHome: () -> Unit,
+    navigateToTimeline: () -> Unit,
     wonder: Wonder,
 ) {
     var currentSelected by remember { mutableStateOf(Editorial) }
 
-    val navigateToTimeline = remember {
-        { }
-    }
     Scaffold(
         bottomBar = {
             BottomBar(

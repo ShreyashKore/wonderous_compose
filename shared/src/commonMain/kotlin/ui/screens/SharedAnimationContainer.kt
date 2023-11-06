@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,18 +25,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import ui.AppIcons
-import ui.theme.black
+import ui.composables.AppIconButton
 import ui.theme.greyStrong
-import ui.theme.white
 
 
 enum class SharedScreen {
@@ -55,7 +48,8 @@ enum class SharedScreen {
 @Composable
 fun SharedAnimationContainer(
     initialWonder: Wonder = ChichenItza,
-    openHomeScreen: Boolean = true
+    openTimelineScreen: (wonder: Wonder?) -> Unit,
+    openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
     var isMenuOpen by remember { mutableStateOf(false) }
@@ -90,20 +84,11 @@ fun SharedAnimationContainer(
                 .padding(horizontal = 8.dp, vertical = 8.dp)
                 .align(Alignment.TopCenter)
         ) {
-            IconButton(
-                onClick = { isMenuOpen = true },
-            ) {
-                Icon(
-                    painterResource(AppIcons.Menu),
-                    contentDescription = "Options",
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(black)
-                        .padding(8.dp)
-                        .size(32.dp),
-                    tint = white
-                )
-            }
+            AppIconButton(
+                iconPath = AppIcons.Menu,
+                contentDescription = "Options",
+                onClick = { isMenuOpen = true }
+            )
         }
     }
 
@@ -114,6 +99,9 @@ fun SharedAnimationContainer(
     ) {
         WonderDetailsScreen(
             wonder = currentWonder,
+            navigateToTimeline = {
+                openTimelineScreen(currentWonder)
+            },
             onPressHome = {
                 scope.launch {
                     swipeableState.animateTo(SharedScreen.Home)

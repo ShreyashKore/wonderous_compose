@@ -70,6 +70,8 @@ import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.AppIcons
+import ui.composables.AppIconButton
 import ui.getAssetPath
 import ui.theme.Raleway
 import ui.theme.TenorSans
@@ -90,10 +92,11 @@ val from = -3000
 val to = 2200
 val maxDuration = to - from
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun TimeLineScreen(
-    selectedWonder: Wonder? = null
+    selectedWonder: Wonder? = null,
+    onClickBack: () -> Unit,
 ) = BoxWithConstraints {
     val scrollState = rememberScrollState()
     val mainLineHeight = maxDuration.dp
@@ -156,8 +159,8 @@ fun TimeLineScreen(
         transitionSpec = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                animationSpec = tween(durationMillis = 500)
-            ) + fadeIn() togetherWith
+                animationSpec = tween(durationMillis = 500, delayMillis = 500)
+            ) + fadeIn(tween(delayMillis = 500)) togetherWith
                     slideOutOfContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Up,
                         animationSpec = tween(delayMillis = 2000)
@@ -185,6 +188,13 @@ fun TimeLineScreen(
         ),
         title = {
             Text("GLOBAL TIMELINE", fontSize = 14.sp, fontFamily = Raleway)
+        },
+        navigationIcon = {
+            AppIconButton(
+                iconPath = AppIcons.Prev,
+                contentDescription = "Back",
+                onClick = onClickBack
+            )
         }
     )
 }

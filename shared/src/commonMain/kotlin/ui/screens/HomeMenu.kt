@@ -20,21 +20,17 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -44,9 +40,9 @@ import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.AppIcons
+import ui.composables.AppIconButton
 import ui.homeBtn
 import ui.theme.fgColor
-import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
 
@@ -91,42 +87,23 @@ fun HomeMenu(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppHeader(
     onClickClose: () -> Unit,
     onToggleLanguage: () -> Unit,
 ) {
     Row(Modifier.fillMaxWidth().height(72.dp).padding(8.dp)) {
-        IconButton(
+        AppIconButton(
+            iconPath = AppIcons.Close,
+            contentDescription = "Close",
             onClick = onClickClose,
-        ) {
-            Image(
-                painterResource(AppIcons.Close),
-                contentDescription = "Close",
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(greyStrong)
-                    .padding(8.dp)
-                    .size(32.dp),
-                colorFilter = ColorFilter.tint(white)
-            )
-        }
+        )
         Spacer(Modifier.weight(1f))
-        IconButton(
+        AppIconButton(
+            iconPath = AppIcons.Info,
+            contentDescription = "Change Language",
             onClick = onToggleLanguage,
-        ) {
-            Icon(
-                Icons.Rounded.Settings,
-                contentDescription = "Change Language",
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(greyStrong)
-                    .padding(8.dp)
-                    .size(32.dp),
-                tint = white
-            )
-        }
+        )
     }
 }
 

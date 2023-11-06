@@ -40,12 +40,21 @@ sealed class Wonder(
 ) {
     val gps get() = GpsPosition(lat, lng)
     val titleWithBreaks: String get() = title.replaceFirst(' ', '\n')
+
+    companion object
 }
 
 val Wonders = listOf(
     GreatWall, Petra, Colosseum, ChichenItza, MachuPicchu,
     TajMahal, ChristRedeemer, PyramidsGiza,
 )
+
+fun Wonder.Companion.parse(name: String?): Wonder {
+    if (name == null) return ChichenItza
+    return Wonders.firstOrNull {
+        it.title.lowercase() == name.lowercase()
+    } ?: ChichenItza
+}
 
 data object ChichenItza : Wonder(
     title = "Chichen Itza",

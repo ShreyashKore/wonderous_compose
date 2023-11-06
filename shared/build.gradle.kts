@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.8.21"
 }
 val ktorVersion = "2.3.2"
+val precomposeVersion = "1.5.7"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
@@ -57,6 +58,8 @@ kotlin {
                 implementation("co.touchlab:kermit:2.0.0-RC5")
 
                 implementation("com.github.skydoves:orbital:0.2.4")
+
+                api("moe.tlaster:precompose:$precomposeVersion") // Navigation
             }
         }
         val androidMain by getting {

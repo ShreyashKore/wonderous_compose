@@ -1,10 +1,14 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import models.Wonder
+import models.parse
+import moe.tlaster.precompose.PreComposeApp
+import moe.tlaster.precompose.navigation.NavHost
+import moe.tlaster.precompose.navigation.path
+import moe.tlaster.precompose.navigation.query
+import moe.tlaster.precompose.navigation.rememberNavigator
 import ui.screens.SharedAnimationContainer
+import ui.screens.TimeLineScreen
 import ui.theme.ColorScheme
 import ui.theme.Typography
 
@@ -14,11 +18,32 @@ fun App() {
         colorScheme = ColorScheme,
         typography = Typography
     ) {
-        Column(
-            Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            SharedAnimationContainer()
+        PreComposeApp {
+            val navigator = rememberNavigator()
+            NavHost(
+                navigator = navigator,
+                initialRoute = "/wonder/chichenitza"
+            ) {
+                scene("/wonder/{type}") { backStackEntry ->
+                    val id = backStackEntry.path<String>("type")
+                    val wonder = Wonder.parse(id)
+                    SharedAnimationContainer(
+                        initialWonder = wonder,
+                        openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
+                    )
+                }
+                scene("/timeline") { backStackEntry ->
+                    val id = backStackEntry.query<String>("type")
+                    val wonder = Wonder.parse(id)
+                    TimeLineScreen(
+                        selectedWonder = wonder,
+                        onClickBack = {
+                            navigator.goBack()
+                        },
+                    )
+                }
+            }
+
         }
     }
 }

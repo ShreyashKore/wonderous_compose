@@ -1,5 +1,8 @@
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.IntOffset
 import models.Wonder
 import models.parse
 import moe.tlaster.precompose.PreComposeApp
@@ -7,6 +10,7 @@ import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.query
 import moe.tlaster.precompose.navigation.rememberNavigator
+import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
 import ui.theme.ColorScheme
@@ -16,7 +20,7 @@ import ui.theme.Typography
 fun App() {
     MaterialTheme(
         colorScheme = ColorScheme,
-        typography = Typography
+        typography = Typography,
     ) {
         PreComposeApp {
             val navigator = rememberNavigator()
@@ -32,7 +36,13 @@ fun App() {
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
                     )
                 }
-                scene("/timeline") { backStackEntry ->
+                scene(
+                    "/timeline",
+                    navTransition = NavTransition(
+                        createTransition = slideIn { IntOffset(it.width, 0) },
+                        destroyTransition = slideOut { IntOffset(it.width, 0) },
+                    )
+                ) { backStackEntry ->
                     val id = backStackEntry.query<String>("type")
                     val wonder = Wonder.parse(id)
                     TimeLineScreen(

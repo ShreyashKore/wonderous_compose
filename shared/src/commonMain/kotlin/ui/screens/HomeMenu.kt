@@ -27,6 +27,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,9 +55,19 @@ fun HomeMenu(
     data: Wonder,
     onPressBack: () -> Unit,
     onChangeWonder: (Wonder) -> Unit,
+    openTimeline: () -> Unit,
+    openCollection: () -> Unit,
     modifier: Modifier = Modifier,
 ) = BoxWithConstraints {
     val btnSize = (maxWidth / 5).coerceIn(60.dp, 100.dp)
+    var isAboutDialogOpen by remember {
+        mutableStateOf(false)
+    }
+
+
+    if (isAboutDialogOpen) {
+        AboutApp(onDismissRequest = { isAboutDialogOpen = false })
+    }
 
     Column(modifier) {
         // AppHeader
@@ -74,13 +88,35 @@ fun HomeMenu(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.height(50.dp))
+                // Wonder Buttons Grid
                 WonderBtnsGrid(
                     currentWonder = data,
                     onSelectWonder = onChangeWonder,
                     btnSize = btnSize,
                 )
-                Spacer(modifier = Modifier.height(24.dp).background(Color.Green))
-                BottomButtons()
+                Spacer(modifier = Modifier.height(24.dp))
+                // Bottom buttons
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    BottomButton(
+                        onClick = openTimeline,
+                        icon = AppIcons.Timeline,
+                        text = "Explore the timeline"
+                    )
+                    Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
+                    BottomButton(
+                        onClick = openCollection,
+                        icon = AppIcons.Collection,
+                        text = "View your collections"
+                    )
+                    Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
+                    BottomButton(
+                        onClick = { isAboutDialogOpen = true },
+                        icon = AppIcons.Info,
+                        text = "About this app"
+                    )
+                }
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -165,38 +201,6 @@ fun WonderBtnsGrid(
 }
 
 
-@Composable
-fun BottomButtons(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        BottomButton(
-            onClick = { /* Handle Timeline Button Click */ },
-            icon = AppIcons.Timeline,
-            text = "Explore the timeline"
-        )
-
-        Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
-
-        BottomButton(
-            onClick = { /* Handle Collection Button Click */ },
-            icon = AppIcons.Collection,
-            text = "View your collections"
-        )
-
-        Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
-
-        BottomButton(
-            onClick = { /* Handle Info Button Click */ },
-            icon = AppIcons.Info,
-            text = "About this app"
-        )
-    }
-}
-
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun BottomButton(
@@ -206,6 +210,7 @@ private fun BottomButton(
 ) {
     TextButton(
         onClick = onClick,
+        modifier = Modifier.padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

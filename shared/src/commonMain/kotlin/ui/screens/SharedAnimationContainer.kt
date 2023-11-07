@@ -20,8 +20,8 @@ import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,7 +52,7 @@ fun SharedAnimationContainer(
     openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
-    var isMenuOpen by remember { mutableStateOf(false) }
+    var isMenuOpen by rememberSaveable { mutableStateOf(false) }
     val pagerState = rememberPagerState(initialPage = Wonders.indexOf(initialWonder) * 100_000,
         pageCount = { Int.MAX_VALUE })
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
@@ -128,7 +128,9 @@ fun SharedAnimationContainer(
                 }
                 isMenuOpen = false
             },
-            modifier = Modifier.fillMaxSize().background(greyStrong.copy(.8f))
+            modifier = Modifier.fillMaxSize().background(greyStrong.copy(.8f)),
+            openTimeline = { openTimelineScreen(currentWonder) },
+            openCollection = {}
         )
     }
 

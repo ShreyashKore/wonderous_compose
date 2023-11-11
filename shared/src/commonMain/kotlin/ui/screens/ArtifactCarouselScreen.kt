@@ -27,8 +27,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -47,7 +45,6 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.FixedScale
@@ -59,7 +56,10 @@ import androidx.compose.ui.unit.sp
 import com.seiko.imageloader.rememberImagePainter
 import data.HighlightData
 import models.Wonder
+import ui.composables.LongButton
 import ui.theme.TenorSans
+import ui.theme.offWhite
+import ui.theme.white
 import kotlin.math.absoluteValue
 
 @OptIn(
@@ -100,11 +100,11 @@ fun ArtifactCarouselScreen(
         }
         Box(
             modifier = Modifier.align(Alignment.BottomCenter)
-                .scale(scaleX = 2.6f, scaleY = 1f)
+                .scale(scaleX = 2.2f, scaleY = 1f)
                 .clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
-                .background(Color.Yellow.copy(alpha = 0.2f).compositeOver(Color.White))
+                .background(offWhite)
                 .fillMaxWidth()
-                .fillMaxHeight(0.45f)
+                .fillMaxHeight(0.5f)
 
         )
     }
@@ -131,11 +131,8 @@ fun ArtifactCarouselScreen(
             }
         }
 
-
-        Spacer(Modifier.weight(1f))
-
         HorizontalPager(
-            modifier = Modifier.height(300.dp),
+            modifier = Modifier.weight(.65f),
             state = pagerState,
             contentPadding = PaddingValues(
                 horizontal = 100.dp
@@ -165,33 +162,31 @@ fun ArtifactCarouselScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        AnimatedContent(
-            targetState = currentArtifact.title
-        ) { title ->
-            Text(
-                title,
-                fontFamily = TenorSans,
-                fontSize = 26.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-        }
-
-        Spacer(Modifier.weight(0.5f))
-
-        Button(
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 12.dp)
-                .fillMaxWidth()
-                .padding(20.dp),
-            onClick = openAllArtifactsScreen,
-            colors = ButtonDefaults.filledTonalButtonColors(
-                containerColor = Color.DarkGray,
-                contentColor = Color.White
-            )
+        Column(
+            Modifier.fillMaxHeight(.35f),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("BROWSE ALL ARTIFACTS", Modifier.padding(12.dp))
+            AnimatedContent(
+                targetState = currentArtifact.title,
+                transitionSpec = {
+                    fadeIn() togetherWith fadeOut()
+                }
+            ) { title ->
+                Text(
+                    title,
+                    fontFamily = TenorSans,
+                    fontSize = 26.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+            }
+
+            Spacer(Modifier.weight(1f))
+
+            LongButton(label = "BROWSE ALL ARTIFACTS", onClick = openAllArtifactsScreen)
         }
+
+
 
         Spacer(Modifier.height(80.dp))
     }
@@ -218,7 +213,7 @@ private fun ArtifactImage(
             painter = imagePainter,
             contentDescription = name,
             modifier = Modifier
-                .border(1.dp, SolidColor(Color.White), RoundedCornerShape(percent = 100))
+                .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))
                 .padding(12.dp).clip(RoundedCornerShape(percent = 100))
                 .size(DpSize(width = width, height = height)),
             contentScale = ContentScale.Crop

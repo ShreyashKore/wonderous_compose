@@ -13,7 +13,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -467,7 +467,7 @@ fun WonderIllustrationBg(
 
     AnimatedContent(
         wonder,
-        transitionSpec = { fadeIn() with fadeOut() }
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
     ) { wonder ->
         Image(
             painterResource(wonder.bgTexture),

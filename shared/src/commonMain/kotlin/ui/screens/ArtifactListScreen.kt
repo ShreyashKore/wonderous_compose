@@ -32,7 +32,7 @@ import models.Wonder
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ArtifactScreen(
+fun ArtifactListScreen(
     wonder: Wonder
 ) {
     Column(

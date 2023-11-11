@@ -49,6 +49,7 @@ fun WonderDetailsScreen(
     onPressHome: () -> Unit,
     navigateToTimeline: () -> Unit,
     openArtifactDetailsScreen: (id: String) -> Unit,
+    openArtifactsScreen: () -> Unit,
     wonder: Wonder,
 ) {
     var currentSelected by rememberSaveable { mutableStateOf(Editorial) }
@@ -75,7 +76,7 @@ fun WonderDetailsScreen(
                 ArtifactCarousel -> ArtifactCarouselScreen(
                     wonder = wonder,
                     openArtifactDetailsScreen = openArtifactDetailsScreen,
-                    openAllArtifactsScreen = { },
+                    openAllArtifactsScreen = openArtifactsScreen,
                 )
 
                 WonderEvents -> WonderEvents(wonder = wonder, navigateToTimeline)

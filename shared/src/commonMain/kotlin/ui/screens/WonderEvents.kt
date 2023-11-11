@@ -1,5 +1,6 @@
 package ui.screens
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,8 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -49,6 +47,7 @@ import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
+import ui.composables.LongButton
 import ui.flattened
 import ui.theme.TenorSans
 import ui.theme.accent2
@@ -163,20 +162,7 @@ fun WonderEvents(
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
     ) {
-        Button(
-            onClick = navigateToTimeLine,
-            colors = ButtonDefaults.filledTonalButtonColors(
-                containerColor = greyStrong,
-                contentColor = white
-            ),
-            contentPadding = PaddingValues(16.dp),
-            shape = RoundedCornerShape(4.dp),
-            modifier = Modifier
-                .padding(vertical = 20.dp, horizontal = 20.dp)
-                .fillMaxWidth()
-        ) {
-            Text("OPEN GLOBAL TIMELINE")
-        }
+        LongButton(label = "OPEN GLOBAL TIMELINE", onClick = navigateToTimeLine)
     }
 
 }

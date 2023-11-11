@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -48,7 +49,7 @@ fun CompassDivider(
         Box(modifier = Modifier.weight(1f)) {
             Divider(
                 color = linesColor ?: MaterialTheme.colorScheme.primary,
-                thickness = 1.dp,
+                thickness = Dp.Hairline,
                 modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterEnd)
             )
         }
@@ -67,7 +68,7 @@ fun CompassDivider(
         Box(modifier = Modifier.weight(1f)) {
             Divider(
                 color = linesColor ?: MaterialTheme.colorScheme.primary,
-                thickness = 1.dp,
+                thickness = Dp.Hairline,
                 modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterStart).graphicsLayer(
                     rotationX = if (isExpanded) 0f else 1f
                 )

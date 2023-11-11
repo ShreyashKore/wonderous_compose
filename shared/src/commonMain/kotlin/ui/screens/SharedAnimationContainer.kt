@@ -50,6 +50,7 @@ fun SharedAnimationContainer(
     initialWonder: Wonder = ChichenItza,
     openTimelineScreen: (wonder: Wonder?) -> Unit,
     openArtifactDetailsScreen: (id: String) -> Unit,
+    openArtifactListScreen: (wonder: Wonder) -> Unit,
     openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
@@ -109,6 +110,7 @@ fun SharedAnimationContainer(
                     swipeableState.animateTo(SharedScreen.Home)
                 }
             },
+            openArtifactsScreen = { openArtifactListScreen(currentWonder) }
         )
     }
 

@@ -3,6 +3,7 @@ import androidx.compose.animation.slideOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.IntOffset
+import models.ChichenItza
 import models.Wonder
 import models.parse
 import moe.tlaster.precompose.PreComposeApp
@@ -12,6 +13,7 @@ import moe.tlaster.precompose.navigation.query
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.screens.ArtifactDetailsScreen
+import ui.screens.ArtifactListScreen
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
 import ui.theme.ColorScheme
@@ -35,7 +37,8 @@ fun App() {
                     SharedAnimationContainer(
                         initialWonder = wonder,
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
-                        openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") }
+                        openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
+                        openArtifactListScreen = { navigator.navigate("/search") }
                     )
                 }
                 scene(
@@ -68,8 +71,19 @@ fun App() {
                         onClickBack = { navigator.goBack() },
                     )
                 }
-            }
 
+                scene(
+                    "/search",
+                    navTransition = NavTransition(
+                        createTransition = slideIn { IntOffset(it.width, 0) },
+                        destroyTransition = slideOut { IntOffset(it.width, 0) },
+                    )
+                ) { backStackEntry ->
+                    ArtifactListScreen(
+                        wonder = ChichenItza
+                    )
+                }
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -457,7 +457,7 @@ fun InfoTitle(
                         }
                     }.wrapContentSize(unbounded = true),
                 targetState = infoSection,
-                transitionSpec = { fadeIn(tween) with fadeOut(tween) },
+                transitionSpec = { fadeIn(tween) togetherWith fadeOut(tween) },
             ) {
                 CircularText(
                     text = it.title.toCharArray()
@@ -471,7 +471,7 @@ fun InfoTitle(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
                 targetState = infoSection,
                 transitionSpec = {
-                    scaleIn(tween) with scaleOut(tween)
+                    scaleIn(tween) togetherWith scaleOut(tween)
                 }
             ) {
                 Image(

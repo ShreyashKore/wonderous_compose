@@ -6,11 +6,12 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -68,6 +69,8 @@ import kotlin.math.absoluteValue
 @Composable
 fun ArtifactCarouselScreen(
     wonder: Wonder,
+    openArtifactDetailsScreen: (id: String) -> Unit,
+    openAllArtifactsScreen: () -> Unit,
 ) {
     val artifacts = remember(wonder) { HighlightData.forWonder(wonder) }
 
@@ -83,7 +86,7 @@ fun ArtifactCarouselScreen(
         AnimatedContent(
             currentArtifact.imageUrl,
             transitionSpec = {
-                fadeIn(tween(durationMillis = 600)) with
+                fadeIn(tween(durationMillis = 600)) togetherWith
                         fadeOut(tween(durationMillis = 800))
             },
         ) { imageUrl ->
@@ -121,7 +124,7 @@ fun ArtifactCarouselScreen(
                 )
                 IconButton(
                     modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = { }
+                    onClick = openAllArtifactsScreen
                 ) {
                     Icon(Icons.Rounded.Search, contentDescription = null)
                 }
@@ -141,9 +144,10 @@ fun ArtifactCarouselScreen(
             verticalAlignment = Alignment.Bottom,
         ) { pageNo ->
             val index = pageNo % artifacts.size
+            val artifact = artifacts[index]
             ArtifactImage(
-                name = artifacts[index].title,
-                image = artifacts[index].imageUrlSmall,
+                name = artifact.title,
+                image = artifact.imageUrlSmall,
                 isSelected = pagerState.currentPage == pageNo,
                 modifier = Modifier
                     .graphicsLayer {
@@ -153,6 +157,8 @@ fun ArtifactCarouselScreen(
                                 ).absoluteValue
                         println("Page Offset $pageOffset")
                         translationY = lerp(0.dp, 40.dp, fraction = pageOffset).toPx()
+                    }.clickable {
+                        openArtifactDetailsScreen(artifact.id)
                     }
             )
         }
@@ -178,7 +184,7 @@ fun ArtifactCarouselScreen(
                 .padding(horizontal = 24.dp, vertical = 12.dp)
                 .fillMaxWidth()
                 .padding(20.dp),
-            onClick = {},
+            onClick = openAllArtifactsScreen,
             colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = Color.DarkGray,
                 contentColor = Color.White

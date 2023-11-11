@@ -49,6 +49,7 @@ enum class SharedScreen {
 fun SharedAnimationContainer(
     initialWonder: Wonder = ChichenItza,
     openTimelineScreen: (wonder: Wonder?) -> Unit,
+    openArtifactDetailsScreen: (id: String) -> Unit,
     openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
@@ -102,6 +103,7 @@ fun SharedAnimationContainer(
             navigateToTimeline = {
                 openTimelineScreen(currentWonder)
             },
+            openArtifactDetailsScreen = openArtifactDetailsScreen,
             onPressHome = {
                 scope.launch {
                     swipeableState.animateTo(SharedScreen.Home)

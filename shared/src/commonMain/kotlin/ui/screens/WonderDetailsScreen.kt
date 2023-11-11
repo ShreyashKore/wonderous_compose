@@ -48,6 +48,7 @@ import ui.theme.white
 fun WonderDetailsScreen(
     onPressHome: () -> Unit,
     navigateToTimeline: () -> Unit,
+    openArtifactDetailsScreen: (id: String) -> Unit,
     wonder: Wonder,
 ) {
     var currentSelected by rememberSaveable { mutableStateOf(Editorial) }
@@ -71,7 +72,12 @@ fun WonderDetailsScreen(
             when (currentSelected) {
                 Editorial -> EditorialScreen(wonder = wonder, onPressHome)
                 PhotoGallery -> PhotoGallery(wonder = wonder)
-                ArtifactCarousel -> ArtifactCarouselScreen(wonder = wonder)
+                ArtifactCarousel -> ArtifactCarouselScreen(
+                    wonder = wonder,
+                    openArtifactDetailsScreen = openArtifactDetailsScreen,
+                    openAllArtifactsScreen = { },
+                )
+
                 WonderEvents -> WonderEvents(wonder = wonder, navigateToTimeline)
             }
         }

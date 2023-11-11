@@ -11,6 +11,7 @@ import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.query
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
+import ui.screens.ArtifactDetailsScreen
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
 import ui.theme.ColorScheme
@@ -34,6 +35,7 @@ fun App() {
                     SharedAnimationContainer(
                         initialWonder = wonder,
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
+                        openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") }
                     )
                 }
                 scene(
@@ -50,6 +52,20 @@ fun App() {
                         onClickBack = {
                             navigator.goBack()
                         },
+                    )
+                }
+
+                scene(
+                    "/artifact/{id}",
+                    navTransition = NavTransition(
+                        createTransition = slideIn { IntOffset(it.width, 0) },
+                        destroyTransition = slideOut { IntOffset(it.width, 0) },
+                    )
+                ) { backStackEntry ->
+                    val id = backStackEntry.path<String>("id")!!
+                    ArtifactDetailsScreen(
+                        artifactId = id,
+                        onClickBack = { navigator.goBack() },
                     )
                 }
             }

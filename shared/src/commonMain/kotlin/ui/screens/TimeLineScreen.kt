@@ -36,6 +36,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -88,19 +89,30 @@ import utils.dashedBorder
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-val from = -3000
-val to = 2200
-val maxDuration = to - from
+const val StartYear = -3000
+const val EndYear = 2200
+const val timelineDuration = EndYear - StartYear
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeLineScreen(
     selectedWonder: Wonder? = null,
     onClickBack: () -> Unit,
 ) = BoxWithConstraints {
     val scrollState = rememberScrollState()
-    val mainLineHeight = maxDuration.dp
+    val timelineHeight = timelineDuration.dp
     val padding = maxHeight / 2
+
+    LaunchedEffect(selectedWonder) {
+        val initialScrollPos = (((selectedWonder?.startYr?.minus(StartYear))?.toFloat()
+            ?: 200f) / timelineDuration * scrollState.maxValue).toInt()
+        // first snap timeline to scroll pos just above the selected wonder
+        scrollState.scrollTo(initialScrollPos - 2000)
+        scrollState.animateScrollTo(
+            initialScrollPos,
+            animationSpec = tween(durationMillis = 2000)
+        )
+    }
 
     val scrollFraction by remember {
         derivedStateOf {
@@ -110,24 +122,24 @@ fun TimeLineScreen(
 
     fun getScrollFraction() = scrollFraction
 
-    val yearInt = (getScrollFraction() * maxDuration - 3000).roundToInt()
+    val currentYear = (getScrollFraction() * timelineDuration - 3000).roundToInt()
 
     Box(
         Modifier.background(black)
             .verticalScroll(scrollState)
             .padding(vertical = padding)
-            .height(mainLineHeight)
+            .height(timelineHeight)
     ) {
 
         Row {
-            TimeStrip(
-                currentYear = yearInt,
-                range = from..to,
+            TimeStripAndEventMarkers(
+                currentYear = currentYear,
+                range = StartYear..EndYear,
                 step = 100,
                 modifier = Modifier.weight(1f).fillMaxHeight().padding(start = 16.dp),
             )
 
-            LineGroup(
+            WonderLines(
                 getScrollFraction = ::getScrollFraction,
                 selectedWonder = selectedWonder,
                 modifier = Modifier.weight(4f)
@@ -135,7 +147,7 @@ fun TimeLineScreen(
         }
 
         CurrentYearLine(
-            currentYear = yearInt,
+            currentYear = currentYear,
             modifier = Modifier.fillMaxWidth()
                 .offset { IntOffset(0, scrollState.value) }
         )
@@ -152,7 +164,7 @@ fun TimeLineScreen(
 
     // Events popup
     AnimatedContent(
-        targetState = AllTimeLineEvents.firstOrNull { it.year in yearInt.highlightRange },
+        targetState = AllTimeLineEvents.firstOrNull { it.year in currentYear.eventHighlightRange },
         modifier = Modifier.fillMaxWidth()
             .padding(top = 80.dp)
             .padding(horizontal = 20.dp, vertical = 10.dp),
@@ -264,7 +276,7 @@ fun SmallTimeLine(
         }
     }
 ) {
-    LineGroup(
+    WonderLines(
         getScrollFraction = { 0f },
         modifier = Modifier.padding(12.dp),
         outlineOnly = true,
@@ -281,7 +293,7 @@ fun SmallTimeLine(
 
 
 @Composable
-fun LineGroup(
+fun WonderLines(
     getScrollFraction: () -> Float,
     selectedWonder: Wonder? = null,
     outlineOnly: Boolean = false,
@@ -398,7 +410,7 @@ fun WonderLine(
 
 
 @Composable
-fun TimeStrip(
+private fun TimeStripAndEventMarkers(
     currentYear: Int,
     range: IntRange,
     step: Int,
@@ -419,7 +431,7 @@ fun TimeStrip(
     }
     Box(Modifier.weight(.6f).fillMaxHeight()) {
         AllTimeLineEvents.map {
-            val highLighted = it.year in currentYear.highlightRange
+            val highLighted = it.year in currentYear.eventHighlightRange
             val verticalBias = extrapolate(
                 start1 = 0f,
                 end1 = 1f,
@@ -488,7 +500,6 @@ fun Line(
         if (content != null) {
             Box(Modifier.fillMaxWidth().height(thumbSize).offset {
                 val scroll = ((getScroll() - fromFraction) / fraction).coerceIn(0f, 1f)
-                println("SCROLLL ${scroll}")
                 val offsetPx = lerp(0, thumbEndOffset.roundToPx(), scroll)
                 IntOffset(0, offsetPx)
             }) {
@@ -511,4 +522,7 @@ fun inverseLerp(start: Float, end: Float, value: Float): Float {
     return (value - start) / (end - start)
 }
 
-private val Int.highlightRange get() = (this - 4..this + 4)
+/**
+ * Range of year in which the event popup is shown and event marker is highlighted
+ */
+private val Int.eventHighlightRange get() = (this - 4..this + 4)

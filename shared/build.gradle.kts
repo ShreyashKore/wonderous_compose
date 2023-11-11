@@ -3,7 +3,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 val ktorVersion = "2.3.2"
 val precomposeVersion = "1.5.7"
@@ -54,7 +54,7 @@ kotlin {
                 api("io.github.oleksandrbalan:textflow:1.1.0")
 
                 implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
                 implementation("co.touchlab:kermit:2.0.0-RC5")
 
                 implementation("com.github.skydoves:orbital:0.2.4")
@@ -68,6 +68,8 @@ kotlin {
                 api("androidx.appcompat:appcompat:1.6.1")
                 api("androidx.core:core-ktx:1.12.0")
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("io.ktor:ktor-client-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("com.google.accompanist:accompanist-permissions:0.29.2-rc")
                 implementation("com.google.android.gms:play-services-maps:18.2.0")
                 implementation("com.google.android.gms:play-services-location:21.0.1")

@@ -1,5 +1,22 @@
 package models
 
+import data.search_data.ChichenSearchData
+import data.search_data.ChichenSearchSuggestions
+import data.search_data.ChristRedeemerSearchData
+import data.search_data.ChristRedeemerSearchSuggestions
+import data.search_data.ColosseumSearchData
+import data.search_data.ColosseumSearchSuggestions
+import data.search_data.GreatWallSearchData
+import data.search_data.GreatWallSearchSuggestions
+import data.search_data.MachuPicchuSearchData
+import data.search_data.MachuPicchuSearchSuggestions
+import data.search_data.PetraSearchData
+import data.search_data.PetraSearchSuggestions
+import data.search_data.PyramidsGizaSearchData
+import data.search_data.PyramidsGizaSearchSuggestions
+import data.search_data.TajMahalSearchData
+import data.search_data.TajMahalSearchSuggestions
+
 
 sealed class Wonder(
     val title: String,
@@ -89,7 +106,8 @@ data object ChichenItza : Wonder(
         1527 to "Invaded by Spanish Conquistador Francisco de Montejo",
         1535 to "All Spanish are driven from the Yucatán Peninsula",
     ),
-    searchData = ChichenItzaSearchData,
+    searchData = ChichenSearchData,
+    searchSuggestions = ChichenSearchSuggestions,
     unsplashCollectionId = "SUK0tuMnLLw"
 )
 
@@ -128,6 +146,8 @@ data object ChristRedeemer : Wonder(
         1931 to "Construction of the statue was completed, standing 98’ tall with a 92’ wide arm span.",
         2006 to "A chapel was consecrated at the statue’s base to Our Lady of Aparecida to mark the statue’s 75th anniversary.",
     ),
+    searchData = ChristRedeemerSearchData,
+    searchSuggestions = ChristRedeemerSearchSuggestions,
     unsplashCollectionId = "dPgX5iK8Ufo"
 )
 
@@ -167,6 +187,8 @@ data object Petra : Wonder(
         1958 to "Excavations led on the site by the British School of Archaeology and the American Center of Oriental Research.",
         1989 to "Appeared in the film Indiana Jones and The Last Crusade.",
     ),
+    searchData = PetraSearchData,
+    searchSuggestions = PetraSearchSuggestions,
     unsplashCollectionId = "qWQJbDvCMW8",
 )
 
@@ -206,6 +228,8 @@ data object Colosseum : Wonder(
         1829 to "Preservation of the Colosseum officially began, after more than a millennia of dilapidation and vandalism. Pope Pius VIII was notably devoted to this project.",
         1990 to "A restoration project was undertaken to ensure the Colosseum remained a major tourist attraction for Rome. It currently stands as one of the greatest sources of tourism revenue in Italy.",
     ),
+    searchData = ColosseumSearchData,
+    searchSuggestions = ColosseumSearchSuggestions,
     unsplashCollectionId = "VPdti8Kjq9o",
 )
 
@@ -243,6 +267,8 @@ data object PyramidsGiza : Wonder(
         1979 to "Designated a UNESCO World Heritage Site to prevent any more unauthorized plundering and vandalism.",
         1990 to "Discovery of laborer’s districts suggest that the workers building the pyramids were not slaves, and an ingenious building method proved a relatively small work-force was required to build such immense structures.",
     ),
+    searchData = PyramidsGizaSearchData,
+    searchSuggestions = PyramidsGizaSearchSuggestions,
     lat = 29.9792,
     lng = 31.1342,
     unsplashCollectionId = "CSEvB5Tza9E",
@@ -283,6 +309,8 @@ data object MachuPicchu : Wonder(
         1964 to "Surrounding sites were excavated thoroughly by Gene Savoy, who found a much more suitable candidate for Vilcabamba in the ruin known as Espíritu Pampa.",
         1997 to "Since its rediscovery, growing numbers of tourists have visited the Machu Picchu each year, with numbers exceeding 1.4 million in 2017.",
     ),
+    searchData = MachuPicchuSearchData,
+    searchSuggestions = MachuPicchuSearchSuggestions,
     unsplashCollectionId = "wUhgZTyUnl8"
 )
 
@@ -320,6 +348,8 @@ data object GreatWall : Wonder(
         618 to "The Great Wall was repaired during the Sui Dynasty and used to defend against Tujue attacks. Before and after the Sui Dynasty, the wall saw very little use and fell into disrepair",
         1487 to "Hongzhi Emperor split the walls into north and south lines, eventually shaping it into how it is today. Since then, it has gradually fallen into disrepair and remains mostly unused",
     ),
+    searchData = GreatWallSearchData,
+    searchSuggestions = GreatWallSearchSuggestions,
     unsplashCollectionId = "Kg_h04xvZEo"
 )
 
@@ -357,5 +387,7 @@ data object TajMahal : Wonder(
         1984 to "To protect the structure from Sikh militants and some Hindu nationalist groups, night viewing was banned to tourists. This ban would last 20 years",
         1998 to "Restoration and research program put into action to help preserve the monument",
     ),
+    searchData = TajMahalSearchData,
+    searchSuggestions = TajMahalSearchSuggestions,
     unsplashCollectionId = "684IRta86_c"
 )

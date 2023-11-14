@@ -51,6 +51,7 @@ fun WonderDetailsScreen(
     openArtifactDetailsScreen: (id: String) -> Unit,
     openArtifactsScreen: () -> Unit,
     openMapScreen: (Wonder) -> Unit,
+    openVideoScreen: (videoId: String) -> Unit,
     wonder: Wonder,
 ) {
     var currentSelected by rememberSaveable { mutableStateOf(Editorial) }
@@ -76,6 +77,7 @@ fun WonderDetailsScreen(
                     wonder = wonder,
                     openHomeScreen = onPressHome,
                     openMapScreen = openMapScreen,
+                    openVideoScreen = openVideoScreen,
                 )
 
                 PhotoGallery -> PhotoGallery(wonder = wonder)

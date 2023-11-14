@@ -14,12 +14,14 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -104,6 +106,7 @@ fun EditorialScreen(
     wonder: Wonder,
     openHomeScreen: () -> Unit,
     openMapScreen: (Wonder) -> Unit,
+    openVideoScreen: (videoId: String) -> Unit,
 ) {
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -324,20 +327,38 @@ fun EditorialScreen(
         }
         // 8
         surfaceItem {
-            Column {
-                YouTubeThumbnail(wonder.videoId, wonder.videoCaption)
-                CallOut(wonder.callout2)
+            Column(
+                Modifier.padding(vertical = 48.dp)
+            ) {
+                YouTubeThumbnail(
+                    wonder.videoId,
+                    onClick = { openVideoScreen(wonder.videoId) },
+                    modifier = Modifier
+                        .clickable {
+                            openVideoScreen(wonder.videoId)
+                        }
+                )
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = wonder.videoCaption,
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
         }
         // 9
         surfaceItem {
-            InfoText(wonder.constructionInfo2)
+            CallOut(wonder.callout2)
         }
         // 10
         surfaceItem {
+            InfoText(wonder.constructionInfo2)
+        }
+        // 11
+        surfaceItem {
             val parallaxProgress by remember {
                 derivedStateOf {
-                    scrollState.scrollProgressFor(10)
+                    scrollState.scrollProgressFor(11)
                 }
             }
             ParallaxImages(
@@ -346,18 +367,18 @@ fun EditorialScreen(
                 bottomImagePath = wonder.getAssetPath("photo-4.jpg"),
             )
         }
-        // 11
+        // 12
         surfaceItem {
             CompassDivider(
                 Modifier.padding(horizontal = 16.dp, vertical = 72.dp),
-                isExpanded = scrollState.firstVisibleItemIndex == 10
+                isExpanded = scrollState.firstVisibleItemIndex == 11
             )
         }
-        // 12
+        // 13
         surfaceItem {
             InfoText(wonder.locationInfo1)
         }
-        // 13
+        // 14
         surfaceItem {
             Quote(
                 text = wonder.pullQuote2,
@@ -365,11 +386,11 @@ fun EditorialScreen(
                 modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
             )
         }
-        // 14
+        // 15
         surfaceItem {
             InfoText(wonder.locationInfo2)
         }
-        // 15
+        // 16
         surfaceItem {
             // Map
             Box {

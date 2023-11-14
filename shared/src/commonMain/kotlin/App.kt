@@ -16,6 +16,7 @@ import ui.screens.ArtifactListScreen
 import ui.screens.MapScreen
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
+import ui.screens.YoutubeVideoScreen
 import ui.theme.ColorScheme
 import ui.theme.Typography
 
@@ -40,6 +41,10 @@ fun App() {
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
                         openArtifactListScreen = { navigator.navigate("/search") },
                         openMapScreen = { navigator.navigate("/maps/${it.title}") },
+                        openVideoScreen = {
+                            println(it)
+                            navigator.navigate("/video/$it")
+                        },
                     )
                 }
                 scene(
@@ -98,6 +103,20 @@ fun App() {
                     val wonder = Wonder.parse(id)
                     MapScreen(
                         gpsPosition = wonder.gps,
+                        onBackClick = { navigator.goBack() }
+                    )
+                }
+
+                scene(
+                    "/video/{id}",
+                    navTransition = NavTransition(
+                        createTransition = slideIn { IntOffset(it.width, 0) },
+                        destroyTransition = slideOut { IntOffset(it.width, 0) },
+                    )
+                ) { backStackEntry ->
+                    val id = backStackEntry.path<String>("id")!!
+                    YoutubeVideoScreen(
+                        id = id,
                         onBackClick = { navigator.goBack() }
                     )
                 }

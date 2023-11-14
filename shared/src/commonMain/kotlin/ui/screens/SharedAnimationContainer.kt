@@ -52,6 +52,7 @@ fun SharedAnimationContainer(
     openArtifactDetailsScreen: (id: String) -> Unit,
     openArtifactListScreen: (wonder: Wonder) -> Unit,
     openMapScreen: (wonder: Wonder) -> Unit,
+    openVideoScreen: (videoId: String) -> Unit,
     openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
@@ -112,7 +113,8 @@ fun SharedAnimationContainer(
                 }
             },
             openMapScreen = openMapScreen,
-            openArtifactsScreen = { openArtifactListScreen(currentWonder) }
+            openArtifactsScreen = { openArtifactListScreen(currentWonder) },
+            openVideoScreen = openVideoScreen
         )
     }
 

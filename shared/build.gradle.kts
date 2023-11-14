@@ -60,6 +60,7 @@ kotlin {
                 implementation("com.github.skydoves:orbital:0.2.4")
 
                 api("moe.tlaster:precompose:$precomposeVersion") // Navigation
+                api("io.github.kevinnzou:compose-webview-multiplatform:1.7.0")
             }
         }
         val androidMain by getting {

@@ -1,10 +1,9 @@
 package ui.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -13,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,11 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.seiko.imageloader.model.ImageRequest
-import com.seiko.imageloader.rememberImagePainter
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import models.Wonder
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ArtifactListScreen(
     wonder: Wonder
@@ -73,10 +70,14 @@ fun ArtifactListScreen(
         ) {
             items(wonder.searchData.size) { i ->
                 val artifact = wonder.searchData[i]
-                Image(
-                    rememberImagePainter(ImageRequest("")),
+                KamelImage(
+                    asyncPainterResource(artifact.imageUrl),
                     contentDescription = artifact.title,
-                    modifier = Modifier.fillMaxWidth().padding(8.dp).clip(RoundedCornerShape(6.dp)),
+                    modifier = Modifier.padding(8.dp)
+                        .aspectRatio(
+                            artifact.aspectRatio.toFloat()
+                        )
+                        .clip(RoundedCornerShape(6.dp)),
                     contentScale = ContentScale.FillWidth
                 )
             }

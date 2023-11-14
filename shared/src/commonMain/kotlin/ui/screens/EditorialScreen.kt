@@ -33,14 +33,17 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,6 +78,7 @@ import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.CircularText
+import ui.composables.MapType
 import ui.composables.MapView
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
@@ -85,6 +89,7 @@ import ui.theme.B612Mono
 import ui.theme.Cinzel
 import ui.theme.bgColor
 import ui.theme.fgColor
+import ui.theme.white
 import utils.StringUtils
 
 private val maxImageHeight = 400.dp
@@ -98,6 +103,7 @@ private val minImageHeight = 52.dp
 fun EditorialScreen(
     wonder: Wonder,
     openHomeScreen: () -> Unit,
+    openMapScreen: (Wonder) -> Unit,
 ) {
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -366,15 +372,31 @@ fun EditorialScreen(
         // 15
         surfaceItem {
             // Map
-            MapView(
-                modifier = Modifier
-                    .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
-                    .height(320.dp)
-                    .clip(RoundedCornerShape(4.dp)),
-                gps = wonder.gps,
-                title = "Map",
-                parentScrollEnableState = mutableStateOf(true),
-            )
+            Box {
+                MapView(
+                    modifier = Modifier
+                        .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
+                        .height(320.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    gps = wonder.gps,
+                    title = "Map",
+                    zoomLevel = .05f,
+                    mapType = MapType.Normal,
+                )
+                IconButton(
+                    onClick = {
+                        openMapScreen(wonder)
+                    },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .background(white, RoundedCornerShape(100f)),
+                ) {
+                    Icon(
+                        Icons.Rounded.Place,
+                        contentDescription = null,
+                    )
+                }
+            }
         }
     }
 }

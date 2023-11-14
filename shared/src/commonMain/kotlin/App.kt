@@ -3,7 +3,6 @@ import androidx.compose.animation.slideOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.IntOffset
-import models.ChichenItza
 import models.Wonder
 import models.parse
 import moe.tlaster.precompose.PreComposeApp
@@ -14,6 +13,7 @@ import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.screens.ArtifactDetailsScreen
 import ui.screens.ArtifactListScreen
+import ui.screens.MapScreen
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
 import ui.theme.ColorScheme
@@ -38,7 +38,8 @@ fun App() {
                         initialWonder = wonder,
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
-                        openArtifactListScreen = { navigator.navigate("/search") }
+                        openArtifactListScreen = { navigator.navigate("/search") },
+                        openMapScreen = { navigator.navigate("/maps/${it.title}") },
                     )
                 }
                 scene(
@@ -79,8 +80,25 @@ fun App() {
                         destroyTransition = slideOut { IntOffset(it.width, 0) },
                     )
                 ) { backStackEntry ->
+                    val id = backStackEntry.path<String>("type")
+                    val wonder = Wonder.parse(id)
                     ArtifactListScreen(
-                        wonder = ChichenItza
+                        wonder = wonder
+                    )
+                }
+
+                scene(
+                    "/maps/{type}",
+                    navTransition = NavTransition(
+                        createTransition = slideIn { IntOffset(it.width, 0) },
+                        destroyTransition = slideOut { IntOffset(it.width, 0) },
+                    )
+                ) { backStackEntry ->
+                    val id = backStackEntry.path<String>("type")
+                    val wonder = Wonder.parse(id)
+                    MapScreen(
+                        gpsPosition = wonder.gps,
+                        onBackClick = { navigator.goBack() }
                     )
                 }
             }

@@ -10,8 +10,13 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import models.GpsPosition
+import com.google.maps.android.compose.MapType as GoogleMapType
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -19,11 +24,13 @@ actual fun MapView(
     modifier: Modifier,
     gps: GpsPosition,
     title: String,
-    parentScrollEnableState: MutableState<Boolean>
+    parentScrollEnableState: MutableState<Boolean>,
+    zoomLevel: Float,
+    mapType: MapType
 ) {
     val currentLocation = LatLng(gps.latitude, gps.longitude)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(currentLocation, 10f)
+        position = CameraPosition.fromLatLngZoom(currentLocation, zoomLevel)
     }
     LaunchedEffect(cameraPositionState.isMoving) {
         // This code helps to use Compose GoogleMap inside scrollable container.
@@ -45,6 +52,15 @@ actual fun MapView(
                 }
             }
         ),
-        cameraPositionState = cameraPositionState
-    )
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(mapType = mapType.toGoogleMapType())
+    ) {
+        val markerState = rememberMarkerState(position = currentLocation)
+        Marker(markerState)
+    }
+}
+
+fun MapType.toGoogleMapType() = when (this) {
+    MapType.Normal -> GoogleMapType.NORMAL
+    MapType.Satellite -> GoogleMapType.SATELLITE
 }

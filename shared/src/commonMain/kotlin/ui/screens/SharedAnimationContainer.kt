@@ -51,6 +51,7 @@ fun SharedAnimationContainer(
     openTimelineScreen: (wonder: Wonder?) -> Unit,
     openArtifactDetailsScreen: (id: String) -> Unit,
     openArtifactListScreen: (wonder: Wonder) -> Unit,
+    openMapScreen: (wonder: Wonder) -> Unit,
     openHomeScreen: Boolean = true,
 ) = BoxWithConstraints {
 
@@ -110,6 +111,7 @@ fun SharedAnimationContainer(
                     swipeableState.animateTo(SharedScreen.Home)
                 }
             },
+            openMapScreen = openMapScreen,
             openArtifactsScreen = { openArtifactListScreen(currentWonder) }
         )
     }

@@ -10,6 +10,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import models.GpsPosition
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.MapKit.MKCoordinateRegionMakeWithDistance
+import platform.MapKit.MKMapTypeSatellite
+import platform.MapKit.MKMapTypeStandard
 import platform.MapKit.MKMapView
 import platform.MapKit.MKPointAnnotation
 
@@ -19,7 +21,9 @@ actual fun MapView(
     modifier: Modifier,
     gps: GpsPosition,
     title: String,
-    parentScrollEnableState: MutableState<Boolean>
+    parentScrollEnableState: MutableState<Boolean>,
+    zoomLevel: Float,
+    mapType: MapType
 ) {
     val location = CLLocationCoordinate2DMake(gps.latitude, gps.longitude)
     val annotation = remember {
@@ -29,21 +33,30 @@ actual fun MapView(
             subtitle = null
         )
     }
-    val mkMapView = remember { MKMapView().apply { addAnnotation(annotation) } }
     annotation.setTitle(title)
     UIKitView(
         modifier = modifier,
         factory = {
-            mkMapView
+            MKMapView().apply {
+                addAnnotation(annotation)
+                setMapType(mapType.toAppleMapType())
+            }
         },
         update = {
-            mkMapView.setRegion(
+            it.addAnnotations(listOf(MKPointAnnotation(location)))
+            it.setRegion(
                 MKCoordinateRegionMakeWithDistance(
                     centerCoordinate = location,
-                    10_000.0, 10_000.0
+                    zoomLevel * 10_000.0,
+                    zoomLevel * 10_000.0
                 ),
                 animated = false
             )
         }
     )
+}
+
+fun MapType.toAppleMapType() = when (this) {
+    MapType.Normal -> MKMapTypeStandard
+    MapType.Satellite -> MKMapTypeSatellite
 }

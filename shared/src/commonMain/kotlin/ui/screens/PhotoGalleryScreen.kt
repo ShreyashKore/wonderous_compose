@@ -1,9 +1,12 @@
 package ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -44,14 +48,16 @@ import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
 import models.Wonder
 import ui.composables.SimpleGrid
+import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
+import ui.utils.simpleTransformable
 import kotlin.math.roundToInt
 
 // TODO: move into separate file
 val BackgroundColor = Color.Black
 
-@OptIn(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PhotoGallery(
     wonder: Wonder,
@@ -97,13 +103,17 @@ fun PhotoGallery(
     )
     val gridOffset = originOffset + indexedOffset
 
-    val urls = photoIds.map {
-        UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.MED)
+    val urls = remember(photoIds) {
+        photoIds.map {
+            UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.MED)
+        }
     }
+
+    var showFullScreenImage by remember { mutableStateOf(false) }
 
     fun onTap(i: Int) {
         if (i == currentIndex) {
-            // Open full screen image
+            showFullScreenImage = true
         } else {
             currentIndex = i
         }
@@ -125,7 +135,7 @@ fun PhotoGallery(
 
     SimpleGrid(
         modifier = Modifier
-            .eightWaySwipeDetector(::onSwipe)
+            .eightWaySwipeDetector(onSwipe = ::onSwipe)
             .offset { gridOffset.roundToIntOffset() },
         columnCount = gridSize,
     ) {
@@ -144,6 +154,16 @@ fun PhotoGallery(
         currentIndex = currentIndex,
         cutoutSize = totalSize - DpSize(padding, padding),
     )
+
+
+    AnimatedVisibility(
+        showFullScreenImage, enter = fadeIn(), exit = fadeOut()
+    ) {
+        FullscreenUrlImgViewer(
+            url = urls[currentIndex],
+            onDismiss = { showFullScreenImage = false },
+        )
+    }
 
 }
 
@@ -204,8 +224,16 @@ private fun UnsplashImage(
 
 
 @Composable
-fun FullscreenUrlImgViewer(url: String) {
-    Image(rememberImagePainter(url), contentDescription = null)
+fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
+    Box(
+        Modifier.fillMaxSize().background(black.copy(alpha = .6f)).clickable { onDismiss() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            rememberImagePainter(url), contentDescription = null,
+            modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
+        )
+    }
 }
 
 

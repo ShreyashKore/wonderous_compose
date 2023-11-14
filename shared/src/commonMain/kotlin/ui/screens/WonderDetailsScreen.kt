@@ -50,6 +50,7 @@ fun WonderDetailsScreen(
     navigateToTimeline: () -> Unit,
     openArtifactDetailsScreen: (id: String) -> Unit,
     openArtifactsScreen: () -> Unit,
+    openMapScreen: (Wonder) -> Unit,
     wonder: Wonder,
 ) {
     var currentSelected by rememberSaveable { mutableStateOf(Editorial) }
@@ -71,7 +72,12 @@ fun WonderDetailsScreen(
             },
         ) { currentSelected ->
             when (currentSelected) {
-                Editorial -> EditorialScreen(wonder = wonder, onPressHome)
+                Editorial -> EditorialScreen(
+                    wonder = wonder,
+                    openHomeScreen = onPressHome,
+                    openMapScreen = openMapScreen,
+                )
+
                 PhotoGallery -> PhotoGallery(wonder = wonder)
                 ArtifactCarousel -> ArtifactCarouselScreen(
                     wonder = wonder,

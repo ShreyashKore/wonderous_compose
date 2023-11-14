@@ -13,7 +13,9 @@ actual fun MapView(
     modifier: Modifier,
     gps: GpsPosition,
     title: String,
-    parentScrollEnableState: MutableState<Boolean>
+    parentScrollEnableState: MutableState<Boolean>,
+    zoomLevel: Float,
+    mapType: MapType
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text("Map Not implemented")

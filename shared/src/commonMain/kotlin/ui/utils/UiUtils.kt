@@ -73,12 +73,12 @@ fun Modifier.simpleTransformable() = composed {
     var x by remember { mutableStateOf(0f) }
     var y by remember { mutableStateOf(0f) }
     var scale by remember { mutableStateOf(1f) }
-    var rotation by remember { mutableStateOf(1f) }
+    var rotation by remember { mutableStateOf(0f) }
     val transformableState = rememberTransformableState { zoomChange, panChange, rotationChange ->
         x += panChange.x
         y += panChange.y
         rotation += rotationChange
-        scale += zoomChange
+        scale *= zoomChange
     }
     graphicsLayer {
         translationX = x

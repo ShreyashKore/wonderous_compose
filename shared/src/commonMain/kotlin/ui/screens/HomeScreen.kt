@@ -42,7 +42,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.SwipeableState
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
 import androidx.compose.material.swipeable
@@ -65,7 +64,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import models.ChichenItza
@@ -82,6 +80,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.composables.IllustrationPiece
+import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
 import ui.theme.bgColor
@@ -157,12 +156,10 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                Text(
-                    currentWonder.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(vertical = 16.dp)
+                WonderTitleText(
+                    currentWonder,
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    enableShadows = true
                 )
                 HorizontalSwipeDots(
                     currentDot = pagerState.currentPage % Wonders.size,

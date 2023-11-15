@@ -39,7 +39,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -48,12 +47,12 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.composables.LongButton
+import ui.composables.WonderTitleText
 import ui.flattened
 import ui.theme.TenorSans
 import ui.theme.accent2
 import ui.theme.black
 import ui.theme.greyStrong
-import ui.theme.offWhite
 import ui.theme.white
 import utils.StringUtils.getYrSuffix
 import kotlin.math.absoluteValue
@@ -125,11 +124,8 @@ fun WonderEvents(
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.BottomCenter,
                 )
-                Text(
-                    wonder.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = offWhite,
-                    textAlign = TextAlign.Center,
+                WonderTitleText(
+                    wonder,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }

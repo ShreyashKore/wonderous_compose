@@ -62,7 +62,6 @@ fun SharedAnimationContainer(
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
 
     val swipeableState = rememberSwipeableState(SharedScreen.Home)
-    println("PagerState ${pagerState.currentPage} ${pagerState.settledPage}")
     val scope = rememberCoroutineScope()
 
 

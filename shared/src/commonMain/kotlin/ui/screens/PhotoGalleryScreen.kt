@@ -121,7 +121,6 @@ fun PhotoGallery(
 
     fun onSwipe(dir: Offset) {
         val (x, y) = dir
-        println("Swipe direction $dir")
         val newIndex =
             currentIndex + (if (y != 0f) if (y > 0) -5 else 5 else 0) + (if (x != 0f) if (x > 0) -1 else 1 else 0)
 

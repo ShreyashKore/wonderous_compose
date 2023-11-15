@@ -82,6 +82,7 @@ import org.jetbrains.compose.resources.painterResource
 import ui.composables.CircularText
 import ui.composables.MapType
 import ui.composables.MapView
+import ui.composables.WonderTitleText
 import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
@@ -201,11 +202,8 @@ fun EditorialScreen(
                     )
                     Divider(Modifier.weight(1f))
                 }
-                Text(
-                    wonder.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                    color = onPrimaryColor
+                WonderTitleText(
+                    wonder,
                 )
                 Text(
                     wonder.regionTitle,

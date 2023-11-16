@@ -11,13 +11,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,13 +36,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.getAssetPath
-import ui.screens.WonderDetailsDest.*
+import ui.screens.WonderDetailsScreen.*
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
@@ -53,24 +59,31 @@ fun WonderDetailsScreen(
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
     wonder: Wonder,
-) {
-    var currentSelected by rememberSaveable { mutableStateOf(Editorial) }
+) = BoxWithConstraints {
+    var currentScreen by rememberSaveable { mutableStateOf(Editorial) }
+    val navbarMode = if (maxWidth > 800.dp) NavBarMode.NavRail else NavBarMode.BottomBar
 
     Scaffold(
         bottomBar = {
-            BottomBar(
-                wonder = wonder,
-                selected = currentSelected,
-                onSelected = { currentSelected = it },
-                onPressHome = onPressHome
-            )
+            if (navbarMode == NavBarMode.BottomBar)
+                NavigationBar(
+                    wonder = wonder,
+                    onPressHome = onPressHome,
+                    currentScreen = currentScreen,
+                    onClickDestination = { currentScreen = it },
+                    mode = navbarMode
+                )
         }
     ) {
         AnimatedContent(
-            currentSelected,
+            currentScreen,
             transitionSpec = {
                 fadeIn() togetherWith fadeOut()
             },
+            modifier = Modifier.padding(
+                start = if (navbarMode == NavBarMode.NavRail && currentScreen != PhotoGallery)
+                    navRailWidth else 0.dp
+            )
         ) { currentSelected ->
             when (currentSelected) {
                 Editorial -> EditorialScreen(
@@ -90,19 +103,30 @@ fun WonderDetailsScreen(
                 WonderEvents -> WonderEvents(wonder = wonder, navigateToTimeline)
             }
         }
+
+        if (navbarMode == NavBarMode.NavRail)
+            NavigationBar(
+                wonder = wonder,
+                onPressHome = onPressHome,
+                currentScreen = currentScreen,
+                onClickDestination = { currentScreen = it },
+                mode = navbarMode
+            )
+
     }
 }
 
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
-private fun BottomBar(
+private fun NavigationBar(
     wonder: Wonder,
-    selected: WonderDetailsDest,
-    onSelected: (WonderDetailsDest) -> Unit,
+    currentScreen: WonderDetailsScreen,
+    onClickDestination: (WonderDetailsScreen) -> Unit,
     onPressHome: () -> Unit,
+    mode: NavBarMode,
 ) {
-    val isBgTransparent = selected == PhotoGallery
+    val isBgTransparent = currentScreen == PhotoGallery
     val bgColor by animateColorAsState(
         targetValue = if (isBgTransparent) Color.Transparent else white,
         animationSpec = tween(500)
@@ -115,75 +139,115 @@ private fun BottomBar(
         targetValue = if (isBgTransparent) 2.dp else 6.dp,
         animationSpec = tween(800)
     )
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .height(82.dp)
-    ) {
 
-        Box(
-            Modifier.padding(top = 12.dp).fillMaxSize()
-                .background(bgColor)
+    val content = @Composable {
+        WonderButton(
+            wonder = wonder,
+            borderWidth = wonderBtnBorderWidth,
+            onClick = onPressHome,
+            modifier = Modifier
+                .requiredSize(76.dp)
+                .offset(
+                    x = if (mode == NavBarMode.NavRail) 8.dp else 0.dp,
+                    y = if (mode == NavBarMode.BottomBar) (-10).dp else 0.dp
+                )
         )
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Image(
-                painterResource(wonder.getAssetPath("wonder-button.png")),
-                contentDescription = "home",
-                modifier = Modifier
-                    .size(76.dp)
-                    .background(white, CircleShape)
-                    .padding(wonderBtnBorderWidth)
-                    .clip(CircleShape)
-                    .background(wonder.fgColor)
-                    .clickable {
-                        onPressHome()
-                    }
 
+        WonderDetailsScreen.entries.map { destination ->
+            NavDestinationButton(
+                iconName = destination.icon,
+                contentDescription = destination.title,
+                isSelected = currentScreen == destination,
+                unSelectedColor = contentColor,
+                onClick = { onClickDestination(destination) },
+                modifier = Modifier.padding(4.dp)
             )
-            Row(
-                Modifier.weight(1f).height(64.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                entries.map { destination ->
-                    AppBarIcon(
-                        destination.icon,
-                        selected = selected == destination,
-                        unSelectedColor = contentColor,
-                        onClick = { onSelected(destination) },
-                    )
-                }
-            }
         }
     }
+
+    when (mode) {
+        NavBarMode.NavRail -> Column(
+            Modifier.fillMaxHeight()
+                .width(navRailWidth)
+                .zIndex(1f)
+                .background(bgColor).padding(vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {// Wonder Button
+            content()
+        }
+        // bottom bar
+        NavBarMode.BottomBar -> Row(
+            Modifier
+                .fillMaxWidth()
+                .height(bottomBarHeight)
+                .background(bgColor)
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            content()
+        }
+    }
+
+}
+
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+private fun WonderButton(
+    wonder: Wonder,
+    borderWidth: Dp,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painterResource(wonder.getAssetPath("wonder-button.png")),
+        contentDescription = "home",
+        modifier = modifier
+            .background(white, CircleShape) // padding as border
+            .padding(borderWidth) // Using padding as border to influence size change when border changes
+            .clip(CircleShape)
+            .background(wonder.fgColor)
+            .clickable(onClick = onClick)
+    )
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-private fun AppBarIcon(
-    icon: String,
-    selected: Boolean = false,
+private fun NavDestinationButton(
+    iconName: String,
+    contentDescription: String,
+    onClick: () -> Unit,
     unSelectedColor: Color,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false
 ) {
-    val iconImgPath = "${ImagePaths.common}/3.0x/tab-${icon}${if (selected) "-active" else ""}.png"
-    val iconTint = if (selected) MaterialTheme.colorScheme.primary else unSelectedColor
+    val iconImgPath =
+        "${ImagePaths.common}/3.0x/tab-${iconName}${if (isSelected) "-active" else ""}.png"
+    val iconTint = if (isSelected) MaterialTheme.colorScheme.primary else unSelectedColor
     IconButton(
-        onClick = onClick
+        onClick = onClick,
+        modifier = modifier,
     ) {
         Icon(
             painterResource(iconImgPath),
-            contentDescription = icon,
+            contentDescription = contentDescription,
             modifier = Modifier.size(26.dp),
             tint = iconTint
         )
     }
 }
 
-private enum class WonderDetailsDest(val title: String, val icon: String) {
+
+private val bottomBarHeight = 72.dp
+private val navRailWidth = 72.dp
+
+private enum class NavBarMode {
+    BottomBar, NavRail
+}
+
+private enum class WonderDetailsScreen(val title: String, val icon: String) {
     Editorial("Editorial", "editorial"),
     PhotoGallery("Photo Gallery", "photos"),
     ArtifactCarousel("Artifact Carousel", "artifacts"),

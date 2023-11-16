@@ -10,6 +10,7 @@ pluginManagement {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google()
         mavenCentral()
+        maven("https://jogamp.org/deployment/maven")
     }
 
     plugins {
@@ -34,5 +35,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://jogamp.org/deployment/maven")
     }
 }

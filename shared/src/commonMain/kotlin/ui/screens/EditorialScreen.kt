@@ -66,6 +66,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -109,6 +110,7 @@ fun EditorialScreen(
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
 ) {
+    val density = LocalDensity.current
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPostScroll(
@@ -234,17 +236,25 @@ fun EditorialScreen(
             }
             val imageHeight by remember {
                 derivedStateOf {
-                    minImageHeight + (maxImageHeight - minImageHeight) * (1.5f - scrollState.scrollProgressFor(
-                        1
-                    ))
+                    when (scrollState.firstVisibleItemIndex) {
+                        in 0..<1 -> maxImageHeight
+                        1 -> {
+                            val scrollOffsetDp = with(density) {
+                                scrollState.firstVisibleItemScrollOffset.toDp()
+                            }
+                            (maxImageHeight - scrollOffsetDp).coerceAtLeast(minImageHeight)
+                        }
+
+                        else -> minImageHeight
+                    }
                 }
             }
 
             val shape = when (wonder) {
                 MachuPicchu, ChichenItza, PyramidsGiza ->
-                    CutCornerShape(topStart = 100.dp, topEnd = 100.dp)
+                    CutCornerShape(topStartPercent = 90, topEndPercent = 90)
 
-                else -> RoundedCornerShape(topStart = 100.dp, topEnd = 100.dp)
+                else -> RoundedCornerShape(topStartPercent = 90, topEndPercent = 90)
             }
             Box(Modifier.height(maxImageHeight)) {
                 Image(

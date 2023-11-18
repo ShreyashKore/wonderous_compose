@@ -154,11 +154,15 @@ fun WonderEvents(
         Modifier
             .zIndex(10f)
             .background(black)
-            .padding(bottom = 80.dp)
             .fillMaxWidth()
             .align(Alignment.BottomCenter)
     ) {
-        LongButton(label = "OPEN GLOBAL TIMELINE", onClick = navigateToTimeLine)
+        LongButton(
+            label = "OPEN GLOBAL TIMELINE",
+            onClick = navigateToTimeLine,
+            modifier = Modifier
+                .padding(vertical = 20.dp, horizontal = 20.dp)
+        )
     }
 
 }

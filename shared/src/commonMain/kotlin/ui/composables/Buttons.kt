@@ -48,7 +48,11 @@ fun AppIconButton(
 
 
 @Composable
-fun LongButton(label: String, onClick: () -> Unit) {
+fun LongButton(
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = { onClick() },
         colors = ButtonDefaults.filledTonalButtonColors(
@@ -57,9 +61,7 @@ fun LongButton(label: String, onClick: () -> Unit) {
         ),
         contentPadding = PaddingValues(16.dp),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .padding(vertical = 20.dp, horizontal = 20.dp)
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(label)
     }

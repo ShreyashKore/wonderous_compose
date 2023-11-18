@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -20,10 +21,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeightIn
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
@@ -40,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -71,7 +76,12 @@ fun ArtifactCarouselScreen(
     wonder: Wonder,
     openArtifactDetailsScreen: (id: String) -> Unit,
     openAllArtifactsScreen: () -> Unit,
-) {
+) = BoxWithConstraints {
+    val maxWidth = maxWidth
+    val maxHeight = maxHeight
+
+    val minDimension = minOf(maxHeight, maxWidth)
+
     val artifacts = remember(wonder) { HighlightData.forWonder(wonder) }
 
     val pagerState = rememberPagerState(
@@ -100,12 +110,10 @@ fun ArtifactCarouselScreen(
         }
         Box(
             modifier = Modifier.align(Alignment.BottomCenter)
-                .scale(scaleX = 2.2f, scaleY = 1f)
-                .clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
+                .requiredSize(minDimension * 2)
+                .offset(y = minDimension)
+                .clip(CircleShape)
                 .background(offWhite)
-                .fillMaxWidth()
-                .fillMaxHeight(0.5f)
-
         )
     }
     Column(
@@ -132,11 +140,14 @@ fun ArtifactCarouselScreen(
         }
 
         HorizontalPager(
-            modifier = Modifier.weight(.65f),
+            modifier = Modifier
+                .weight(.65f)
+                .requiredHeightIn(min = 200.dp),
             state = pagerState,
             contentPadding = PaddingValues(
-                horizontal = 100.dp
+                horizontal = (maxWidth - 200.dp) / 2
             ),
+            pageSize = PageSize.Fixed(200.dp),
             pageSpacing = 20.dp,
             verticalAlignment = Alignment.Bottom,
         ) { pageNo ->
@@ -146,16 +157,17 @@ fun ArtifactCarouselScreen(
                 name = artifact.title,
                 image = artifact.imageUrlSmall,
                 isSelected = pagerState.currentPage == pageNo,
+                onClick = {
+                    openArtifactDetailsScreen(artifact.id)
+                },
                 modifier = Modifier
+                    .fillMaxSize()
                     .graphicsLayer {
                         val pageOffset = (
                                 (pagerState.currentPage - pageNo) + pagerState
                                     .currentPageOffsetFraction
                                 ).absoluteValue
-                        println("Page Offset $pageOffset")
                         translationY = lerp(0.dp, 40.dp, fraction = pageOffset).toPx()
-                    }.clickable {
-                        openArtifactDetailsScreen(artifact.id)
                     }
             )
         }
@@ -183,12 +195,13 @@ fun ArtifactCarouselScreen(
 
             Spacer(Modifier.weight(1f))
 
-            LongButton(label = "BROWSE ALL ARTIFACTS", onClick = openAllArtifactsScreen)
+            LongButton(
+                label = "BROWSE ALL ARTIFACTS",
+                onClick = openAllArtifactsScreen,
+                modifier = Modifier
+                    .padding(vertical = 20.dp, horizontal = 20.dp)
+            )
         }
-
-
-
-        Spacer(Modifier.height(80.dp))
     }
 }
 
@@ -197,6 +210,7 @@ private fun ArtifactImage(
     modifier: Modifier = Modifier,
     name: String,
     image: String,
+    onClick: () -> Unit,
     isSelected: Boolean,
 ) {
     val imagePainter = rememberImagePainter(image)
@@ -205,8 +219,7 @@ private fun ArtifactImage(
     val width by animateDpAsState(if (isSelected) 200.dp else 130.dp, animationSpec = tween(800))
 
     Box(
-        modifier
-            .fillMaxHeight(),
+        modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
         Image(
@@ -214,7 +227,7 @@ private fun ArtifactImage(
             contentDescription = name,
             modifier = Modifier
                 .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))
-                .padding(12.dp).clip(RoundedCornerShape(percent = 100))
+                .padding(12.dp).clip(RoundedCornerShape(percent = 100)).clickable(onClick = onClick)
                 .size(DpSize(width = width, height = height)),
             contentScale = ContentScale.Crop
         )

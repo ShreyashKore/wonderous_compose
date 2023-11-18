@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import models.ChichenItza
+import models.ChristRedeemer
 import models.MachuPicchu
 import models.PyramidsGiza
 import models.Wonder
@@ -91,6 +92,7 @@ import ui.getAssetPath
 import ui.mainImageName
 import ui.theme.B612Mono
 import ui.theme.Cinzel
+import ui.theme.accent1
 import ui.theme.bgColor
 import ui.theme.fgColor
 import ui.theme.white
@@ -250,12 +252,6 @@ fun EditorialScreen(
                 }
             }
 
-            val shape = when (wonder) {
-                MachuPicchu, ChichenItza, PyramidsGiza ->
-                    CutCornerShape(topStartPercent = 90, topEndPercent = 90)
-
-                else -> RoundedCornerShape(topStartPercent = 90, topEndPercent = 90)
-            }
             Box(Modifier.height(maxImageHeight)) {
                 Image(
                     painterResource(wonder.getAssetPath("photo-1.jpg")),
@@ -264,7 +260,7 @@ fun EditorialScreen(
                         .fillMaxWidth()
                         .height(imageHeight)
                         .alpha(imageAlpha)
-                        .clip(shape),
+                        .clip(wonder.cutoutShape),
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                 )
@@ -298,7 +294,7 @@ fun EditorialScreen(
         surfaceItem {
             val pullQuote1Progress by remember {
                 derivedStateOf {
-                    (0.45f - scrollState.scrollProgressFor(4)).coerceAtLeast(0f)
+                    (0.45f - scrollState.scrollProgressFor(4)).coerceIn(0f, .2f)
                 }
             }
 
@@ -509,13 +505,13 @@ fun InfoTitle(
                     }.wrapContentSize(unbounded = true),
                 targetState = infoSection,
                 transitionSpec = { fadeIn(tween) togetherWith fadeOut(tween) },
-            ) {
+            ) { infoSection ->
                 CircularText(
-                    text = it.title.toCharArray()
+                    text = infoSection.title.toCharArray()
                         .map { it.toString() }, // Circular Text needs individual letters (graphemes)
-                    radius = 100.dp,
-                    textStyle = TextStyle(fontSize = 14.sp, fontFamily = B612Mono),
-                    modifier = Modifier.rotate(circularTextAngle)
+                    radius = 90.dp,
+                    textStyle = TextStyle(fontSize = 16.sp, fontFamily = B612Mono, color = accent1),
+                    modifier = Modifier.padding(20.dp).size(200.dp).rotate(circularTextAngle)
                 )
             }
             AnimatedContent(
@@ -688,3 +684,16 @@ enum class InfoSection(val title: String, val imageName: String) {
 }
 
 val InfoSection.imagePath get() = "images/common/$imageName"
+
+private val Wonder.cutoutShape
+    get() = when (this) {
+        ChichenItza ->
+            CutCornerShape(topStartPercent = 40, topEndPercent = 40)
+
+        PyramidsGiza, MachuPicchu ->
+            CutCornerShape(topStartPercent = 50, topEndPercent = 50)
+
+        ChristRedeemer -> RoundedCornerShape(topStartPercent = 60, topEndPercent = 60)
+
+        else -> RoundedCornerShape(topStartPercent = 80, topEndPercent = 80)
+    }

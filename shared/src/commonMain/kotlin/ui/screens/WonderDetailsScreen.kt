@@ -13,7 +13,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,6 +52,7 @@ import ui.theme.fgColor
 import ui.theme.white
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WonderDetailsScreen(
     onPressHome: () -> Unit,
@@ -74,16 +77,21 @@ fun WonderDetailsScreen(
                     mode = navbarMode
                 )
         }
-    ) {
+    ) { padding ->
         AnimatedContent(
             currentScreen,
             transitionSpec = {
                 fadeIn() togetherWith fadeOut()
             },
-            modifier = Modifier.padding(
-                start = if (navbarMode == NavBarMode.NavRail && currentScreen != PhotoGallery)
-                    navRailWidth else 0.dp
-            )
+            modifier = Modifier.run {
+                if (navbarMode == NavBarMode.NavRail) padding(
+                    start = if (navbarMode == NavBarMode.NavRail && currentScreen != PhotoGallery)
+                        navRailWidth else 0.dp
+                ) else {
+                    if (currentScreen == PhotoGallery) this // For photo gallery don't pad as we show content behind navbar
+                    else padding(padding).consumeWindowInsets(padding)
+                }
+            }
         ) { currentSelected ->
             when (currentSelected) {
                 Editorial -> EditorialScreen(

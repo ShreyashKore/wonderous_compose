@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import com.seiko.imageloader.rememberImagePainter
 import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import models.Wonder
 import ui.composables.SimpleGrid
 import ui.theme.black
@@ -119,13 +122,19 @@ fun PhotoGallery(
         }
     }
 
-    fun onSwipe(dir: Offset) {
-        val (x, y) = dir
-        val newIndex =
-            currentIndex + (if (y != 0f) if (y > 0) -5 else 5 else 0) + (if (x != 0f) if (x > 0) -1 else 1 else 0)
+    fun onSwipe(direction: Offset) {
+        val (x, y) = direction
+        // Calculate next index using magic
+        val newIndex = currentIndex +
+                (if (y == 0f) 0 else if (y > 0) -5 else 5) +
+                (if (x == 0f) 0 else if (x > 0) -1 else 1)
 
+        // Check if the index is valid; This discards trying to cross top/bottom boundaries
         if (newIndex in 0..<imgCount) {
-            if ((x < 0 && newIndex % gridSize == 0) || (x > 0 && newIndex % gridSize == gridSize - 1)) {
+            // for valid a index, first check if we are crossing left/right boundaries
+            val swipedLeftWhenAtLeftBoundary = x < 0 && newIndex % gridSize == 0
+            val swipedRightWhenAtRightBoundary = x > 0 && newIndex % gridSize == gridSize - 1
+            if (swipedLeftWhenAtLeftBoundary || swipedRightWhenAtRightBoundary) {
                 return
             }
             currentIndex = newIndex
@@ -203,7 +212,7 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = rememberImagePainter(photoUrl)
+    val painter = asyncPainterResource(photoUrl)
 
     Box(
         modifier = modifier
@@ -212,11 +221,14 @@ private fun UnsplashImage(
             .clickable(onClick = onTap),
         contentAlignment = Alignment.Center,
     ) {
-        Image(
-            painter = painter,
+        KamelImage(
+            resource = painter,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
+            onLoading = {
+                CircularProgressIndicator()
+            }
         )
     }
 }

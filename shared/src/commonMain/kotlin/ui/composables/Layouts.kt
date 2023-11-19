@@ -14,8 +14,8 @@ fun SimpleGrid(
         modifier = modifier,
         content = content
     ) { measurables, constraints ->
-
-        val placeables = measurables.map { it.measure(constraints) }
+        val placeables =
+            measurables.map { it.measure(constraints.copy(minHeight = 0, minWidth = 0)) }
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             var x = 0

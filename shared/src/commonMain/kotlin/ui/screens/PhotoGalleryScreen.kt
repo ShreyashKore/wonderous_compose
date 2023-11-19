@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -25,7 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -44,7 +43,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.seiko.imageloader.rememberImagePainter
 import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
 import io.kamel.image.KamelImage
@@ -55,12 +53,11 @@ import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
 import ui.utils.simpleTransformable
-import kotlin.math.roundToInt
 
 // TODO: move into separate file
 val BackgroundColor = Color.Black
 
-@OptIn(ExperimentalStdlibApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun PhotoGallery(
     wonder: Wonder,
@@ -69,7 +66,7 @@ fun PhotoGallery(
 
     val imgCount = gridSize * gridSize
 
-    var currentIndex by remember { mutableStateOf((gridSize * gridSize / 2f).roundToInt()) }
+    var currentIndex by remember { mutableStateOf((gridSize * gridSize / 2)) }
 
     val density = LocalDensity.current
 
@@ -90,19 +87,16 @@ fun PhotoGallery(
     }
 
 
-    val totalSize = DpSize(maxWidth * 0.7f, maxHeight * 0.5f)
-    val totalSizePx = with(density) { totalSize.toSize() }
+    val itemSize = DpSize(maxWidth * 0.7f, maxHeight * 0.5f)
+    val itemSizePx = with(density) { itemSize.toSize() }
     val padding = 10.dp
 
-    val originOffset = with(density) {
-        val screenCenter = Offset(maxWidth.toPx() / 2f, maxHeight.toPx() / 2f)
-        val imageCenter = Offset(totalSizePx.width / 2f, totalSizePx.height / 2f)
-        screenCenter - imageCenter
-    }
+    val originOffset = Offset(itemSizePx.width, itemSizePx.height) * 2f
+
     val col = currentIndex % gridSize
     val row = currentIndex / gridSize
     val indexedOffset by animateOffsetAsState(
-        Offset(-totalSizePx.width * col, -totalSizePx.height * row)
+        Offset(-itemSizePx.width * col, -itemSizePx.height * row)
     )
     val gridOffset = originOffset + indexedOffset
 
@@ -143,13 +137,14 @@ fun PhotoGallery(
 
     SimpleGrid(
         modifier = Modifier
+            .requiredSize(itemSize * gridSize)
             .eightWaySwipeDetector(onSwipe = ::onSwipe)
             .offset { gridOffset.roundToIntOffset() },
         columnCount = gridSize,
     ) {
         urls.forEachIndexed { i, photoId ->
             UnsplashImage(
-                modifier = Modifier.size(totalSize).padding(padding),
+                modifier = Modifier.size(itemSize).padding(padding),
                 onTap = { onTap(i) },
                 isSelected = i == currentIndex,
                 photoUrl = photoId,
@@ -160,7 +155,7 @@ fun PhotoGallery(
     AnimatedCutOut(
         modifier = Modifier.fillMaxSize(),
         currentIndex = currentIndex,
-        cutoutSize = totalSize - DpSize(padding, padding),
+        cutoutSize = itemSize - DpSize(padding, padding),
     )
 
 
@@ -240,9 +235,13 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         Modifier.fillMaxSize().background(black.copy(alpha = .6f)).clickable { onDismiss() },
         contentAlignment = Alignment.Center,
     ) {
-        Image(
-            rememberImagePainter(url), contentDescription = null,
+        KamelImage(
+            asyncPainterResource(url),
+            contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
+            onLoading = {
+                CircularProgressIndicator()
+            }
         )
     }
 }

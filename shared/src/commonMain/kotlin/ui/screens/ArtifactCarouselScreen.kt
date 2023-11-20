@@ -1,7 +1,6 @@
 package ui.screens
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -16,43 +15,40 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.FixedScale
+import androidx.compose.ui.layout.ScaleFactor
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -61,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import com.seiko.imageloader.rememberImagePainter
 import data.HighlightData
 import models.Wonder
+import ui.AppIcons
+import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.theme.TenorSans
 import ui.theme.offWhite
@@ -69,7 +67,7 @@ import kotlin.math.absoluteValue
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class
+    ExperimentalMaterial3Api::class
 )
 @Composable
 fun ArtifactCarouselScreen(
@@ -103,8 +101,8 @@ fun ArtifactCarouselScreen(
             Image(
                 painter = rememberImagePainter(imageUrl),
                 contentDescription = "background",
-                modifier = Modifier.blur(2.dp).fillMaxWidth().fillMaxHeight(0.7f),
-                contentScale = FixedScale(1.5f),
+                modifier = Modifier.blur(2.dp).fillMaxWidth().fillMaxHeight(0.8f),
+                contentScale = ContentScale.cropScaled(1.4f),
                 colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.5f), BlendMode.Multiply)
             )
         }
@@ -119,70 +117,66 @@ fun ArtifactCarouselScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CompositionLocalProvider(
-            LocalContentColor provides Color.White
-        ) {
-            Box( // Title bar
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
+
+        CenterAlignedTopAppBar(
+            title = {
                 Text(
                     "ARTIFACTS",
                     style = MaterialTheme.typography.bodyLarge,
+                    color = white
                 )
-                IconButton(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = openAllArtifactsScreen
-                ) {
-                    Icon(Icons.Rounded.Search, contentDescription = null)
-                }
-            }
-        }
+            },
+            actions = {
+                AppIconButton(
+                    iconPath = AppIcons.Search,
+                    contentDescription = "Search",
+                    onClick = openAllArtifactsScreen,
+                )
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.Transparent)
+        )
 
-        HorizontalPager(
-            modifier = Modifier
-                .weight(.65f)
-                .requiredHeightIn(min = 200.dp),
-            state = pagerState,
-            contentPadding = PaddingValues(
-                horizontal = (maxWidth - 200.dp) / 2
-            ),
-            pageSize = PageSize.Fixed(200.dp),
-            pageSpacing = 20.dp,
-            verticalAlignment = Alignment.Bottom,
-        ) { pageNo ->
-            val index = pageNo % artifacts.size
-            val artifact = artifacts[index]
-            ArtifactImage(
-                name = artifact.title,
-                image = artifact.imageUrlSmall,
-                isSelected = pagerState.currentPage == pageNo,
-                onClick = {
-                    openArtifactDetailsScreen(artifact.id)
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        val pageOffset = (
-                                (pagerState.currentPage - pageNo) + pagerState
-                                    .currentPageOffsetFraction
-                                ).absoluteValue
-                        translationY = lerp(0.dp, 40.dp, fraction = pageOffset).toPx()
-                    }
-            )
-        }
 
-        Spacer(Modifier.height(20.dp))
-
-        Column(
-            Modifier.fillMaxHeight(.35f),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            Modifier.weight(1f),
         ) {
+            HorizontalPager(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxHeight(),
+                state = pagerState,
+                contentPadding = PaddingValues(
+                    horizontal = (maxWidth - 200.dp) / 2
+                ),
+                pageSize = PageSize.Fixed(200.dp),
+                pageSpacing = 20.dp,
+                verticalAlignment = Alignment.Top,
+            ) { pageNo ->
+                val index = pageNo % artifacts.size
+                val artifact = artifacts[index]
+                ArtifactImage(
+                    name = artifact.title,
+                    image = artifact.imageUrlSmall,
+                    isSelected = pagerState.currentPage == pageNo,
+                    onClick = {
+                        openArtifactDetailsScreen(artifact.id)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.7f)
+                        .graphicsLayer {
+                            val pageOffset =
+                                ((pagerState.currentPage - pageNo) + pagerState.currentPageOffsetFraction).absoluteValue
+                            translationY = lerp(0.dp, 80.dp, fraction = pageOffset).toPx()
+                        }
+                )
+            }
+
             AnimatedContent(
+                modifier = Modifier.align(BiasAlignment(horizontalBias = 0f, verticalBias = .8f)),
                 targetState = currentArtifact.title,
-                transitionSpec = {
-                    fadeIn() togetherWith fadeOut()
-                }
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                contentAlignment = Alignment.Center,
             ) { title ->
                 Text(
                     title,
@@ -192,16 +186,15 @@ fun ArtifactCarouselScreen(
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
-
-            Spacer(Modifier.weight(1f))
-
-            LongButton(
-                label = "BROWSE ALL ARTIFACTS",
-                onClick = openAllArtifactsScreen,
-                modifier = Modifier
-                    .padding(vertical = 20.dp, horizontal = 20.dp)
-            )
         }
+
+        LongButton(
+            label = "BROWSE ALL ARTIFACTS",
+            onClick = openAllArtifactsScreen,
+            modifier = Modifier
+                .padding(vertical = 20.dp, horizontal = 20.dp)
+                .widthIn(max = 400.dp)
+        )
     }
 }
 
@@ -233,4 +226,10 @@ private fun ArtifactImage(
         )
     }
 
+}
+
+fun ContentScale.Companion.cropScaled(scale: Float = 1f) = object : ContentScale {
+    override fun computeScaleFactor(srcSize: Size, dstSize: Size): ScaleFactor {
+        return ContentScale.Crop.computeScaleFactor(srcSize, dstSize) * scale
+    }
 }

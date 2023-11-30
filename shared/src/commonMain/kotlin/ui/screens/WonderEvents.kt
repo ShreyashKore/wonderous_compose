@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -73,8 +74,8 @@ fun WonderEvents(
     val sheetHeight = maxHeight * 0.45f
 
     @Composable
-    fun ListComposable() {
-        LazyColumn {
+    fun ListComposable(bottomPadding: Dp = 0.dp) {
+        LazyColumn(contentPadding = PaddingValues(bottom = bottomPadding)) {
             items(wonderEvents.toList()) { item ->
                 TimelineEventCard(
                     year = item.first,
@@ -159,8 +160,7 @@ fun WonderEvents(
                 )
             },
             sheetContent = {
-                ListComposable()
-                Spacer(Modifier.height(500.dp))
+                ListComposable(bottomPadding = 500.dp)
             },
         ) {
             WonderImageWithTimeline()
@@ -237,7 +237,8 @@ fun TimelineEventCard(
     ) {
         Row(
             modifier = Modifier.height(IntrinsicSize.Min)
-                .padding(10.dp)
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // Date
             Column(
@@ -249,8 +250,8 @@ fun TimelineEventCard(
                 Text(
                     text = "${year.absoluteValue}",
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.W400,
-                        lineHeight = 24.sp,
+                        fontWeight = FontWeight.W500,
+                        lineHeight = 20.sp,
                         fontFamily = TenorSans
                     )
                 )
@@ -258,6 +259,7 @@ fun TimelineEventCard(
                     text = getYrSuffix(year),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = TenorSans,
+                        fontWeight = FontWeight.W500
                     )
                 )
             }
@@ -265,9 +267,10 @@ fun TimelineEventCard(
             // Divider
             Divider(
                 modifier = Modifier
+                    .padding(horizontal = 8.dp)
                     .width(1.dp)
-                    .fillMaxHeight()
-                    .padding(horizontal = 8.dp),
+                    .fillMaxHeight(),
+                color = contentColor
             )
 
             // Text content

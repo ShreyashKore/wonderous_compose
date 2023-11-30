@@ -39,7 +39,7 @@ fun App() {
                         initialWonder = wonder,
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
-                        openArtifactListScreen = { navigator.navigate("/search") },
+                        openArtifactListScreen = { navigator.navigate("/search/${it.title}") },
                         openMapScreen = { navigator.navigate("/maps/${it.title}") },
                         openVideoScreen = {
                             println(it)
@@ -79,7 +79,7 @@ fun App() {
                 }
 
                 scene(
-                    "/search",
+                    "/search/{type}",
                     navTransition = NavTransition(
                         createTransition = slideIn { IntOffset(it.width, 0) },
                         destroyTransition = slideOut { IntOffset(it.width, 0) },

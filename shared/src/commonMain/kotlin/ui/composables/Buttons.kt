@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.theme.black
 import ui.theme.greyStrong
 import ui.theme.white
 
@@ -38,7 +37,7 @@ fun AppIconButton(
             contentDescription = contentDescription,
             modifier = Modifier
                 .clip(CircleShape)
-                .background(black)
+                .background(greyStrong)
                 .padding(8.dp)
                 .size(32.dp),
             tint = white

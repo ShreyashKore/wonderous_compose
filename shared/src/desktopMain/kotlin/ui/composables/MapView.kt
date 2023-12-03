@@ -17,7 +17,7 @@ actual fun MapView(
     zoomLevel: Float,
     mapType: MapType
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         Text("Map Not implemented")
         Text("Lat: ${gps.latitude}, Lng: ${gps.longitude}")
     }

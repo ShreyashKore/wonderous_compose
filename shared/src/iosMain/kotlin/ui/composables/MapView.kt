@@ -47,8 +47,8 @@ actual fun MapView(
             it.setRegion(
                 MKCoordinateRegionMakeWithDistance(
                     centerCoordinate = location,
-                    zoomLevel * 10_000.0,
-                    zoomLevel * 10_000.0
+                    10_000.0 / zoomLevel,
+                    10_000.0 / zoomLevel
                 ),
                 animated = false
             )

@@ -11,6 +11,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -39,7 +40,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -51,14 +54,14 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import models.AllTimeLineEvents
 import models.ChichenItza
 import models.ChristRedeemer
@@ -71,8 +74,11 @@ import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import platform.Platform
+import platform.platform
 import ui.AppIcons
 import ui.composables.AppIconButton
+import ui.composables.RotatedLayout
 import ui.getAssetPath
 import ui.theme.Raleway
 import ui.theme.TenorSans
@@ -83,7 +89,7 @@ import ui.theme.fgColor
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
-import ui.utils.extrapolate
+import ui.utils.lerp
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
 import kotlin.math.absoluteValue
@@ -100,7 +106,8 @@ fun TimeLineScreen(
     onClickBack: () -> Unit,
 ) = BoxWithConstraints {
     val scrollState = rememberScrollState()
-    val timelineHeight = timelineDuration.dp
+    var scale by remember { mutableStateOf(1.dp) }
+    val timelineHeight = timelineDuration * scale
     val padding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
@@ -126,6 +133,11 @@ fun TimeLineScreen(
 
     Box(
         Modifier.background(black)
+            .pointerInput(Unit) {
+                detectTransformGestures { centroid, pan, zoom, rotation ->
+                    scale = (scale * zoom).coerceIn(0.5f.dp, 2.dp)
+                }
+            }
             .verticalScroll(scrollState)
             .padding(vertical = padding)
             .height(timelineHeight)
@@ -262,32 +274,25 @@ fun SmallTimeLine(
     scrollThumbWidth: Dp = 72.dp,
     modifier: Modifier = Modifier,
     highLightedWonder: Wonder? = null,
-) = BoxWithConstraints(
-    // Rotating child composables but and giving them reversed constraints
-    modifier.layout { measurables, constraints ->
-        val w = constraints.maxWidth
-        val h = constraints.maxHeight
-        val reversedConstraints = Constraints.fixed(h, w)
-        val placeable = measurables.measure(reversedConstraints)
-        layout(width = w, height = h) {
-            placeable.placeWithLayer((w - h) / 2, -((w - h) / 2)) {
-                rotationZ = -90f
-            }
+) = RotatedLayout(rotationDegrees = -90f, modifier = modifier) {
+
+    BoxWithConstraints {
+        WonderLines(
+            getScrollFraction = { 0f },
+            modifier = Modifier.padding(12.dp),
+            outlineOnly = true,
+            selectedWonder = highLightedWonder
+        )
+        if (getScrollFraction != null) {
+            // Scroll Thumb : only shown when scroll info is provided
+            Box(
+                Modifier.offset {
+                    val offset = ((maxHeight - scrollThumbWidth) * getScrollFraction()).roundToPx()
+                    IntOffset(0, offset)
+                }.border(1.dp, offWhite, RoundedCornerShape(8.dp)).fillMaxWidth()
+                    .height(scrollThumbWidth)
+            )
         }
-    }
-) {
-    WonderLines(
-        getScrollFraction = { 0f },
-        modifier = Modifier.padding(12.dp),
-        outlineOnly = true,
-        selectedWonder = highLightedWonder
-    )
-    if (getScrollFraction != null) {
-        // Scroll Thumb : only shown when scroll info is provided
-        Box(Modifier.offset {
-            val offset = ((maxHeight - scrollThumbWidth) * getScrollFraction()).roundToPx()
-            IntOffset(0, offset)
-        }.border(1.dp, offWhite, RoundedCornerShape(8.dp)).fillMaxWidth().height(scrollThumbWidth))
     }
 }
 
@@ -378,10 +383,10 @@ fun WonderLine(
         else wonder.fgColor
 
     Line(
-        from = wonder.startYr,
-        to = wonder.endYr,
-        rangeStart = -3000,
-        rangeEnd = 2200,
+        start = wonder.startYr,
+        end = wonder.endYr,
+        totalRangeStart = StartYear,
+        totalRangeEnd = EndYear,
         getScroll = getScroll,
         modifier = Modifier.background(
             color = bgColor,
@@ -401,8 +406,10 @@ fun WonderLine(
                     .fillMaxSize()
                     .clip(CircleShape),
                 colorFilter = if (highLighted) null else ColorFilter.tint(
-                    wonder.fgColor,
-                    BlendMode.Color
+                    color = wonder.fgColor,
+                    // Color blend mode is not supported on Android versions below 29
+                    blendMode = if (platform is Platform.Android && platform.version < 29) BlendMode.Overlay
+                    else BlendMode.Color
                 ),
             )
     }
@@ -432,12 +439,10 @@ private fun TimeStripAndEventMarkers(
     Box(Modifier.weight(.6f).fillMaxHeight()) {
         AllTimeLineEvents.map {
             val highLighted = it.year in currentYear.eventHighlightRange
-            val verticalBias = extrapolate(
-                start1 = 0f,
-                end1 = 1f,
-                start2 = -1f,
-                end2 = 1f,
-                x = (it.year.toFloat() + 3000) / (range.last - range.first).toFloat()
+            val verticalBias = lerp(
+                start = -1f,
+                stop = 1f,
+                fraction = (it.year.toFloat() + 3000) / (range.last - range.first).toFloat()
             )
             EventMarker(
                 highLighted = highLighted,
@@ -467,40 +472,43 @@ private fun EventMarker(
 
 @Composable
 fun Line(
-    from: Int,
-    to: Int,
-    rangeStart: Int,
-    rangeEnd: Int,
+    start: Int,
+    end: Int,
+    totalRangeStart: Int,
+    totalRangeEnd: Int,
     getScroll: () -> Float,
     modifier: Modifier = Modifier,
     content: @Composable (() -> Unit)? = null,
 ) = BoxWithConstraints {
-    val totalRange = rangeEnd - rangeStart
-    val unitDistance = maxHeight / totalRange
+    val totalRange = totalRangeEnd - totalRangeStart
+    val dpPerUnit = maxHeight / totalRange
 
-    val minSpace = maxOf(100, (maxWidth / unitDistance).toInt())
+    val minRange = maxOf(100, (maxWidth / dpPerUnit).toInt())
 
-    val range = to - from
-    val safeFrom = (if (range < minSpace) from - (minSpace - range) / 2 else from) - rangeStart
-    val safeRange = maxOf(range, minSpace)
+    val range = end - start
+    // For some wonders their range is too small to display correctly so we define minRange
+    val safeStart =
+        (if (range < minRange) start - (minRange - range) / 2 else start) - totalRangeStart
+    val safeRange = maxOf(range, minRange)
 
 
-    val fromFraction = safeFrom / totalRange.toFloat()
-    val fraction = safeRange.toFloat() / totalRange
-    val startOffset = unitDistance * safeFrom.toFloat()
-    val fractionHeight = unitDistance * safeRange
-    val thumbSize = maxOf(maxWidth, minOf(fractionHeight, unitDistance * 200))
-    val thumbEndOffset = fractionHeight - thumbSize
+    val fractionOfTotalRange = safeRange.toFloat() / totalRange
+    val safeStartOffset = dpPerUnit * safeStart.toFloat()
+    val safeHeightDp = dpPerUnit * safeRange
+    val thumbSize = maxOf(maxWidth, minOf(safeHeightDp, 300.dp))
+
     Box(
         Modifier
             .fillMaxWidth()
-            .fillMaxHeight(fraction)
-            .offset(y = startOffset) then modifier,
+            .fillMaxHeight(fractionOfTotalRange)
+            .offset(y = safeStartOffset) then modifier,
     ) {
         if (content != null) {
             Box(Modifier.fillMaxWidth().height(thumbSize).offset {
-                val scroll = ((getScroll() - fromFraction) / fraction).coerceIn(0f, 1f)
-                val offsetPx = lerp(0, thumbEndOffset.roundToPx(), scroll)
+                val startFraction = safeStart / totalRange.toFloat()
+                val thumbMaxOffsetDp = safeHeightDp - thumbSize
+                val scroll = ((getScroll() - startFraction) / fractionOfTotalRange).coerceIn(0f, 1f)
+                val offsetPx = lerp(0, thumbMaxOffsetDp.roundToPx(), scroll)
                 IntOffset(0, offsetPx)
             }) {
                 content()
@@ -509,18 +517,6 @@ fun Line(
     }
 }
 
-
-fun Offset.toIntOffset() = IntOffset(x = x.roundToInt(), y = y.roundToInt())
-
-
-fun lerp(start: Float, end: Float, fraction: Float): Float = (1 - fraction) * start + fraction * end
-fun lerp(start: Int, end: Int, fraction: Float): Int =
-    start + ((end - start) * fraction.toDouble()).roundToInt()
-
-
-fun inverseLerp(start: Float, end: Float, value: Float): Float {
-    return (value - start) / (end - start)
-}
 
 /**
  * Range of year in which the event popup is shown and event marker is highlighted

@@ -1,3 +1,5 @@
 package platform
 
-actual val platform = Platform.Android
+import android.os.Build
+
+actual val platform: Platform = Platform.Android(Build.VERSION.SDK_INT)

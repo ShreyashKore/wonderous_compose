@@ -1,3 +1,3 @@
 package platform
 
-actual val platform = Platform.Desktop
+actual val platform: Platform = Platform.Desktop

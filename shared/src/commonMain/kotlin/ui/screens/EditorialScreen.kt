@@ -89,7 +89,6 @@ import ui.composables.YouTubeThumbnail
 import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
 import ui.getAssetPath
-import ui.mainImageName
 import ui.theme.B612Mono
 import ui.theme.Cinzel
 import ui.theme.accent1
@@ -111,6 +110,7 @@ fun EditorialScreen(
     openHomeScreen: () -> Unit,
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
+    sharedElement: @Composable () -> Unit
 ) {
     val density = LocalDensity.current
     val nestedScrollConnection = remember {
@@ -155,17 +155,7 @@ fun EditorialScreen(
                     .background(wonder.bgColor)
             )
         }
-        Image(
-            painterResource(wonder.getAssetPath(wonder.mainImageName)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(280.dp)
-                .padding(top = 10.dp)
-                .zIndex(0.1f),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            alignment = Alignment.BottomCenter,
-        )
+        sharedElement()
     }
     LazyColumn(modifier = Modifier.nestedScroll(nestedScrollConnection), state = scrollState) {
         // 0

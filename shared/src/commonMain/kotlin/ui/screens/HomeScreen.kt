@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -81,8 +80,6 @@ import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.composables.IllustrationPiece
 import ui.composables.WonderTitleText
-import ui.getAssetPath
-import ui.mainImageName
 import ui.theme.bgColor
 import ui.theme.fgColor
 import kotlin.math.roundToInt
@@ -97,6 +94,7 @@ fun HomeScreen(
     pagerState: PagerState,
     swipeableState: SwipeableState<SharedScreen>,
     openDetailScreen: () -> Unit,
+    sharedElement: @Composable () -> Unit,
 ) = BoxWithConstraints {
     val swipeProgress by remember {
         derivedStateOf {
@@ -130,19 +128,7 @@ fun HomeScreen(
         ) { pageNo ->
             val wonder = Wonders[pageNo % Wonders.size]
             Box(Modifier.fillMaxSize()) {
-                Image(
-                    painterResource(wonder.getAssetPath(wonder.mainImageName)),
-                    contentDescription = "main",
-                    modifier = Modifier.graphicsLayer {
-                        val scale = 1 - swipeProgress * .01f
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                        .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
-                        .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
-                        .wrapContentSize(unbounded = true).requiredHeight(wonder.fractionalScale),
-                    contentScale = ContentScale.FillHeight,
-                )
+                sharedElement()
             }
         }
 
@@ -545,7 +531,7 @@ fun VerticalSwipeIndicator(
     }
 }
 
-private val Wonder.fractionalScale
+val Wonder.fractionalScale
     get() = when (this) {
         ChichenItza -> .4f
         ChristRedeemer -> .95f

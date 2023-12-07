@@ -46,7 +46,10 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.getAssetPath
-import ui.screens.WonderDetailsScreen.*
+import ui.screens.WonderDetailsScreen.ArtifactCarousel
+import ui.screens.WonderDetailsScreen.Editorial
+import ui.screens.WonderDetailsScreen.PhotoGallery
+import ui.screens.WonderDetailsScreen.WonderEvents
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
@@ -62,6 +65,7 @@ fun WonderDetailsScreen(
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
     wonder: Wonder,
+    sharedElement: @Composable () -> Unit,
 ) = BoxWithConstraints {
     var currentScreen by rememberSaveable { mutableStateOf(Editorial) }
     val navbarMode = if (maxWidth > 800.dp) NavBarMode.NavRail else NavBarMode.BottomBar
@@ -99,6 +103,7 @@ fun WonderDetailsScreen(
                     openHomeScreen = onPressHome,
                     openMapScreen = openMapScreen,
                     openVideoScreen = openVideoScreen,
+                    sharedElement = sharedElement
                 )
 
                 PhotoGallery -> PhotoGallery(wonder = wonder)

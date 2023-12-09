@@ -31,7 +31,7 @@ fun IllustrationPiece(
     currentWonder: Wonder,
     wonder: Wonder,
     imageName: String,
-    swipeProgress: Float = 0f,
+    verticalSwipeProgress: Float = 0f,
     modifier: Modifier,
     contentScale: ContentScale = ContentScale.Crop,
     hiddenStateOffset: () -> Offset = { Offset(1f, 1f) },
@@ -56,7 +56,7 @@ fun IllustrationPiece(
             targetOffset = ::getHiddenStateOffset
         ),
         modifier = Modifier.graphicsLayer {
-            val scale = 1 + swipeProgress * .03f
+            val scale = 1 + verticalSwipeProgress * .03f
             scaleX = scale
             scaleY = scale
         }.wrapContentSize(unbounded = true) then modifier,

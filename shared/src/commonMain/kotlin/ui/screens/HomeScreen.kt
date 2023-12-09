@@ -100,20 +100,18 @@ fun HomeScreen(
 ) = BoxWithConstraints {
     val swipeProgress by remember {
         derivedStateOf {
+            // `progress.fraction` resets to 1 so here we return 0
             if (swipeableState.progress.from == SharedScreen.Home && swipeableState.progress.to == SharedScreen.Home) 0f
             else swipeableState.progress.fraction
         }
     }
     val maxHeight = maxHeight
 
-    fun Modifier.requiredHeight(fraction: Float) = requiredHeight(maxHeight * fraction)
-
     Box(
         Modifier.fillMaxSize().swipeable(
-            swipeableState, orientation = Orientation.Vertical, anchors = mapOf(
-                0f to SharedScreen.Home,
-                -300f to SharedScreen.Details,
-            )
+            state = swipeableState,
+            orientation = Orientation.Vertical,
+            anchors = mapOf(0f to SharedScreen.Home, -300f to SharedScreen.Details)
         )
 
     ) {
@@ -129,25 +127,24 @@ fun HomeScreen(
             key = { it }
         ) { pageNo ->
             val wonder = Wonders[pageNo % Wonders.size]
-            Box(Modifier.fillMaxSize()) {
-                Image(
-                    painterResource(wonder.getAssetPath(wonder.mainImageName)),
-                    contentDescription = "main",
-                    modifier = Modifier.graphicsLayer {
-                        val scale = 1 - swipeProgress * .01f
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                        .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
-                        .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
-                        .wrapContentSize(unbounded = true).requiredHeight(wonder.fractionalScale),
-                    contentScale = ContentScale.FillHeight,
-                )
-            }
+            Image(
+                painterResource(wonder.getAssetPath(wonder.mainImageName)),
+                contentDescription = "main",
+                modifier = Modifier.graphicsLayer {
+                    val scale = 1 - swipeProgress * .01f
+                    scaleX = scale
+                    scaleY = scale
+                }
+                    .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
+                    .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
+                    .wrapContentSize(unbounded = true)
+                    .requiredHeight(maxHeight * wonder.fractionalScale),
+                contentScale = ContentScale.FillHeight,
+            )
         }
 
         WonderIllustrationFg(
-            wonder = currentWonder, swipeProgress = swipeProgress
+            wonder = currentWonder, verticalSwipeProgress = swipeProgress
         )
 
         Box {
@@ -184,12 +181,12 @@ fun HomeScreen(
 @Composable
 fun WonderIllustrationFg(
     wonder: Wonder,
-    swipeProgress: Float,
+    verticalSwipeProgress: Float,
 ) = BoxWithConstraints(
     Modifier.fillMaxSize().drawWithContent {
-        val gradientTopStop = .4f - swipeProgress * .2f
-        val gradientBottomStop = 10f - swipeProgress * .2f
-        val gradientBottomAlpha = (.9f + swipeProgress * .2f).coerceIn(0f, 1f)
+        val gradientTopStop = .4f - verticalSwipeProgress * .2f
+        val gradientBottomStop = 10f - verticalSwipeProgress * .2f
+        val gradientBottomAlpha = (.9f + verticalSwipeProgress * .2f).coerceIn(0f, 1f)
         drawContent()
         drawRect(
             Brush.verticalGradient(
@@ -210,24 +207,28 @@ fun WonderIllustrationFg(
     fun Modifier.offset(x: Float, y: Float) = offset(smallestDim * x, smallestDim * y)
 
     // Wall
-    IllustrationPiece(wonder = GreatWall,
+    IllustrationPiece(
+        wonder = GreatWall,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomEnd).width(1.6f).offset(.7f, .6f),
         currentWonder = wonder,
-        hiddenStateOffset = { Offset(.3f, .4f) })
-    IllustrationPiece(wonder = GreatWall,
+        hiddenStateOffset = { Offset(.3f, .4f) },
+    )
+    IllustrationPiece(
+        wonder = GreatWall,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomStart).width(1.6f).offset(-.8f, .95f),
         currentWonder = wonder,
-        hiddenStateOffset = { Offset(-.3f, .4f) })
+        hiddenStateOffset = { Offset(-.3f, .4f) },
+    )
 
     // Petra
     IllustrationPiece(
         wonder = Petra,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.CenterEnd).requiredHeight(maxHeight)
             .offset(x = .7f, y = 0f),
         currentWonder = wonder,
@@ -238,7 +239,7 @@ fun WonderIllustrationFg(
     IllustrationPiece(
         wonder = Petra,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.CenterStart).requiredHeight(maxHeight)
             .offset(x = -.7f, y = 0f),
         currentWonder = wonder,
@@ -251,13 +252,13 @@ fun WonderIllustrationFg(
     // Colosseum
     IllustrationPiece(wonder = Colosseum,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomStart).height(1.5f).offset(-.3f, .3f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.3f, .3f) })
     IllustrationPiece(wonder = Colosseum,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomEnd).height(1.5f).offset(.3f, .4f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.3f, .3f) })
@@ -265,25 +266,25 @@ fun WonderIllustrationFg(
     // ChichenItza
     IllustrationPiece(wonder = ChichenItza,
         imageName = "top-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.TopStart).height(1.2f).offset(-.5f, -.4f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.3f, -.3f) })
     IllustrationPiece(wonder = ChichenItza,
         imageName = "top-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.TopEnd).height(1.2f).offset(.4f, -.5f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.3f, -.3f) })
     IllustrationPiece(wonder = ChichenItza,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomStart).height(1.2f).offset(-.4f, .2f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.3f, .3f) })
     IllustrationPiece(wonder = ChichenItza,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomEnd).height(.8f).offset(.3f, -.1f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.3f, .3f) })
@@ -292,7 +293,7 @@ fun WonderIllustrationFg(
     IllustrationPiece(
         wonder = MachuPicchu,
         imageName = "foreground-back.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomCenter).height(1f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(0f, .1f) },
@@ -301,7 +302,7 @@ fun WonderIllustrationFg(
     IllustrationPiece(
         wonder = MachuPicchu,
         imageName = "foreground-front.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomCenter).height(1.2f).offset(-.5f, .45f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(0f, .1f) },
@@ -312,13 +313,13 @@ fun WonderIllustrationFg(
     // Taj Mahal
     IllustrationPiece(wonder = TajMahal,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomEnd).height(1f).offset(.15f, -.1f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.5f, .5f) })
     IllustrationPiece(wonder = TajMahal,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomStart).height(1f).offset(-.1f, -.1f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.5f, .5f) })
@@ -326,13 +327,13 @@ fun WonderIllustrationFg(
     // Christ
     IllustrationPiece(wonder = ChristRedeemer,
         imageName = "foreground-left.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomStart).height(1.2f).offset(-.4f, -.1f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.4f, 0f) })
     IllustrationPiece(wonder = ChristRedeemer,
         imageName = "foreground-right.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomEnd).height(1.2f).offset(.5f, .2f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.4f, 0f) })
@@ -341,7 +342,7 @@ fun WonderIllustrationFg(
     IllustrationPiece(
         wonder = PyramidsGiza,
         imageName = "foreground-back.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomCenter).height(1f).offset(.6f, 0f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(.2f, .3f) },
@@ -350,7 +351,7 @@ fun WonderIllustrationFg(
     IllustrationPiece(
         wonder = PyramidsGiza,
         imageName = "foreground-front.png",
-        swipeProgress = swipeProgress,
+        verticalSwipeProgress = verticalSwipeProgress,
         modifier = Modifier.align(Alignment.BottomCenter).height(1f).offset(-.2f, 0f),
         currentWonder = wonder,
         hiddenStateOffset = { Offset(-.2f, .3f) },

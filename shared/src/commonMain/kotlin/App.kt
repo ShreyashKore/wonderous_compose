@@ -88,7 +88,8 @@ fun App() {
                     val id = backStackEntry.path<String>("type")
                     val wonder = Wonder.parse(id)
                     ArtifactListScreen(
-                        wonder = wonder
+                        wonder = wonder,
+                        onBackClick = { navigator.goBack() },
                     )
                 }
 

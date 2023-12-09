@@ -27,7 +27,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -74,6 +73,7 @@ fun ArtifactDetailsScreen(
     artifactId: String,
     onClickBack: () -> Unit,
 ) {
+    // Not an ideal way to handle data fetching. Use ViewModel instead.
     val repo = remember { MetRepository() }
     var result by remember { mutableStateOf<Result<ArtifactData?>?>(null) }
     LaunchedEffect(artifactId) {
@@ -91,58 +91,55 @@ fun ArtifactDetailsScreen(
     }
 
 
-    Scaffold(
-        content = { _ ->
-            Box(
-                modifier = Modifier.fillMaxSize()
-                    .background(greyStrong)
-                    .verticalScroll(scrollState),
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .background(greyStrong)
+            .verticalScroll(scrollState),
+    ) {
+        if (result == null) {
+            CircularProgressIndicator(
+                Modifier.align(Alignment.Center)
+            )
+        } else if (result!!.isFailure || (result!!.getOrNull() == null)) {
+            ArtifactNotFoundError()
+        } else {
+            val data = result!!.getOrThrow()!!
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (result == null) {
-                    CircularProgressIndicator(
-                        Modifier.align(Alignment.Center)
-                    )
-                } else if (result!!.isFailure || (result!!.getOrNull() == null)) {
-                    ArtifactNotFoundError()
-                } else {
-                    val data = result!!.getOrThrow()!!
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        ArtifactImage(
-                            imageUrl = data.image ?: "",
-                            onImagePressed = {},
-                            modifier = Modifier.zIndex(1f)
-                                .offset {
-                                    IntOffset(0, scrollState.value)
-                                }.fillMaxWidth()
-                                .height(imageHeight)
-                        )
-                        InfoColumn(
-                            data = data,
-                        )
-                    }
-                }
-                TopAppBar(
-                    modifier = Modifier.offset {
-                        IntOffset(0, scrollState.value)
-                    },
-                    title = {},
-                    navigationIcon = {
-                        AppIconButton(
-                            iconPath = AppIcons.Prev,
-                            contentDescription = "Back",
-                            onClick = onClickBack
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                        titleContentColor = white
-                    ),
+                ArtifactImage(
+                    imageUrl = data.image ?: "",
+                    onImagePressed = {},
+                    modifier = Modifier.zIndex(1f)
+                        .offset {
+                            IntOffset(0, scrollState.value)
+                        }.fillMaxWidth()
+                        .height(imageHeight)
+                )
+                InfoColumn(
+                    data = data,
                 )
             }
         }
-    )
+        TopAppBar(
+            modifier = Modifier.offset {
+                IntOffset(0, scrollState.value)
+            },
+            title = {},
+            navigationIcon = {
+                AppIconButton(
+                    iconPath = AppIcons.Prev,
+                    contentDescription = "Back",
+                    onClick = onClickBack
+                )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                titleContentColor = white
+            ),
+        )
+    }
+
 }
 
 @Composable

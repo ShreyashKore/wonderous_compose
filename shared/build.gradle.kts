@@ -61,6 +61,7 @@ kotlin {
 
                 api("moe.tlaster:precompose:$precomposeVersion") // Navigation
                 api("io.github.kevinnzou:compose-webview-multiplatform:1.7.0")
+                api("dev.icerock.moko:mvvm-compose:0.16.1") // api mvvm-core, getViewModel for Compose Multiplatform
             }
         }
         val androidMain by getting {

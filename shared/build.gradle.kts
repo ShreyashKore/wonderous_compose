@@ -34,6 +34,16 @@ kotlin {
         }
     }
 
+//    @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+//    wasmJs {
+//        browser()
+//    }
+
+    js(IR) {
+        browser()
+        binaries.executable()
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -45,22 +55,21 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation("media.kamel:kamel-image:0.6.0")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
                 api("io.github.qdsfdhvh:image-loader:1.6.4")
-                api("io.github.oleksandrbalan:textflow:1.1.0")
+//                api("io.github.oleksandrbalan:textflow:1.1.0")
 
                 implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
                 implementation("co.touchlab:kermit:2.0.0-RC5")
 
-                implementation("com.github.skydoves:orbital:0.2.4")
+                implementation("com.github.skydoves:orbital:0.3.2")
 
                 api("moe.tlaster:precompose:$precomposeVersion") // Navigation
-                api("io.github.kevinnzou:compose-webview-multiplatform:1.7.0")
+//                api("io.github.kevinnzou:compose-webview-multiplatform:1.7.0")
                 api("dev.icerock.moko:mvvm-compose:0.16.1") // api mvvm-core, getViewModel for Compose Multiplatform
             }
         }
@@ -87,6 +96,11 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.common)
                 implementation("io.ktor:ktor-client-java:$ktorVersion")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation(compose.html.core)
             }
         }
     }

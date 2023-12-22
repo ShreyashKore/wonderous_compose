@@ -3,6 +3,7 @@ package ui.theme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +63,7 @@ val Typography.quoteFont: TextStyle
     @Composable get() = TextStyle(fontFamily = Cinzel)
 
 
+fun FontFamily(vararg fonts: Font?) = FontFamily(fonts.toList().filterNotNull())
 
 
 

@@ -1,25 +1,45 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.multiplatform)
     kotlin("native.cocoapods")
-    id("com.android.library")
-    id("org.jetbrains.compose")
-    kotlin("plugin.serialization") version "1.9.0"
+    alias(libs.plugins.compose)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.buildConfig)
+    alias(libs.plugins.kotlinx.serialization)
 }
-val ktorVersion = "2.3.2"
-val precomposeVersion = "1.5.7"
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
 
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("noJs") {
+                withAndroidTarget()
+                withNative()
+                withJvm()
+            }
+            withJs()
+        }
+    }
     androidTarget()
 
     jvm("desktop")
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "shared"
+            isStatic = true
+        }
+    }
 
     cocoapods {
         version = "1.0.0"
@@ -53,49 +73,52 @@ kotlin {
                 implementation(compose.material3)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
-                implementation("media.kamel:kamel-image:0.6.0")
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                implementation(libs.kamel.image)
+                implementation(libs.ktor.core)
+                implementation(libs.ktor.contentNegotiation)
+                implementation(libs.ktor.serialization)
+                implementation(libs.kotlinx.datetime)
 
-                api("io.github.qdsfdhvh:image-loader:1.6.4")
-//                api("io.github.oleksandrbalan:textflow:1.1.0")
+                api(libs.image.loader)
 
-                implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-                implementation("co.touchlab:kermit:2.0.0-RC5")
+                implementation(libs.insetsx)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kermit)
 
-                implementation("com.github.skydoves:orbital:0.3.2")
-
-                api("moe.tlaster:precompose:$precomposeVersion") // Navigation
-//                api("io.github.kevinnzou:compose-webview-multiplatform:1.7.0")
-                api("dev.icerock.moko:mvvm-compose:0.16.1") // api mvvm-core, getViewModel for Compose Multiplatform
+                implementation(libs.orbital)
+                api(libs.precompose)
+                api(libs.moko.mvvm)
             }
         }
+        val noJsMain by getting {
+            dependencies {
+                implementation(libs.compose.webview.multiplatform)
+            }
+        }
+
         val androidMain by getting {
             dependencies {
-                api("androidx.activity:activity-compose:1.8.0")
-                api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.12.0")
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
-                implementation("io.ktor:ktor-client-json:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("com.google.accompanist:accompanist-permissions:0.29.2-rc")
-                implementation("com.google.android.gms:play-services-maps:18.2.0")
-                implementation("com.google.android.gms:play-services-location:21.0.1")
-                implementation("com.google.maps.android:maps-compose:2.11.2")
+                api(libs.androidx.activityCompose)
+                api(libs.androidx.appcompat)
+                api(libs.androidx.core.ktx)
+                implementation(libs.ktor.client.android)
+                implementation(libs.ktor.client.json)
+                implementation(libs.ktor.client.serialization)
+                implementation(libs.accompanist.permissions)
+                implementation(libs.play.services.maps)
+                implementation(libs.play.services.location)
+                implementation(libs.maps.compose)
             }
         }
-        val iosMain by creating {
+        val iosMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                implementation(libs.ktor.client.darwin)
             }
         }
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.common)
-                implementation("io.ktor:ktor-client-java:$ktorVersion")
+                implementation(libs.ktor.client.java)
             }
         }
         val jsMain by getting {
@@ -106,23 +129,70 @@ kotlin {
     }
 }
 
-android {
-    compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.shreyashkore.common"
 
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-    sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
+android {
+    namespace = "org.shreyashkore.testkmp"
+    compileSdk = 34
 
     defaultConfig {
-        minSdk = (findProperty("android.minSdk") as String).toInt()
+        minSdk = 24
+        targetSdk = 34
+
+//        applicationId = "org.shreyashkore.testkmp.androidApp"
+//        versionCode = 1
+//        versionName = "1.0.0"
+    }
+    sourceSets["main"].apply {
+        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        res.srcDirs("src/androidMain/resources")
+        resources.srcDirs("src/commonMain/resources")
+        sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlin {
-        jvmToolchain(11)
+    buildFeatures {
+        compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
+    }
+}
+//android {
+//    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+//    namespace = "com.shreyashkore.common"
+
+//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+//    sourceSets["main"].res.srcDirs("src/androidMain/res")
+//    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+//    sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
+
+//    defaultConfig {
+//        minSdk = (findProperty("android.minSdk") as String).toInt()
+//        applicationId = "org.shreyashkore.wonderouscompose"
+//    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_11
+//        targetCompatibility = JavaVersion.VERSION_11
+//    }
+//    kotlin {
+//        jvmToolchain(11)
+//    }
+//}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "org.shreyashkore.testkmp.desktopApp"
+            packageVersion = "1.0.0"
+        }
+    }
+}
+
+compose.experimental {
+    web.application {}
 }

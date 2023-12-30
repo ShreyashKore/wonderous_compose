@@ -17,6 +17,7 @@ val cache = mutableMapOf<String, Font>()
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 actual fun font(name: String, res: String, weight: FontWeight, style: FontStyle): Font? {
+    if (cache[name] != null) return cache[name]
     var fontFamily by remember { mutableStateOf<Font?>(null) }
     LaunchedEffect(Unit) {
         val byteArray =

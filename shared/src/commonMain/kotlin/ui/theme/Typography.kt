@@ -63,7 +63,8 @@ val Typography.quoteFont: TextStyle
     @Composable get() = TextStyle(fontFamily = Cinzel)
 
 
-fun FontFamily(vararg fonts: Font?) = FontFamily(fonts.toList().filterNotNull())
+fun FontFamily(vararg fonts: Font?) =
+    if (fonts.all { it == null }) FontFamily.Default else FontFamily(fonts.toList().filterNotNull())
 
 
 

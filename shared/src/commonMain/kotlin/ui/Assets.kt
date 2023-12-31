@@ -27,6 +27,7 @@ object ImagePaths {
 
     val appLogo = "$common/app-logo.png"
     val appLogoPlain = "$common/app-logo-plain.png"
+    val noImagePlaceholder = "$common/no-image-placeholder.png"
 }
 
 

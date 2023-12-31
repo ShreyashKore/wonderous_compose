@@ -63,6 +63,7 @@ import ui.theme.black
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
+import utils.prependProxy
 
 val imageMaxHeight = 400.dp
 val imageMinHeight = 250.dp
@@ -179,7 +180,7 @@ private fun ArtifactImage(
             .padding(bottom = 12.dp),
     ) {
         KamelImage(
-            resource = asyncPainterResource(imageUrl),
+            resource = asyncPainterResource(imageUrl.prependProxy()),
             onLoading = {
                 CircularProgressIndicator()
             },

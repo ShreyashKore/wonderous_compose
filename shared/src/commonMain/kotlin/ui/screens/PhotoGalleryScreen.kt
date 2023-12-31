@@ -57,6 +57,7 @@ import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
 import ui.utils.simpleTransformable
+import utils.prependProxy
 
 // TODO: move into separate file
 val BackgroundColor = Color.Black
@@ -214,7 +215,7 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = asyncPainterResource(photoUrl)
+    val painter = asyncPainterResource(photoUrl.prependProxy())
 
     Box(
         modifier = modifier
@@ -250,7 +251,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         KamelImage(
-            asyncPainterResource(url),
+            asyncPainterResource(url.prependProxy()),
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
             onLoading = {

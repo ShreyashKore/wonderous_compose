@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,7 @@ import ui.theme.TenorSans
 import ui.theme.accent1
 import ui.theme.black
 import ui.theme.white
+import utils.prependProxy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,14 +124,17 @@ fun ArtifactListScreen(
             items(viewModel.filteredArtifacts) { artifact ->
 
                 KamelImage(
-                    asyncPainterResource(artifact.imageUrl),
+                    asyncPainterResource(artifact.imageUrl.prependProxy()),
                     contentDescription = artifact.title,
                     modifier = Modifier.padding(8.dp)
                         .aspectRatio(
                             maxOf(0.5f, artifact.aspectRatio.toFloat())
                         )
                         .clip(RoundedCornerShape(6.dp)),
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillWidth,
+                    onLoading = {
+                        CircularProgressIndicator()
+                    }
                 )
             }
         }

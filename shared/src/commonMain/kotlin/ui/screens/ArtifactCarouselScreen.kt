@@ -29,6 +29,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,15 +55,21 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
-import com.seiko.imageloader.rememberImagePainter
 import data.HighlightData
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 import models.Wonder
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import ui.AppIcons
+import ui.ImagePaths
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.theme.TenorSans
+import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
+import utils.prependProxy
 import kotlin.math.absoluteValue
 
 @OptIn(
@@ -98,8 +105,8 @@ fun ArtifactCarouselScreen(
                         fadeOut(tween(durationMillis = 800))
             },
         ) { imageUrl ->
-            Image(
-                painter = rememberImagePainter(imageUrl),
+            KamelImage(
+                resource = asyncPainterResource(imageUrl.prependProxy()),
                 contentDescription = "background",
                 modifier = Modifier.blur(2.dp).fillMaxWidth().fillMaxHeight(0.8f),
                 contentScale = ContentScale.cropScaled(1.4f),
@@ -114,6 +121,8 @@ fun ArtifactCarouselScreen(
                 .background(offWhite)
         )
     }
+
+    // foreground content
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -140,6 +149,7 @@ fun ArtifactCarouselScreen(
         Box(
             Modifier.weight(1f),
         ) {
+            // Artifact Image
             HorizontalPager(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -156,7 +166,7 @@ fun ArtifactCarouselScreen(
                 val artifact = artifacts[index]
                 ArtifactImage(
                     name = artifact.title,
-                    image = artifact.imageUrlSmall,
+                    url = artifact.imageUrlSmall,
                     isSelected = pagerState.currentPage == pageNo,
                     onClick = {
                         openArtifactDetailsScreen(artifact.id)
@@ -172,6 +182,7 @@ fun ArtifactCarouselScreen(
                 )
             }
 
+            // Artifact title
             AnimatedContent(
                 modifier = Modifier.align(BiasAlignment(horizontalBias = 0f, verticalBias = .8f)),
                 targetState = currentArtifact.title,
@@ -198,15 +209,15 @@ fun ArtifactCarouselScreen(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun ArtifactImage(
-    modifier: Modifier = Modifier,
     name: String,
-    image: String,
+    url: String,
     onClick: () -> Unit,
     isSelected: Boolean,
+    modifier: Modifier = Modifier,
 ) {
-    val imagePainter = rememberImagePainter(image)
 
     val height by animateDpAsState(if (isSelected) 300.dp else 130.dp, animationSpec = tween(800))
     val width by animateDpAsState(if (isSelected) 200.dp else 130.dp, animationSpec = tween(800))
@@ -215,14 +226,25 @@ private fun ArtifactImage(
         modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
-        Image(
-            painter = imagePainter,
+        KamelImage(
+            resource = asyncPainterResource(url.prependProxy()),
             contentDescription = name,
             modifier = Modifier
                 .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))
                 .padding(12.dp).clip(RoundedCornerShape(percent = 100)).clickable(onClick = onClick)
                 .size(DpSize(width = width, height = height)),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            onLoading = {
+                Box(
+                    Modifier.fillMaxSize().background(greyStrong),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            onFailure = {
+                Image(painterResource(ImagePaths.noImagePlaceholder), null)
+            }
         )
     }
 

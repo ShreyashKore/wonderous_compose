@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,16 +49,20 @@ import data.UnsplashPhotoSize
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import models.Wonder
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import ui.ImagePaths
 import ui.composables.SimpleGrid
 import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
 import ui.utils.simpleTransformable
+import utils.prependProxy
 
 // TODO: move into separate file
 val BackgroundColor = Color.Black
 
-@OptIn(ExperimentalStdlibApi::class)
+
 @Composable
 fun PhotoGallery(
     wonder: Wonder,
@@ -70,20 +75,15 @@ fun PhotoGallery(
 
     val density = LocalDensity.current
 
-    var photoIds by remember { mutableStateOf(listOf<String>()) }
-
     val collectionId = wonder.unsplashCollectionId
 
-    LaunchedEffect(collectionId) {
-        val ids = UnsplashPhotoData.photosByCollectionId[collectionId]?.toMutableList()
-        if (!ids.isNullOrEmpty()) {
-            // Ensure we have enough images to fill the grid, repeat if necessary
-            while (ids.size < imgCount) {
-                ids.addAll(ids)
-                if (ids.size > imgCount) ids.subList(imgCount, ids.size).clear()
-            }
-        }
-        photoIds = ids?.toList() ?: emptyList()
+    val photoIds = remember {
+        var ids = UnsplashPhotoData.photosByCollectionId[collectionId]!!.toList()
+        if (ids.isEmpty()) return@remember emptyList() // avoid infinite loop
+
+        // Ensure we have enough images to fill the grid, repeat if necessary
+        while (ids.size < imgCount) ids += ids
+        ids.subList(0, imgCount)
     }
 
 
@@ -152,9 +152,9 @@ fun PhotoGallery(
         }
     }
 
-    AnimatedCutOut(
+    OverlayWithAnimatedCutOut(
+        key = currentIndex,
         modifier = Modifier.fillMaxSize(),
-        currentIndex = currentIndex,
         cutoutSize = itemSize - DpSize(padding, padding),
     )
 
@@ -170,34 +170,42 @@ fun PhotoGallery(
 
 }
 
+/**
+ * An overlay gradient with a rounded rectangular cutout at the center.
+ * The cutout's height gets animated when the [key] changes.
+ *
+ * @param key changing this key will animate the cutout
+ * @param modifier for the overlay
+ * @param cutoutSize size of cutout
+ * @param cutoutCornerRadius corner radius of cutout. The corners are circular.
+ */
 @Composable
-private fun AnimatedCutOut(
+private fun OverlayWithAnimatedCutOut(
+    key: Any,
     modifier: Modifier = Modifier,
-    currentIndex: Int,
     cutoutSize: DpSize,
-    cornerRadius: Dp = 12.dp
+    cutoutCornerRadius: Dp = 12.dp
 ) {
-    val animatable = remember(currentIndex) { Animatable(0.8f) }
-    LaunchedEffect(currentIndex) {
+    val animatable = remember(key) { Animatable(0.8f) }
+    LaunchedEffect(key) {
         animatable.animateTo(1f, animationSpec = tween(durationMillis = 500))
     }
     val cutOutHeight = cutoutSize.height * animatable.value
 
     Box(
-        modifier.cutOut(cutoutSize.copy(height = cutOutHeight), cornerRadius)
-    ) {
-        Box(
-            Modifier.fillMaxSize().background(
+        modifier
+            .roundedRectangularCutout(cutoutSize.copy(height = cutOutHeight), cutoutCornerRadius)
+            .background(
                 Brush.radialGradient(
                     0f to BackgroundColor.copy(alpha = 0.4f),
                     1f to BackgroundColor.copy(alpha = 0.8f),
                 )
             )
-        )
-    }
+    )
 }
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun UnsplashImage(
     modifier: Modifier = Modifier,
@@ -207,7 +215,7 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = asyncPainterResource(photoUrl)
+    val painter = asyncPainterResource(photoUrl.prependProxy())
 
     Box(
         modifier = modifier
@@ -223,6 +231,13 @@ private fun UnsplashImage(
             contentScale = ContentScale.Crop,
             onLoading = {
                 CircularProgressIndicator()
+            },
+            onFailure = {
+                Image(
+                    painterResource(ImagePaths.noImagePlaceholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                )
             }
         )
     }
@@ -236,7 +251,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         KamelImage(
-            asyncPainterResource(url),
+            asyncPainterResource(url.prependProxy()),
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
             onLoading = {
@@ -247,7 +262,10 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
 }
 
 
-fun Modifier.cutOut(
+/**
+ * Creates a rounded rectangular cutout at the center
+ */
+private fun Modifier.roundedRectangularCutout(
     cutoutSize: DpSize,
     cornerRadius: Dp
 ) = drawWithContent {

@@ -90,6 +90,7 @@ fun App() {
                     ArtifactListScreen(
                         wonder = wonder,
                         onBackClick = { navigator.goBack() },
+                        onClickArtifact = { navigator.navigate("/artifact/${it}") }
                     )
                 }
 

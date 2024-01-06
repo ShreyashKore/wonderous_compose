@@ -51,6 +51,7 @@ import utils.prependProxy
 fun ArtifactListScreen(
     wonder: Wonder,
     onBackClick: () -> Unit,
+    onClickArtifact: (artifactId: Int) -> Unit,
 ) {
     val viewModel = getViewModel(wonder, viewModelFactory { ArtifactListViewModel(wonder) })
 
@@ -130,7 +131,8 @@ fun ArtifactListScreen(
                         .aspectRatio(
                             maxOf(0.5f, artifact.aspectRatio.toFloat())
                         )
-                        .clip(RoundedCornerShape(6.dp)),
+                        .clip(RoundedCornerShape(6.dp))
+                        .clickable { onClickArtifact(artifact.id) },
                     contentScale = ContentScale.FillWidth,
                     onLoading = {
                         CircularProgressIndicator()

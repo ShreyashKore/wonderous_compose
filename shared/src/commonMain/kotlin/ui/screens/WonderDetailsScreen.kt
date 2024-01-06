@@ -125,7 +125,6 @@ fun WonderDetailsScreen(
 }
 
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 private fun NavigationBar(
     wonder: Wonder,

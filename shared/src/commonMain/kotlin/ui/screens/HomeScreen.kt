@@ -127,20 +127,22 @@ fun HomeScreen(
             key = { it }
         ) { pageNo ->
             val wonder = Wonders[pageNo % Wonders.size]
-            Image(
-                painterResource(wonder.getAssetPath(wonder.mainImageName)),
-                contentDescription = "main",
-                modifier = Modifier.graphicsLayer {
-                    val scale = 1 - swipeProgress * .01f
-                    scaleX = scale
-                    scaleY = scale
-                }
-                    .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
-                    .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
-                    .wrapContentSize(unbounded = true)
-                    .requiredHeight(maxHeight * wonder.fractionalScale),
-                contentScale = ContentScale.FillHeight,
-            )
+            Box(Modifier.fillMaxSize()) {
+                Image(
+                    painterResource(wonder.getAssetPath(wonder.mainImageName)),
+                    contentDescription = "main",
+                    modifier = Modifier.graphicsLayer {
+                        val scale = 1 - swipeProgress * .01f
+                        scaleX = scale
+                        scaleY = scale
+                    }
+                        .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
+                        .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
+                        .wrapContentSize(unbounded = true)
+                        .requiredHeight(maxHeight * wonder.fractionalScale),
+                    contentScale = ContentScale.FillHeight,
+                )
+            }
         }
 
         WonderIllustrationFg(

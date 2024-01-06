@@ -400,6 +400,7 @@ fun EditorialScreen(
             Box {
                 MapView(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
                         .height(320.dp)
                         .clip(RoundedCornerShape(4.dp)),

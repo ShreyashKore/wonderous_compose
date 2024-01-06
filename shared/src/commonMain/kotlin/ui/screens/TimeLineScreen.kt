@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -111,6 +112,7 @@ fun TimeLineScreen(
     val padding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
+        // Bring the selected wonder into view when screen opens up
         val initialScrollPos = (((selectedWonder?.startYr?.minus(StartYear))?.toFloat()
             ?: 200f) / timelineDuration * scrollState.maxValue).toInt()
         // first snap timeline to scroll pos just above the selected wonder
@@ -134,16 +136,17 @@ fun TimeLineScreen(
     Box(
         Modifier.background(black)
             .pointerInput(Unit) {
-                detectTransformGestures { centroid, pan, zoom, rotation ->
+                detectTransformGestures { _, _, zoom, _ ->
                     scale = (scale * zoom).coerceIn(0.5f.dp, 2.dp)
                 }
             }
             .verticalScroll(scrollState)
             .padding(vertical = padding)
-            .height(timelineHeight)
+            .height(timelineHeight),
+        contentAlignment = Alignment.Center
     ) {
 
-        Row {
+        Row(Modifier.widthIn(max = 600.dp)) {
             TimeStripAndEventMarkers(
                 currentYear = currentYear,
                 range = StartYear..EndYear,
@@ -169,7 +172,7 @@ fun TimeLineScreen(
     SmallTimeLine(
         ::getScrollFraction,
         modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(8.dp))
-            .background(greyStrong).fillMaxWidth().height(72.dp)
+            .background(greyStrong).widthIn(max = 800.dp).height(72.dp)
             .align(Alignment.BottomCenter),
         highLightedWonder = selectedWonder
     )

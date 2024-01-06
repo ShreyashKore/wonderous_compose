@@ -9,7 +9,9 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
@@ -42,7 +44,7 @@ fun WonderTitleText(
         val i = pieces.indexOf(text)
         val addLinebreak = i == 0 && pieces.size > 1
         val addSpace = !addLinebreak && i < pieces.size - 1
-        val formattedText = if (useSmallText) text.lowercase() else text.capitalize()
+        val formattedText = if (useSmallText) text.lowercase() else text.capitalize(Locale.current)
 
         withStyle(
             if (useSmallText) spanStyle.copy(fontSize = 20.sp) else spanStyle

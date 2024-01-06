@@ -1,5 +1,6 @@
 package ui.composables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +18,11 @@ actual fun MapView(
     zoomLevel: Float,
     mapType: MapType
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
         Text("Map Not implemented")
         Text("Lat: ${gps.latitude}, Lng: ${gps.longitude}")
     }

@@ -20,9 +20,8 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 
 ## Outline
 
-* For navigation, I've used the PreCompose library. This has a very similar API to the Navigation
-  library on Android which I am already familiar with. This library provides page transition and
-  parameter parsing.
+* For navigation, PreCompose library is used. This has similar API to the AndroidX navigation
+  library.
 * HomeScreen shows the usage of HorizontalPager along with AnimatedVisibility for animating
   foreground and background elements
 * ArtifactListScreen uses a ViewModel to store business logic.
@@ -48,5 +47,11 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 > You need a Mac with macOS to write and run iOS-specific code on simulated or real devices.
 > This is an Apple requirement.
 
-For detailed information
-checkout [compose multiplatform template repo] (https://github.com/JetBrains/compose-multiplatform-template).
+> For compose multiplatform setup information
+> checkout its [template repo](https://github.com/JetBrains/compose-multiplatform-template).
+
+- Add Google Maps key in `local.properties` at the project root.
+
+```properties
+MAPS_API_KEY=YOUR_KEY
+```

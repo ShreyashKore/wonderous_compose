@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberSwipeableState
@@ -25,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.ChichenItza
@@ -73,6 +75,9 @@ fun SharedAnimationContainer(
             scope.launch {
                 swipeableState.animateTo(SharedScreen.Details)
             }
+        },
+        modifier = Modifier.run {
+            if (isMenuOpen) blur(12.dp) else this
         }
     )
 
@@ -85,6 +90,7 @@ fun SharedAnimationContainer(
             Modifier.fillMaxSize()
                 .height(72.dp)
                 .padding(horizontal = 8.dp, vertical = 8.dp)
+                .safeDrawingPadding()
                 .align(Alignment.TopCenter)
         ) {
             AppIconButton(
@@ -135,7 +141,7 @@ fun SharedAnimationContainer(
                 }
                 isMenuOpen = false
             },
-            modifier = Modifier.fillMaxSize().background(greyStrong.copy(.8f)),
+            modifier = Modifier.fillMaxSize().background(greyStrong.copy(.4f)),
             openTimeline = { openTimelineScreen(currentWonder) },
             openCollection = {}
         )

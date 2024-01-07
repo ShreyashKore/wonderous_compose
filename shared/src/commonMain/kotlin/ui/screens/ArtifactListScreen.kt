@@ -120,7 +120,7 @@ fun ArtifactListScreen(
         // Artifacts list
         LazyVerticalStaggeredGrid(
             modifier = Modifier.weight(1f),
-            columns = StaggeredGridCells.Fixed(2)
+            columns = StaggeredGridCells.Adaptive(minSize = 180.dp)
         ) {
             items(viewModel.filteredArtifacts) { artifact ->
 

@@ -27,8 +27,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -71,6 +73,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -139,6 +142,7 @@ fun EditorialScreen(
                 drawContent()
                 drawRect(SolidColor(wonder.bgColor), alpha = bgAlpha)
             }
+            .safeDrawingPadding()
     ) {
         Column {
             Image(
@@ -167,7 +171,14 @@ fun EditorialScreen(
             alignment = Alignment.BottomCenter,
         )
     }
-    LazyColumn(modifier = Modifier.nestedScroll(nestedScrollConnection), state = scrollState) {
+
+    // Main content
+    LazyColumn(
+        modifier = Modifier
+            .safeDrawingPadding()
+            .nestedScroll(nestedScrollConnection),
+        state = scrollState,
+    ) {
         // 0
         item {
             val titleAlpha by remember {
@@ -332,7 +343,9 @@ fun EditorialScreen(
         // 8
         surfaceItem {
             Column(
-                Modifier.padding(vertical = 48.dp)
+                Modifier
+                    .padding(vertical = 48.dp)
+                    .widthIn(max = 450.dp)
             ) {
                 YouTubeThumbnail(
                     wonder.videoId,
@@ -397,32 +410,32 @@ fun EditorialScreen(
         // 16
         surfaceItem {
             // Map
-            Box {
-                MapView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
-                        .height(320.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    gps = wonder.gps,
-                    title = "Map",
-                    zoomLevel = .05f,
-                    mapType = MapType.Normal,
+            MapView(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
+                    .height(320.dp)
+                    .widthIn(max = 450.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                gps = wonder.gps,
+                title = "Map",
+                zoomLevel = .05f,
+                mapType = MapType.Normal,
+            )
+            IconButton(
+                onClick = {
+                    openMapScreen(wonder)
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .background(white, RoundedCornerShape(100f)),
+            ) {
+                Icon(
+                    Icons.Rounded.Place,
+                    contentDescription = null,
                 )
-                IconButton(
-                    onClick = {
-                        openMapScreen(wonder)
-                    },
-                    modifier = Modifier.align(Alignment.TopEnd)
-                        .padding(8.dp)
-                        .background(white, RoundedCornerShape(100f)),
-                ) {
-                    Icon(
-                        Icons.Rounded.Place,
-                        contentDescription = null,
-                    )
-                }
             }
+
         }
     }
 }
@@ -432,13 +445,19 @@ fun EditorialScreen(
  */
 fun LazyListScope.surfaceItem(
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
+    maxContentWidth: Dp = 620.dp,
+    content: @Composable BoxScope.() -> Unit,
 ) {
     item {
         Box(
-            modifier.background(MaterialTheme.colorScheme.surface).fillMaxWidth()
+            modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
-            content()
+            Box(Modifier.widthIn(max = maxContentWidth)) {
+                content()
+            }
         }
     }
 }
@@ -596,6 +615,7 @@ fun PullQuote1(
     Box(
         Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 32.dp, top = 48.dp)
+            .widthIn(max = 450.dp)
             .height(500.dp)
     ) {
         val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
@@ -647,7 +667,15 @@ fun ParallaxImages(
     topImagePath: String,
     bottomImagePath: String,
 ) {
-    Box(Modifier.padding(16.dp).fillMaxWidth().height(700.dp)) {
+
+    Box(
+        Modifier
+            .padding(16.dp)
+            .widthIn(max = 400.dp)
+            .fillMaxWidth()
+            .height(700.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         Image(
             painterResource(topImagePath),
             contentDescription = null,

@@ -13,17 +13,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,13 +47,15 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.ImagePaths
 import ui.getAssetPath
-import ui.screens.WonderDetailsScreen.*
+import ui.screens.WonderDetailsScreen.ArtifactCarousel
+import ui.screens.WonderDetailsScreen.Editorial
+import ui.screens.WonderDetailsScreen.PhotoGallery
+import ui.screens.WonderDetailsScreen.WonderEvents
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
 
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun WonderDetailsScreen(
     onPressHome: () -> Unit,
@@ -87,10 +90,8 @@ fun WonderDetailsScreen(
                 if (navbarMode == NavBarMode.NavRail) padding(
                     start = if (navbarMode == NavBarMode.NavRail && currentScreen != PhotoGallery)
                         navRailWidth else 0.dp
-                ) else {
-                    if (currentScreen == PhotoGallery) this // For photo gallery don't pad as we show content behind navbar
-                    else padding(padding).consumeWindowInsets(padding)
-                }
+                ) else this
+
             }
         ) { currentSelected ->
             when (currentSelected) {
@@ -187,8 +188,9 @@ private fun NavigationBar(
         NavBarMode.BottomBar -> Row(
             Modifier
                 .fillMaxWidth()
-                .height(bottomBarHeight)
                 .background(bgColor)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .height(bottomBarHeight)
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,

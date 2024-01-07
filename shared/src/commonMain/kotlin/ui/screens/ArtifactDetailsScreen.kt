@@ -7,16 +7,20 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -73,7 +77,7 @@ val imageMinHeight = 250.dp
 fun ArtifactDetailsScreen(
     artifactId: String,
     onClickBack: () -> Unit,
-) {
+) = BoxWithConstraints {
     // Not an ideal way to handle data fetching. Use ViewModel instead.
     val repo = remember { MetRepository() }
     var result by remember { mutableStateOf<Result<ArtifactData?>?>(null) }
@@ -83,19 +87,67 @@ fun ArtifactDetailsScreen(
     val scrollState = rememberScrollState()
 
     val density = LocalDensity.current
+    val orientation = orientation
 
-    val imageHeight by remember {
-        derivedStateOf {
-            val scrollInDp = with(density) { scrollState.value.toDp() }
-            (imageMaxHeight - scrollInDp).coerceAtLeast(imageMinHeight)
+    @Composable
+    fun SingleColumnLayout() {
+        val data = result!!.getOrThrow()!!
+        val imageHeight by remember {
+            derivedStateOf {
+                val scrollInDp = with(density) { scrollState.value.toDp() }
+                (imageMaxHeight - scrollInDp).coerceAtLeast(imageMinHeight)
+            }
+        }
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            ArtifactImage(
+                imageUrl = data.image ?: "",
+                onImagePressed = {},
+                modifier = Modifier.zIndex(1f)
+                    .offset {
+                        IntOffset(0, scrollState.value)
+                    }.fillMaxWidth()
+                    .height(imageHeight)
+            )
+            InfoColumn(
+                data = data,
+                modifier = Modifier
+                    .padding(horizontal = 24.dp),
+            )
         }
     }
 
+    @Composable
+    fun TwoColumnLayout() {
+        val data = result!!.getOrThrow()!!
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            ArtifactImage(
+                imageUrl = data.image ?: "",
+                onImagePressed = {},
+                modifier = Modifier.weight(1f)
+                    .fillMaxHeight()
+            )
+            InfoColumn(
+                data = data,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .padding(horizontal = 32.dp)
+            )
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
             .background(greyStrong)
-            .verticalScroll(scrollState),
+            .safeDrawingPadding(),
     ) {
         if (result == null) {
             CircularProgressIndicator(
@@ -104,28 +156,12 @@ fun ArtifactDetailsScreen(
         } else if (result!!.isFailure || (result!!.getOrNull() == null)) {
             ArtifactNotFoundError()
         } else {
-            val data = result!!.getOrThrow()!!
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                ArtifactImage(
-                    imageUrl = data.image ?: "",
-                    onImagePressed = {},
-                    modifier = Modifier.zIndex(1f)
-                        .offset {
-                            IntOffset(0, scrollState.value)
-                        }.fillMaxWidth()
-                        .height(imageHeight)
-                )
-                InfoColumn(
-                    data = data,
-                )
-            }
+            if (orientation == Orientation.Vertical)
+                SingleColumnLayout()
+            else
+                TwoColumnLayout()
         }
         TopAppBar(
-            modifier = Modifier.offset {
-                IntOffset(0, scrollState.value)
-            },
             title = {},
             navigationIcon = {
                 AppIconButton(
@@ -195,6 +231,7 @@ private fun ArtifactImage(
 @Composable
 fun InfoColumn(
     data: ArtifactData,
+    modifier: Modifier = Modifier,
 ) {
 
     var isVisible by remember { mutableStateOf(false) }
@@ -203,7 +240,9 @@ fun InfoColumn(
     }
 
     Column(
-        modifier = Modifier.background(greyStrong).padding(horizontal = 24.dp),
+        modifier = Modifier.background(greyStrong) then modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 

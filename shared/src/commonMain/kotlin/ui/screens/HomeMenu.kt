@@ -13,14 +13,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -34,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -45,6 +43,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.AppIcons
 import ui.composables.AppIconButton
+import ui.composables.SimpleGrid
 import ui.homeBtn
 import ui.theme.fgColor
 import ui.theme.offWhite
@@ -58,8 +57,8 @@ fun HomeMenu(
     openTimeline: () -> Unit,
     openCollection: () -> Unit,
     modifier: Modifier = Modifier,
-) = BoxWithConstraints {
-    val btnSize = (maxWidth / 5).coerceIn(60.dp, 100.dp)
+) = BoxWithConstraints(modifier) {
+    val btnSize = (maxWidth / 4).coerceIn(60.dp, 100.dp)
     var isAboutDialogOpen by remember {
         mutableStateOf(false)
     }
@@ -69,7 +68,9 @@ fun HomeMenu(
         AboutApp(onDismissRequest = { isAboutDialogOpen = false })
     }
 
-    Column(modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         // AppHeader
         AppHeader(
             onClickClose = onPressBack,
@@ -77,49 +78,51 @@ fun HomeMenu(
         )
 
         // Content
-        Box(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 48.dp),
-            contentAlignment = Alignment.Center,
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 48.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Spacer(modifier = Modifier.height(50.dp))
+            // Wonder Buttons Grid
+            WonderBtnsGrid(
+                currentWonder = data,
+                onSelectWonder = onChangeWonder,
+                btnSize = btnSize,
+                modifier = Modifier
+                    .width(btnSize * 3)
+                    .height(btnSize * 3)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            // Bottom buttons
             Column(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight(align = Alignment.CenterVertically),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.widthIn(max = 450.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(50.dp))
-                // Wonder Buttons Grid
-                WonderBtnsGrid(
-                    currentWonder = data,
-                    onSelectWonder = onChangeWonder,
-                    btnSize = btnSize,
+                BottomButton(
+                    onClick = openTimeline,
+                    icon = AppIcons.Timeline,
+                    text = "Explore the timeline"
                 )
-                Spacer(modifier = Modifier.height(24.dp))
-                // Bottom buttons
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    BottomButton(
-                        onClick = openTimeline,
-                        icon = AppIcons.Timeline,
-                        text = "Explore the timeline"
-                    )
-                    Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
-                    BottomButton(
-                        onClick = openCollection,
-                        icon = AppIcons.Collection,
-                        text = "View your collections"
-                    )
-                    Divider(modifier = Modifier.height(1.dp), color = Color.Gray)
-                    BottomButton(
-                        onClick = { isAboutDialogOpen = true },
-                        icon = AppIcons.Info,
-                        text = "About this app"
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+                Divider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                BottomButton(
+                    onClick = openCollection,
+                    icon = AppIcons.Collection,
+                    text = "View your collections"
+                )
+                Divider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                BottomButton(
+                    onClick = { isAboutDialogOpen = true },
+                    icon = AppIcons.Info,
+                    text = "About this app"
+                )
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
+
     }
 }
 
@@ -128,7 +131,7 @@ fun AppHeader(
     onClickClose: () -> Unit,
     onToggleLanguage: () -> Unit,
 ) {
-    Row(Modifier.fillMaxWidth().height(72.dp).padding(8.dp)) {
+    Row(Modifier.fillMaxWidth().safeDrawingPadding().height(72.dp).padding(8.dp)) {
         AppIconButton(
             iconPath = AppIcons.Close,
             contentDescription = "Close",
@@ -152,22 +155,18 @@ val modifiedWondersList = Wonders.toMutableList<Wonder?>().apply {
 fun WonderBtnsGrid(
     currentWonder: Wonder,
     onSelectWonder: (Wonder) -> Unit,
-    btnSize: Dp
-) = LazyVerticalGrid(
-    modifier = Modifier.wrapContentWidth(),
-    columns = GridCells.Fixed(3),
-    userScrollEnabled = false,
-    horizontalArrangement = Arrangement.Center
+    btnSize: Dp,
+    modifier: Modifier = Modifier,
+) = SimpleGrid(
+    modifier = modifier,
+    columnCount = 3,
 ) {
     val shape = RoundedCornerShape(10.dp)
 
-    items(
-        modifiedWondersList
-    ) { wonder ->
-
+    modifiedWondersList.map { wonder ->
         if (wonder == null)
             Box(
-                Modifier.padding(8.dp).size(btnSize),
+                Modifier.size(btnSize).padding(8.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
@@ -184,8 +183,8 @@ fun WonderBtnsGrid(
                     painterResource(wonder.homeBtn),
                     contentDescription = wonder.title,
                     modifier = Modifier
-                        .padding(8.dp)
                         .size(btnSize)
+                        .padding(8.dp)
                         .clip(shape)
                         .background(wonder.fgColor)
                         .run {

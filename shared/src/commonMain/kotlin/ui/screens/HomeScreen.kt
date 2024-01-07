@@ -97,7 +97,8 @@ fun HomeScreen(
     pagerState: PagerState,
     swipeableState: SwipeableState<SharedScreen>,
     openDetailScreen: () -> Unit,
-) = BoxWithConstraints {
+    modifier: Modifier = Modifier,
+) = BoxWithConstraints(modifier) {
     val swipeProgress by remember {
         derivedStateOf {
             // `progress.fraction` resets to 1 so here we return 0

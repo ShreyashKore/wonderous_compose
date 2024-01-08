@@ -8,7 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.DpSize
+import kotlin.math.roundToInt
 
 @Composable
 fun SimpleGrid(
@@ -55,3 +57,18 @@ fun RotatedLayout(
         }
     }
 }
+
+
+/**
+ * Offsets the composable by it's height and width's fractional values
+ */
+fun Modifier.fractionalOffset(widthFraction: Float, heightFraction: Float) =
+    layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints)
+        layout(placeable.width, placeable.height) {
+            placeable.placeRelative(
+                (placeable.width * widthFraction).roundToInt(),
+                (placeable.width * heightFraction).roundToInt()
+            )
+        }
+    }

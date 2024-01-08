@@ -70,7 +70,7 @@ fun Wonder.Companion.parse(name: String?): Wonder {
     if (name == null) return ChichenItza
     return Wonders.firstOrNull {
         it.title.lowercase() == name.lowercase()
-    } ?: ChichenItza
+    } ?: GreatWall
 }
 
 data object ChichenItza : Wonder(

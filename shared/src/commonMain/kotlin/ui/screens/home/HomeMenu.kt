@@ -1,8 +1,9 @@
-package ui.screens
+package ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material3.Divider
@@ -146,7 +146,7 @@ fun AppHeader(
     }
 }
 
-val modifiedWondersList = Wonders.toMutableList<Wonder?>().apply {
+val wondersWithCentralNullElement = Wonders.toMutableList<Wonder?>().apply {
     add(4, null)
 }
 
@@ -163,8 +163,9 @@ fun WonderBtnsGrid(
 ) {
     val shape = RoundedCornerShape(10.dp)
 
-    modifiedWondersList.map { wonder ->
+    wondersWithCentralNullElement.map { wonder ->
         if (wonder == null)
+        // Center icon
             Box(
                 Modifier.size(btnSize).padding(8.dp),
                 contentAlignment = Alignment.Center,
@@ -176,26 +177,23 @@ fun WonderBtnsGrid(
                 )
             }
         else
-            IconButton(
-                onClick = { onSelectWonder(wonder) }
-            ) {
-                Image(
-                    painterResource(wonder.homeBtn),
-                    contentDescription = wonder.title,
-                    modifier = Modifier
-                        .size(btnSize)
-                        .padding(8.dp)
-                        .clip(shape)
-                        .background(wonder.fgColor)
-                        .run {
-                            if (currentWonder == wonder) border(
-                                width = 6.dp,
-                                color = offWhite,
-                                shape = shape
-                            ) else this
-                        }
-                )
-            }
+            Image(
+                painterResource(wonder.homeBtn),
+                contentDescription = wonder.title,
+                modifier = Modifier
+                    .size(btnSize)
+                    .padding(8.dp)
+                    .clip(shape)
+                    .clickable { onSelectWonder(wonder) }
+                    .background(wonder.fgColor)
+                    .run {
+                        if (currentWonder == wonder) border(
+                            width = 6.dp,
+                            color = offWhite,
+                            shape = shape
+                        ) else this
+                    }
+            )
     }
 }
 

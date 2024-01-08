@@ -22,6 +22,7 @@ object AppIcons {
     val Collection = getIconPath("collection")
     val NextLarge = getIconPath("next-large")
     val ZoomOut = getIconPath("zoom-out")
+    const val Github = "images/common/icons/github-logo.png"
 
     private fun getIconPath(name: String) = "images/common/icons/icon-$name.png"
 }

@@ -18,8 +18,10 @@ by team [gskinner](https://gskinner.com/flutter/)
 using [Flutter.](https://flutter.dev/) This project is a tribute to their original
 work, with an aim to explore the design possibilities with Compose.
 
-Artworks and logos are taken from original
-project's [github repo.](https://github.com/gskinnerTeam/flutter-wonderous-app)
+![Banner](./readme_images/banner.png)
+
+Artworks and logos are taken from the original
+project's [GitHub repo.](https://github.com/gskinnerTeam/flutter-wonderous-app)
 Public-domain artwork from
 [The Metropolitan Museum of Art, New Your.](https://www.metmuseum.org/about-the-met/policies-and-documents/open-access")
 Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
@@ -28,7 +30,7 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 
 ## Outline
 
-* For navigation, PreCompose library is used. This has similar API to the AndroidX navigation
+* For navigation, the PreCompose library is used. This has a similar API to the AndroidX navigation
   library.
 * HomeScreen shows the usage of HorizontalPager along with AnimatedVisibility for animating
   foreground and background elements
@@ -38,7 +40,7 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
   when they appear on the screen.
 * Map View demonstrates how KMP and Compose's interoperability layer can be used to embed native UIs
   in Compose.
-* Photo Gallery screen makes use of a custom layout and also uses a custom gesture detection
+* The Photo Gallery screen makes use of a custom layout and also uses a custom gesture detection
   modifier.
 
 ## TODO
@@ -46,7 +48,8 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 * WASM support
 * Collectibles and My Collection Screen
 * Localization
-* Shared Element Transition on home screen
+* Gesture support on Web and Desktop platforms
+* Shared Element Transition on the home screen
 * Haptics
 
 ## Set up the environment

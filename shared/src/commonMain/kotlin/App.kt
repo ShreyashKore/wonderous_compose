@@ -41,35 +41,24 @@ fun App() {
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
                         openArtifactListScreen = { navigator.navigate("/search/${it.title}") },
                         openMapScreen = { navigator.navigate("/maps/${it.title}") },
-                        openVideoScreen = {
-                            println(it)
-                            navigator.navigate("/video/$it")
-                        },
+                        openVideoScreen = { navigator.navigate("/video/$it") },
                     )
                 }
                 scene(
                     "/timeline",
-                    navTransition = NavTransition(
-                        createTransition = slideIn { IntOffset(it.width, 0) },
-                        destroyTransition = slideOut { IntOffset(it.width, 0) },
-                    )
+                    navTransition = DefaultNavTransition
                 ) { backStackEntry ->
                     val id = backStackEntry.query<String>("type")
                     val wonder = Wonder.parse(id)
                     TimeLineScreen(
                         selectedWonder = wonder,
-                        onClickBack = {
-                            navigator.goBack()
-                        },
+                        onClickBack = { navigator.goBack() },
                     )
                 }
 
                 scene(
                     "/artifact/{id}",
-                    navTransition = NavTransition(
-                        createTransition = slideIn { IntOffset(it.width, 0) },
-                        destroyTransition = slideOut { IntOffset(it.width, 0) },
-                    )
+                    navTransition = DefaultNavTransition
                 ) { backStackEntry ->
                     val id = backStackEntry.path<String>("id")!!
                     ArtifactDetailsScreen(
@@ -80,25 +69,20 @@ fun App() {
 
                 scene(
                     "/search/{type}",
-                    navTransition = NavTransition(
-                        createTransition = slideIn { IntOffset(it.width, 0) },
-                        destroyTransition = slideOut { IntOffset(it.width, 0) },
-                    )
+                    navTransition = DefaultNavTransition
                 ) { backStackEntry ->
                     val id = backStackEntry.path<String>("type")
                     val wonder = Wonder.parse(id)
                     ArtifactListScreen(
                         wonder = wonder,
                         onBackClick = { navigator.goBack() },
+                        onClickArtifact = { navigator.navigate("/artifact/${it}") }
                     )
                 }
 
                 scene(
                     "/maps/{type}",
-                    navTransition = NavTransition(
-                        createTransition = slideIn { IntOffset(it.width, 0) },
-                        destroyTransition = slideOut { IntOffset(it.width, 0) },
-                    )
+                    navTransition = DefaultNavTransition
                 ) { backStackEntry ->
                     val id = backStackEntry.path<String>("type")
                     val wonder = Wonder.parse(id)
@@ -110,10 +94,7 @@ fun App() {
 
                 scene(
                     "/video/{id}",
-                    navTransition = NavTransition(
-                        createTransition = slideIn { IntOffset(it.width, 0) },
-                        destroyTransition = slideOut { IntOffset(it.width, 0) },
-                    )
+                    navTransition = DefaultNavTransition
                 ) { backStackEntry ->
                     val id = backStackEntry.path<String>("id")!!
                     YoutubeVideoScreen(
@@ -125,6 +106,11 @@ fun App() {
         }
     }
 }
+
+private val DefaultNavTransition = NavTransition(
+    createTransition = slideIn { IntOffset(it.width, 0) },
+    destroyTransition = slideOut { IntOffset(it.width, 0) },
+)
 
 
 expect fun getPlatformName(): String

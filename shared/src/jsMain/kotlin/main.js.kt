@@ -7,7 +7,7 @@ actual fun getPlatformName(): String = "Web"
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     onWasmReady {
-        CanvasBasedWindow("TestKmp") {
+        CanvasBasedWindow("Wonderous Compose") {
             App()
         }
     }

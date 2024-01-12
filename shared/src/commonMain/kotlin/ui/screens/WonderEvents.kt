@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
@@ -39,7 +41,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -67,15 +68,15 @@ import kotlin.math.absoluteValue
 fun WonderEvents(
     wonder: Wonder,
     navigateToTimeLine: () -> Unit,
-) = BoxWithConstraints(Modifier.background(black)) {
+) = BoxWithConstraints(Modifier.background(black).safeDrawingPadding()) {
     val wonderEvents = wonder.events
 
     val bgHeight = maxHeight * 0.55f
     val sheetHeight = maxHeight * 0.45f
 
     @Composable
-    fun ListComposable(bottomPadding: Dp = 0.dp) {
-        LazyColumn(contentPadding = PaddingValues(bottom = bottomPadding)) {
+    fun ListComposable(modifier: Modifier = Modifier) {
+        LazyColumn(modifier) {
             items(wonderEvents.toList()) { item ->
                 TimelineEventCard(
                     year = item.first,
@@ -85,6 +86,10 @@ fun WonderEvents(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 10.dp),
                 )
+            }
+            item {
+                // TODO: implement hidden artifact
+                Spacer(Modifier.height(500.dp))
             }
         }
     }
@@ -131,7 +136,7 @@ fun WonderEvents(
                         },
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    alignment = Alignment.BottomCenter,
+                    alignment = BiasAlignment(0f, -0.5f),
                 )
                 WonderTitleText(
                     wonder,
@@ -160,7 +165,7 @@ fun WonderEvents(
                 )
             },
             sheetContent = {
-                ListComposable(bottomPadding = 500.dp)
+                ListComposable()
             },
         ) {
             WonderImageWithTimeline()
@@ -190,11 +195,12 @@ fun WonderEvents(
                 WonderImageWithTimeline()
                 NavigateToTimelineBtn()
             }
-            Box(
-                Modifier.weight(1f),
-            ) {
-                ListComposable()
-            }
+
+            ListComposable(
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 24.dp)
+            )
         }
     }
 

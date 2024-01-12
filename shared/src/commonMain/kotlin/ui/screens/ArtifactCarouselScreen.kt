@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -37,6 +38,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ScaleFactor
@@ -58,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import data.HighlightData
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import kotlinx.coroutines.launch
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -66,10 +70,10 @@ import ui.ImagePaths
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.theme.TenorSans
+import ui.theme.greyMedium
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
-import utils.prependProxy
 import kotlin.math.absoluteValue
 
 @OptIn(
@@ -94,6 +98,7 @@ fun ArtifactCarouselScreen(
         initialPageOffsetFraction = 0f,
         pageCount = { Int.MAX_VALUE }
     )
+    val coroutineScope = rememberCoroutineScope()
 
     val currentArtifact = artifacts[pagerState.currentPage % artifacts.size]
     // background
@@ -106,11 +111,13 @@ fun ArtifactCarouselScreen(
             },
         ) { imageUrl ->
             KamelImage(
-                resource = asyncPainterResource(imageUrl.prependProxy()),
+                resource = asyncPainterResource(imageUrl),
                 contentDescription = "background",
-                modifier = Modifier.blur(2.dp).fillMaxWidth().fillMaxHeight(0.8f),
+                modifier = Modifier.blur(8.dp)
+                    .background(greyStrong).fillMaxWidth()
+                    .fillMaxHeight(0.8f),
                 contentScale = ContentScale.cropScaled(1.4f),
-                colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.5f), BlendMode.Multiply)
+                colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.5f), BlendMode.Multiply),
             )
         }
         Box(
@@ -118,12 +125,13 @@ fun ArtifactCarouselScreen(
                 .requiredSize(minDimension * 2)
                 .offset(y = minDimension)
                 .clip(CircleShape)
-                .background(offWhite)
+                .background(greyMedium.copy(.4f).compositeOver(offWhite))
         )
     }
 
     // foreground content
     Column(
+        modifier = Modifier.safeDrawingPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -166,10 +174,15 @@ fun ArtifactCarouselScreen(
                 val artifact = artifacts[index]
                 ArtifactImage(
                     name = artifact.title,
-                    url = artifact.imageUrlSmall,
+                    url = artifact.imageUrl,
                     isSelected = pagerState.currentPage == pageNo,
                     onClick = {
-                        openArtifactDetailsScreen(artifact.id)
+                        // When clicked on current artifact; open it's details else bring the clicked artifact to center
+                        if (artifact.id == currentArtifact.id)
+                            openArtifactDetailsScreen(artifact.id)
+                        else coroutineScope.launch {
+                            pagerState.animateScrollToPage(pageNo)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -203,7 +216,7 @@ fun ArtifactCarouselScreen(
             label = "BROWSE ALL ARTIFACTS",
             onClick = openAllArtifactsScreen,
             modifier = Modifier
-                .padding(vertical = 20.dp, horizontal = 20.dp)
+                .padding(bottom = 100.dp, start = 20.dp, end = 20.dp)
                 .widthIn(max = 400.dp)
         )
     }
@@ -227,7 +240,7 @@ private fun ArtifactImage(
         contentAlignment = Alignment.BottomCenter
     ) {
         KamelImage(
-            resource = asyncPainterResource(url.prependProxy()),
+            resource = asyncPainterResource(url),
             contentDescription = name,
             modifier = Modifier
                 .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))
@@ -236,14 +249,18 @@ private fun ArtifactImage(
             contentScale = ContentScale.Crop,
             onLoading = {
                 Box(
-                    Modifier.fillMaxSize().background(greyStrong),
+                    Modifier.fillMaxSize().background(greyMedium),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
                 }
             },
             onFailure = {
-                Image(painterResource(ImagePaths.noImagePlaceholder), null)
+                Image(
+                    painterResource(ImagePaths.noImagePlaceholder),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
             }
         )
     }

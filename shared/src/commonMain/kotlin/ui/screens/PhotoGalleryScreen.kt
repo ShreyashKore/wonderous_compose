@@ -10,8 +10,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -57,7 +59,7 @@ import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
 import ui.utils.simpleTransformable
-import utils.prependProxy
+
 
 // TODO: move into separate file
 val BackgroundColor = Color.Black
@@ -77,8 +79,8 @@ fun PhotoGallery(
 
     val collectionId = wonder.unsplashCollectionId
 
-    val photoIds = remember {
-        var ids = UnsplashPhotoData.photosByCollectionId[collectionId]!!.toList()
+    val photoIds = remember(collectionId) {
+        var ids = UnsplashPhotoData.getPhotosByCollectionId(collectionId)
         if (ids.isEmpty()) return@remember emptyList() // avoid infinite loop
 
         // Ensure we have enough images to fill the grid, repeat if necessary
@@ -87,7 +89,13 @@ fun PhotoGallery(
     }
 
 
-    val itemSize = DpSize(maxWidth * 0.7f, maxHeight * 0.5f)
+    val itemSize =
+        when (orientation) {
+            Orientation.Vertical -> DpSize(maxWidth * .66f, maxHeight * .5f) // Portrait
+            Orientation.Horizontal -> DpSize(maxWidth * .5f, maxHeight * .66f)  // Landscape
+        }
+
+    DpSize(maxWidth * 0.7f, maxHeight * 0.5f)
     val itemSizePx = with(density) { itemSize.toSize() }
     val padding = 10.dp
 
@@ -102,7 +110,7 @@ fun PhotoGallery(
 
     val urls = remember(photoIds) {
         photoIds.map {
-            UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.MED)
+            UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.LARGE)
         }
     }
 
@@ -215,7 +223,7 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = asyncPainterResource(photoUrl.prependProxy())
+    val painter = asyncPainterResource(photoUrl)
 
     Box(
         modifier = modifier
@@ -251,7 +259,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         KamelImage(
-            asyncPainterResource(url.prependProxy()),
+            asyncPainterResource(url),
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
             onLoading = {
@@ -293,3 +301,7 @@ private fun Modifier.roundedRectangularCutout(
 
 }
 
+/**
+ * Not actual orientation; but perceived orientation based on aspect ration
+ */
+val BoxWithConstraintsScope.orientation get() = if (maxWidth > maxHeight) Orientation.Horizontal else Orientation.Vertical;

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,8 +26,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -104,13 +108,16 @@ const val timelineDuration = EndYear - StartYear
 fun TimeLineScreen(
     selectedWonder: Wonder? = null,
     onClickBack: () -> Unit,
-) = BoxWithConstraints {
+) = BoxWithConstraints(
+    Modifier.background(black).windowInsetsPadding(WindowInsets.safeDrawing)
+) {
     val scrollState = rememberScrollState()
     var scale by remember { mutableStateOf(1.dp) }
     val timelineHeight = timelineDuration * scale
     val padding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
+        // Bring the selected wonder into view when screen opens up
         val initialScrollPos = (((selectedWonder?.startYr?.minus(StartYear))?.toFloat()
             ?: 200f) / timelineDuration * scrollState.maxValue).toInt()
         // first snap timeline to scroll pos just above the selected wonder
@@ -129,21 +136,22 @@ fun TimeLineScreen(
 
     fun getScrollFraction() = scrollFraction
 
-    val currentYear = (getScrollFraction() * timelineDuration - 3000).roundToInt()
+    val currentYear = (scrollFraction * timelineDuration - 3000).roundToInt()
 
     Box(
-        Modifier.background(black)
+        Modifier.fillMaxWidth()
             .pointerInput(Unit) {
-                detectTransformGestures { centroid, pan, zoom, rotation ->
+                detectTransformGestures { _, _, zoom, _ ->
                     scale = (scale * zoom).coerceIn(0.5f.dp, 2.dp)
                 }
             }
             .verticalScroll(scrollState)
             .padding(vertical = padding)
-            .height(timelineHeight)
+            .height(timelineHeight),
+        contentAlignment = Alignment.Center
     ) {
 
-        Row {
+        Row(Modifier.widthIn(max = 600.dp)) {
             TimeStripAndEventMarkers(
                 currentYear = currentYear,
                 range = StartYear..EndYear,
@@ -157,27 +165,32 @@ fun TimeLineScreen(
                 modifier = Modifier.weight(4f)
             )
         }
+    }
 
-        CurrentYearLine(
-            currentYear = currentYear,
-            modifier = Modifier.fillMaxWidth()
-                .offset { IntOffset(0, scrollState.value) }
+    CurrentYearLine(
+        currentYear = currentYear,
+        modifier = Modifier.align(Alignment.Center)
+    )
+
+    // Small bottom timeline
+    Box(
+        Modifier.widthIn(max = 800.dp).align(Alignment.BottomCenter).padding(20.dp)
+    ) {
+        SmallTimeLine(
+            ::getScrollFraction,
+            modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                .background(greyStrong).fillMaxWidth().height(72.dp),
+            highLightedWonder = selectedWonder
         )
     }
 
-    // Small bottom timeline
-    SmallTimeLine(
-        ::getScrollFraction,
-        modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(8.dp))
-            .background(greyStrong).fillMaxWidth().height(72.dp)
-            .align(Alignment.BottomCenter),
-        highLightedWonder = selectedWonder
-    )
 
     // Events popup
     AnimatedContent(
         targetState = AllTimeLineEvents.firstOrNull { it.year in currentYear.eventHighlightRange },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .widthIn(max = 800.dp)
             .padding(top = 80.dp)
             .padding(horizontal = 20.dp, vertical = 10.dp),
         transitionSpec = {
@@ -231,7 +244,8 @@ fun CurrentYearLine(
 ) {
     val yearSuffix = getYrSuffix(currentYear)
     Column(
-        modifier.requiredHeight(50.dp).offset(y = (-50).dp),
+        // Offsetting by half the height to make line at the bottom align with screen center
+        modifier.requiredHeight(50.dp).offset(y = (-25).dp),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Bottom
     ) {
@@ -262,7 +276,7 @@ fun CurrentYearLine(
             Modifier.fillMaxWidth().height(1.dp)
                 .dashedBorder(
                     BorderStroke(Dp.Hairline, Color.White),
-                    on = 4.dp, off = 8.dp
+                    on = 2.dp, off = 4.dp
                 )
         )
     }

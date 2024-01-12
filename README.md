@@ -1,5 +1,13 @@
 # Wonderous Compose
 
+![badge android][badge-android]
+![badge ios][badge-ios]
+![badge linux][badge-linux]
+![badge windows][badge-windows]
+![badge macos][badge-macos]
+![badge web javascript][badge-js]
+
+
 > 🚧 WORK IN PROGRESS 🚧
 
 Wonderous Compose is a port of Wonderous
@@ -20,9 +28,8 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 
 ## Outline
 
-* For navigation, I've used the PreCompose library. This has a very similar API to the Navigation
-  library on Android which I am already familiar with. This library provides page transition and
-  parameter parsing.
+* For navigation, PreCompose library is used. This has similar API to the AndroidX navigation
+  library.
 * HomeScreen shows the usage of HorizontalPager along with AnimatedVisibility for animating
   foreground and background elements
 * ArtifactListScreen uses a ViewModel to store business logic.
@@ -34,9 +41,9 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 * Photo Gallery screen makes use of a custom layout and also uses a custom gesture detection
   modifier.
 
-## Work In Progress
+## TODO
 
-* Web support
+* WASM support
 * Collectibles and My Collection Screen
 * Localization
 * Shared Element Transition on home screen
@@ -48,5 +55,27 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 > You need a Mac with macOS to write and run iOS-specific code on simulated or real devices.
 > This is an Apple requirement.
 
-For detailed information
-checkout [compose multiplatform template repo] (https://github.com/JetBrains/compose-multiplatform-template).
+> For compose multiplatform setup information
+> checkout its [template repo](https://github.com/JetBrains/compose-multiplatform-template).
+
+- Add Google Maps key in `local.properties` at the project root.
+
+```properties
+MAPS_API_KEY=YOUR_KEY
+```
+
+[badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
+
+[badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat
+
+[badge-js]: http://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat
+
+[badge-jvm]: http://img.shields.io/badge/platform-jvm-DB413D.svg?style=flat
+
+[badge-linux]: http://img.shields.io/badge/platform-linux-2D3F6C.svg?style=flat
+
+[badge-windows]: http://img.shields.io/badge/platform-windows-4D76CD.svg?style=flat
+
+[badge-macos]: http://img.shields.io/badge/platform-macos-111111.svg?style=flat
+
+[badge-wasm]: https://img.shields.io/badge/platform-wasm-624FE8.svg?style=flat

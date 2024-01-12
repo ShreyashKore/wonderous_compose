@@ -78,16 +78,13 @@ kotlin {
                 implementation(libs.ktor.contentNegotiation)
                 implementation(libs.ktor.serialization)
                 implementation(libs.kotlinx.datetime)
-
-                api(libs.image.loader)
-
+                implementation(libs.image.loader)
                 implementation(libs.insetsx)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kermit)
-
                 implementation(libs.orbital)
-                api(libs.precompose)
-                api(libs.moko.mvvm)
+                implementation(libs.precompose)
+                implementation(libs.moko.mvvm)
             }
         }
         val noJsMain by getting {
@@ -149,8 +146,8 @@ android {
         sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true

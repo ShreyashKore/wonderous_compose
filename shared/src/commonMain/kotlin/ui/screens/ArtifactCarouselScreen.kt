@@ -74,7 +74,6 @@ import ui.theme.greyMedium
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
-import utils.prependProxy
 import kotlin.math.absoluteValue
 
 @OptIn(
@@ -105,14 +104,14 @@ fun ArtifactCarouselScreen(
     // background
     Box(Modifier.fillMaxSize()) {
         AnimatedContent(
-            currentArtifact.imageUrlSmall,
+            currentArtifact.imageUrl,
             transitionSpec = {
                 fadeIn(tween(durationMillis = 600)) togetherWith
                         fadeOut(tween(durationMillis = 800))
             },
         ) { imageUrl ->
             KamelImage(
-                resource = asyncPainterResource(imageUrl.prependProxy()),
+                resource = asyncPainterResource(imageUrl),
                 contentDescription = "background",
                 modifier = Modifier.blur(8.dp)
                     .background(greyStrong).fillMaxWidth()
@@ -175,7 +174,7 @@ fun ArtifactCarouselScreen(
                 val artifact = artifacts[index]
                 ArtifactImage(
                     name = artifact.title,
-                    url = artifact.imageUrlSmall,
+                    url = artifact.imageUrl,
                     isSelected = pagerState.currentPage == pageNo,
                     onClick = {
                         // When clicked on current artifact; open it's details else bring the clicked artifact to center
@@ -241,7 +240,7 @@ private fun ArtifactImage(
         contentAlignment = Alignment.BottomCenter
     ) {
         KamelImage(
-            resource = asyncPainterResource(url.prependProxy()),
+            resource = asyncPainterResource(url),
             contentDescription = name,
             modifier = Modifier
                 .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))

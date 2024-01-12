@@ -44,6 +44,9 @@ enum class SharedScreen {
     Home, Details
 }
 
+/**
+ * Container around [HomeScreen] and [WonderDetailsScreen]
+ */
 @OptIn(
     ExperimentalFoundationApi::class,
     ExperimentalMaterialApi::class,
@@ -65,7 +68,9 @@ fun SharedAnimationContainer(
             pageCount = { Int.MAX_VALUE })
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
 
-    val swipeableState = rememberSwipeableState(SharedScreen.Home)
+    val swipeableState = rememberSwipeableState(
+        if (openHomeScreen) SharedScreen.Home else SharedScreen.Details
+    )
     val scope = rememberCoroutineScope()
 
 

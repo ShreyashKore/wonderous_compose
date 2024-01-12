@@ -2,6 +2,7 @@ package ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -52,7 +53,9 @@ fun ArtifactListScreen(
     wonder: Wonder,
     onBackClick: () -> Unit,
     onClickArtifact: (artifactId: Int) -> Unit,
-) {
+) = BoxWithConstraints {
+    // Limit max horizontal items to
+    val gridItemMinSize = maxOf(180.dp, maxWidth / 6)
     val viewModel = getViewModel(wonder, viewModelFactory { ArtifactListViewModel(wonder) })
 
     Column(
@@ -120,7 +123,7 @@ fun ArtifactListScreen(
         // Artifacts list
         LazyVerticalStaggeredGrid(
             modifier = Modifier.weight(1f),
-            columns = StaggeredGridCells.Adaptive(minSize = 180.dp)
+            columns = StaggeredGridCells.Adaptive(minSize = gridItemMinSize)
         ) {
             items(viewModel.filteredArtifacts) { artifact ->
 

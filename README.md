@@ -1,5 +1,13 @@
 # Wonderous Compose
 
+![badge android][badge-android]
+![badge ios][badge-ios]
+![badge linux][badge-linux]
+![badge windows][badge-windows]
+![badge macos][badge-macos]
+![badge web javascript][badge-js]
+
+
 > 🚧 WORK IN PROGRESS 🚧
 
 Wonderous Compose is a port of Wonderous
@@ -33,9 +41,9 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 * Photo Gallery screen makes use of a custom layout and also uses a custom gesture detection
   modifier.
 
-## Work In Progress
+## TODO
 
-* Web support
+* WASM support
 * Collectibles and My Collection Screen
 * Localization
 * Shared Element Transition on home screen
@@ -55,3 +63,19 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 ```properties
 MAPS_API_KEY=YOUR_KEY
 ```
+
+[badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
+
+[badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat
+
+[badge-js]: http://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat
+
+[badge-jvm]: http://img.shields.io/badge/platform-jvm-DB413D.svg?style=flat
+
+[badge-linux]: http://img.shields.io/badge/platform-linux-2D3F6C.svg?style=flat
+
+[badge-windows]: http://img.shields.io/badge/platform-windows-4D76CD.svg?style=flat
+
+[badge-macos]: http://img.shields.io/badge/platform-macos-111111.svg?style=flat
+
+[badge-wasm]: https://img.shields.io/badge/platform-wasm-624FE8.svg?style=flat

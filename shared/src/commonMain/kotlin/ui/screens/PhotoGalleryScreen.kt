@@ -59,7 +59,6 @@ import ui.theme.black
 import ui.utils.eightWaySwipeDetector
 import ui.utils.roundToIntOffset
 import ui.utils.simpleTransformable
-import utils.prependProxy
 
 
 // TODO: move into separate file
@@ -80,8 +79,8 @@ fun PhotoGallery(
 
     val collectionId = wonder.unsplashCollectionId
 
-    val photoIds = remember {
-        var ids = UnsplashPhotoData.photosByCollectionId[collectionId]!!.toList()
+    val photoIds = remember(collectionId) {
+        var ids = UnsplashPhotoData.getPhotosByCollectionId(collectionId)
         if (ids.isEmpty()) return@remember emptyList() // avoid infinite loop
 
         // Ensure we have enough images to fill the grid, repeat if necessary
@@ -111,7 +110,7 @@ fun PhotoGallery(
 
     val urls = remember(photoIds) {
         photoIds.map {
-            UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.MED)
+            UnsplashPhotoData.getSelfHostedUrl(it, UnsplashPhotoSize.LARGE)
         }
     }
 
@@ -224,7 +223,7 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = asyncPainterResource(photoUrl.prependProxy())
+    val painter = asyncPainterResource(photoUrl)
 
     Box(
         modifier = modifier
@@ -260,7 +259,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         KamelImage(
-            asyncPainterResource(url.prependProxy()),
+            asyncPainterResource(url),
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
             onLoading = {

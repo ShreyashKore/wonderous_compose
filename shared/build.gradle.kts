@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
@@ -78,7 +77,6 @@ kotlin {
                 implementation(libs.ktor.contentNegotiation)
                 implementation(libs.ktor.serialization)
                 implementation(libs.kotlinx.datetime)
-                implementation(libs.image.loader)
                 implementation(libs.insetsx)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kermit)
@@ -128,16 +126,11 @@ kotlin {
 
 
 android {
-    namespace = "org.shreyashkore.testkmp"
+    namespace = "org.shreyashkore.wonderouscompose"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 34
-
-//        applicationId = "org.shreyashkore.testkmp.androidApp"
-//        versionCode = 1
-//        versionName = "1.0.0"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -154,39 +147,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
-    }
-}
-//android {
-//    compileSdk = (findProperty("android.compileSdk") as String).toInt()
-//    namespace = "com.shreyashkore.common"
-
-//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-//    sourceSets["main"].res.srcDirs("src/androidMain/res")
-//    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-//    sourceSets["main"].assets.srcDirs("src/androidMain/assets/fonts")
-
-//    defaultConfig {
-//        minSdk = (findProperty("android.minSdk") as String).toInt()
-//        applicationId = "org.shreyashkore.wonderouscompose"
-//    }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_11
-//        targetCompatibility = JavaVersion.VERSION_11
-//    }
-//    kotlin {
-//        jvmToolchain(11)
-//    }
-//}
-
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.shreyashkore.testkmp.desktopApp"
-            packageVersion = "1.0.0"
-        }
     }
 }
 

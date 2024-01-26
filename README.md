@@ -7,6 +7,8 @@
 ![badge macos][badge-macos]
 ![badge web javascript][badge-js]
 
+Checkout live web version (based on JS) here
+https://wonderous.shreyashkore.com
 
 > 🚧 WORK IN PROGRESS 🚧
 

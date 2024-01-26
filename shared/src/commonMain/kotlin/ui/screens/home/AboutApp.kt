@@ -54,7 +54,7 @@ fun AboutApp(onDismissRequest: () -> Unit) {
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text("Wonderous Compose", fontSize = 24.sp, fontFamily = Raleway)
-                    Text("2.0.14")
+                    Text("1.0.0")
                 }
             }
             Spacer(Modifier.height(16.dp))
@@ -124,7 +124,7 @@ fun AboutApp(onDismissRequest: () -> Unit) {
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun AnnotatedString.Builder.appendLink(str: String, url: String = "https://google.com") =
+fun AnnotatedString.Builder.appendLink(str: String, url: String) =
     withStyle(linkStyle) {
         withAnnotation(UrlAnnotation(url)) {
             append(str)

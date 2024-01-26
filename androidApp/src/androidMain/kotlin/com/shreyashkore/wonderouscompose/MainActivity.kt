@@ -1,4 +1,4 @@
-package com.shreyashkore
+package com.shreyashkore.wonderouscompose
 
 import MainView
 import android.os.Bundle

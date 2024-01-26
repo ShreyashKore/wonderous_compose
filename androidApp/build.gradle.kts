@@ -18,7 +18,7 @@ kotlin {
 
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.shreyashkore"
+    namespace = "com.shreyashkore.wonderouscompose"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 

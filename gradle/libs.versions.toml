@@ -1,64 +1,69 @@
 [versions]
-
+agp = "8.2.2"
+android-compileSdk = "34"
+android-minSdk = "24"
+android-targetSdk = "34"
+androidx-activityCompose = "1.8.2"
+androidx-appcompat = "1.6.1"
+androidx-core-ktx = "1.12.0"
+androidx-espresso-core = "3.5.1"
+androidx-material = "1.11.0"
+androidx-test-junit = "1.1.5"
+compose = "1.5.11"
+compose-compiler = "1.5.8"
+compose-plugin = "1.5.11"
+junit = "4.13.2"
+kotlin = "1.9.21"
 accompanistPermissions = "0.29.2-rc"
 composeWebviewMultiplatform = "1.7.0"
-coreKtx = "1.12.0"
-imageLoader = "1.7.1"
 insetsx = "0.1.0-alpha10"
 kamelImage = "0.6.0"
-kermit = "2.0.2"
-kotlin = "1.9.21"
-agp = "8.2.2"
-compose = "1.5.11"
-androidx-appcompat = "1.6.1"
-androidx-activityCompose = "1.8.2"
 mapsCompose = "2.11.2"
 orbital = "0.3.2"
 playServicesLocation = "21.1.0"
 playServicesMaps = "18.2.0"
 precomposeVersion = "1.5.7"
-buildConfig = "4.1.1"
 kotlinx-coroutines = "1.7.3"
 moko-mvvm = "0.16.1"
 ktor = "2.3.7"
 kotlinx-serialization = "1.6.2"
 kotlinx-datetime = "0.5.0"
-multiplatformSettings = "1.1.1"
-kstore = "0.7.1"
+
 
 [libraries]
-
-# Compose
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
-androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
-
-# Image Loading
-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
-kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
-
-# Android
-## Maps
-maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
-play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
-## Permissions
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
-
-# Navigation
-precompose = { module = "moe.tlaster:precompose", version.ref = "precomposeVersion" }
-# ViewModel
-moko-mvvm = { module = "dev.icerock.moko:mvvm-compose", version.ref = "moko-mvvm" }
-
 # Kotlin
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 ## Coroutines
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+
+
+# Test
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+
+# Compose
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+
+# Android
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
+androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
+## Maps
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+## Permissions
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 
 # Networking
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -70,9 +75,14 @@ ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-serialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktor" }
 
-# Persistence
-multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
-kstore = { module = "io.github.xxfast:kstore", version.ref = "kstore" }
+# Navigation
+precompose = { module = "moe.tlaster:precompose", version.ref = "precomposeVersion" }
+
+# ViewModel
+moko-mvvm = { module = "dev.icerock.moko:mvvm-compose", version.ref = "moko-mvvm" }
+
+# Image Loading
+kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
 
 # UI
 insetsx = { module = "com.moriatsushi.insetsx:insetsx", version.ref = "insetsx" }
@@ -81,10 +91,8 @@ compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-
 
 
 [plugins]
-
-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
-android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
-buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

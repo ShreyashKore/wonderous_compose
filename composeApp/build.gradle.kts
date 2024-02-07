@@ -171,6 +171,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.shreyashkore.wonderouscompose"
             packageVersion = "1.0.0"
+            modules("java.net.http")
         }
     }
 }

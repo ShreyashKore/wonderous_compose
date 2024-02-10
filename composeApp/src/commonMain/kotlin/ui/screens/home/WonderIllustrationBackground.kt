@@ -2,6 +2,7 @@ package ui.screens.home
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -46,7 +48,8 @@ import ui.ImagePaths
 import ui.composables.BackgroundTexture
 import ui.composables.IllustrationPiece
 import ui.theme.fgColor
-import kotlin.math.roundToInt
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 import kotlin.random.Random
 
 
@@ -57,10 +60,8 @@ fun WonderIllustrationBackground(
 ) = BoxWithConstraints(Modifier.fillMaxSize().background(wonder.fgColor)) {
     val currentWonder = wonder
 
-    val maxWidthPx = LocalDensity.current.run {
-        maxWidth.roundToPx()
-    }
-
+    val maxWidthPx = LocalDensity.current.run { maxWidth.roundToPx() }
+    val maxHeightPx = LocalDensity.current.run { maxHeight.roundToPx() }
 
     @Composable
     fun CelestialBody(
@@ -75,58 +76,6 @@ fun WonderIllustrationBackground(
         hiddenStateOffset = { Offset(0f, wonder.celestialBodyConfig.hiddenStateYOffset) },
         hiddenStateScale = .8f
     )
-
-
-    @Composable
-    fun Clouds(
-        wonder: Wonder
-    ) {
-        @Composable
-        fun Cloud(
-            modifier: Modifier,
-        ) = AnimatedVisibility(
-            currentWonder == wonder,
-            modifier = modifier,
-            enter = slideIn(tween(2500, delayMillis = 600)) { IntOffset(maxWidthPx, 0) } +
-                    fadeIn(tween(1500, delayMillis = 500)),
-            exit = slideOut(tween(1500)) { IntOffset(-maxWidthPx, 0) } + fadeOut(tween(1000)),
-        ) {
-            Image(
-                painterResource(ImagePaths.common + "/" + "cloud-white.png"),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize().alpha(.3f),
-            )
-        }
-
-        val random = Random(wonder.hashCode())
-        val halfWidth = maxWidth.value.roundToInt() / 2
-
-        val anim = rememberInfiniteTransition()
-        repeat(3) { i ->
-            val scaleX = if (i % 2 == 0) -1f else 1f
-            val innerRandom = Random(i)
-            val offsetX = anim.animateFloat(
-                innerRandom.nextFloat() * halfWidth,
-                innerRandom.nextFloat() * halfWidth,
-                animationSpec = infiniteRepeatable(
-                    tween(10 * maxWidthPx), // increasing time for larger width as the movement should appear subtle
-                    repeatMode = RepeatMode.Reverse
-                )
-            )
-            Cloud(
-                modifier = Modifier
-                    .graphicsLayer {
-                        translationX = offsetX.value
-                    }
-                    .offset(
-                        x = random.nextInt(-halfWidth, halfWidth).dp,
-                        y = random.nextInt(0, 200).dp
-                    )
-                    .height(random.nextInt(60, 150).dp)
-                    .scale(scaleX = scaleX, scaleY = 1f)
-            )
-        }
-    }
 
     AnimatedContent(
         wonder,
@@ -143,11 +92,77 @@ fun WonderIllustrationBackground(
         CelestialBody(
             wonder = w,
         )
-        Clouds(w)
+        repeat(3) { i ->
+            Cloud(
+                index = i,
+                wonder = wonder,
+                currentWonder = currentWonder,
+                maxWidthPx = maxWidthPx,
+                maxHeightPx = maxHeightPx
+            )
+        }
     }
 
 }
 
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun Cloud(
+    index: Int,
+    wonder: Wonder,
+    currentWonder: Wonder,
+    maxWidthPx: Int,
+    maxHeightPx: Int,
+) {
+    val anim = rememberInfiniteTransition()
+
+    val scaleX = if (index % 2 == 0) -1f else 1f
+    val random = remember { Random(wonder.hashCode() * index) }
+    val cloudAnimStart = remember { random.nextDouble(-1.0, 1.0).toFloat() }
+    val cloudAnimEnd =
+        remember { cloudAnimStart - (random.nextDouble(0.2, 0.5) * cloudAnimStart.sign).toFloat() }
+    val cloudOffsetX = remember { random.nextDouble(-1.0, 1.0) }
+    val cloudOffsetY = remember { random.nextDouble(0.0, .2) }
+    val cloudHeight = remember { random.nextInt(60, 150).dp }
+
+    val offsetX = anim.animateFloat(
+        cloudAnimStart, cloudAnimEnd,
+        animationSpec = infiniteRepeatable(
+            tween(
+                (20 * maxWidthPx * (cloudAnimEnd - cloudAnimStart).absoluteValue *
+                        random.nextDouble(1.0, 1.6)).toInt(),
+                easing = LinearEasing
+            ), // increasing time for larger width screens as the movement should appear subtle
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    AnimatedVisibility(
+        currentWonder == wonder,
+        modifier = Modifier
+            .graphicsLayer {
+                translationX = offsetX.value * maxWidthPx
+            }
+            .offset {
+                IntOffset(
+                    (cloudOffsetX * maxWidthPx / 2).toInt(),
+                    (cloudOffsetY * maxHeightPx).toInt()
+                )
+            }
+            .height(cloudHeight)
+            .scale(scaleX = scaleX, scaleY = 1f),
+        enter = slideIn(tween(2500, delayMillis = 600)) { IntOffset(maxWidthPx, 0) } +
+                fadeIn(tween(1500, delayMillis = 500)),
+        exit = slideOut(tween(1500)) { IntOffset(-maxWidthPx, 0) } + fadeOut(tween(1000)),
+    ) {
+        Image(
+            painterResource(ImagePaths.common + "/" + "cloud-white.png"),
+            contentDescription = null,
+            modifier = Modifier.alpha(.1f),
+        )
+    }
+}
 
 private val Wonder.celestialBodyConfig: CelestialBodyConfig
     get() = when (this) {

@@ -3,8 +3,10 @@ package ui.screens
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
+// import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import models.Wonder
+
+open class ViewModel()
 
 class ArtifactListViewModel(wonder: Wonder) : ViewModel() {
 

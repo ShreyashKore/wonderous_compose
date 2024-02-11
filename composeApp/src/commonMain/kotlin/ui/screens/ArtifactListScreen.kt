@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.icerock.moko.mvvm.compose.getViewModel
-import dev.icerock.moko.mvvm.compose.viewModelFactory
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import coil3.compose.AsyncImage
+// import dev.icerock.moko.mvvm.compose.getViewModel
+// import dev.icerock.moko.mvvm.compose.viewModelFactory
 import models.Wonder
 import ui.composables.BackButton
 import ui.theme.Raleway
@@ -56,7 +56,7 @@ fun ArtifactListScreen(
 ) = BoxWithConstraints {
     // Limit max horizontal items to
     val gridItemMinSize = maxOf(180.dp, maxWidth / 6)
-    val viewModel = getViewModel(wonder, viewModelFactory { ArtifactListViewModel(wonder) })
+    val viewModel = remember(wonder, { ArtifactListViewModel(wonder) })
 
     Column(
         Modifier.background(color = black),
@@ -127,8 +127,8 @@ fun ArtifactListScreen(
         ) {
             items(viewModel.filteredArtifacts) { artifact ->
 
-                KamelImage(
-                    asyncPainterResource(artifact.imageUrl.prependProxy()),
+                AsyncImage(
+                    artifact.imageUrl.prependProxy(),
                     contentDescription = artifact.title,
                     modifier = Modifier.padding(8.dp)
                         .aspectRatio(
@@ -138,7 +138,7 @@ fun ArtifactListScreen(
                         .clickable { onClickArtifact(artifact.id) },
                     contentScale = ContentScale.FillWidth,
                     onLoading = {
-                        CircularProgressIndicator()
+                        // CircularProgressIndicator()
                     }
                 )
             }

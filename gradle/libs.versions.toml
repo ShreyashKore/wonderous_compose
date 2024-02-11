@@ -9,9 +9,9 @@ androidx-core-ktx = "1.12.0"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
-compose = "1.5.11"
-compose-compiler = "1.5.8"
-compose-plugin = "1.5.11"
+coilCompose = "3.0.0-SNAPSHOT"
+compose = "1.6.0-beta02"
+compose-plugin = "1.6.0-beta02"
 junit = "4.13.2"
 kotlin = "1.9.21"
 accompanistPermissions = "0.29.2-rc"
@@ -22,10 +22,10 @@ mapsCompose = "2.11.2"
 orbital = "0.3.2"
 playServicesLocation = "21.1.0"
 playServicesMaps = "18.2.0"
-precomposeVersion = "1.5.7"
+precomposeVersion = "1.6.0-beta02"
 kotlinx-coroutines = "1.7.3"
 moko-mvvm = "0.16.1"
-ktor = "2.3.7"
+ktor = "3.0.0-wasm2"
 kotlinx-serialization = "1.6.2"
 kotlinx-datetime = "0.5.0"
 
@@ -83,6 +83,8 @@ moko-mvvm = { module = "dev.icerock.moko:mvvm-compose", version.ref = "moko-mvvm
 
 # Image Loading
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilCompose" }
 
 # UI
 insetsx = { module = "com.moriatsushi.insetsx:insetsx", version.ref = "insetsx" }

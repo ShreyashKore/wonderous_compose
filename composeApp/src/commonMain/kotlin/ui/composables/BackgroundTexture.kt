@@ -8,10 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.TileMode
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.orEmpty
-import org.jetbrains.compose.resources.rememberImageBitmap
-import org.jetbrains.compose.resources.resource
+import org.jetbrains.compose.resources.imageResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -20,12 +19,12 @@ fun BackgroundTexture(
     alpha: Float = 1f,
     modifier: Modifier = Modifier
 ) {
-    val image = resource(texture).rememberImageBitmap()
+    val image = imageResource(DrawableResource(texture))
 
     val brush = remember(image) {
         ShaderBrush(
             ImageShader(
-                image.orEmpty(),
+                image,
                 TileMode.Mirror,
                 TileMode.Mirror,
             )

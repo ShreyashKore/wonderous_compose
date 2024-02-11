@@ -1,6 +1,7 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import java.util.Properties
 
 plugins {
@@ -20,20 +21,23 @@ kotlin {
                 withNative()
                 withJvm()
             }
-            withJs()
+            group("jsWasm") {
+                withJs()
+                withWasm()
+            }
         }
     }
 
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        moduleName = "composeApp"
-//        browser {
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//            }
-//        }
-//        binaries.executable()
-//    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        moduleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
 
     js(IR) {
         browser()
@@ -73,16 +77,18 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
 
-            implementation(libs.kamel.image)
+            // implementation(libs.kamel.image) // https://github.com/Kamel-Media/Kamel/issues/85
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.serialization)
             implementation(libs.kotlinx.datetime)
             implementation(libs.insetsx)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.orbital)
-            implementation(libs.precompose)
-            implementation(libs.moko.mvvm)
+            // implementation(libs.orbital)
+            implementation(libs.precompose) // https://github.com/Tlaster/PreCompose/issues/69
+            // implementation(libs.moko.mvvm) // https://github.com/icerockdev/moko-mvvm/issues/261
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
 
         val noJsMain by getting {

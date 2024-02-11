@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import coil3.compose.AsyncImage
+
 import ui.theme.black
 import ui.theme.white
 import utils.prependProxy
@@ -35,8 +35,8 @@ fun YouTubeThumbnail(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        KamelImage(
-            asyncPainterResource(imageUrl),
+        AsyncImage(
+            imageUrl,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()

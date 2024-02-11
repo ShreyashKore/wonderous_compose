@@ -12,6 +12,8 @@ https://wonderous.shreyashkore.com
 
 > 🚧 WORK IN PROGRESS 🚧
 
+[![Banner](./readme_images/banner.png)](https://youtube.com/shorts/f-wM_MCiQmo?feature=share)
+
 Wonderous Compose is a port of Wonderous
 in [Compose Multiplatform.](https://www.jetbrains.com/lp/compose-multiplatform/)
 Wonderous Compose is a visual showcase of eight wonders of the world.
@@ -19,8 +21,6 @@ The [original project](https://flutter.gskinner.com/wonderous/) was built
 by team [gskinner](https://gskinner.com/flutter/)
 using [Flutter.](https://flutter.dev/) This project is a tribute to their original
 work, with an aim to explore the design possibilities with Compose.
-
-![Banner](./readme_images/banner.png)
 
 Artworks and logos are taken from the original
 project's [GitHub repo.](https://github.com/gskinnerTeam/flutter-wonderous-app)

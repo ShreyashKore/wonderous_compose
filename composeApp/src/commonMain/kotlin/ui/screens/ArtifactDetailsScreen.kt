@@ -53,9 +53,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import coil3.compose.AsyncImage
 import data.MetRepository
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+//import io.kamel.image.KamelImage
+//import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.delay
 import models.ArtifactData
 import ui.AppIcons
@@ -215,10 +216,10 @@ private fun ArtifactImage(
             .background(black)
             .padding(bottom = 12.dp),
     ) {
-        KamelImage(
-            resource = asyncPainterResource(imageUrl.prependProxy()),
+        AsyncImage(
+            imageUrl.prependProxy(),
             onLoading = {
-                CircularProgressIndicator()
+                // CircularProgressIndicator()
             },
             contentDescription = null,
             modifier = Modifier.fillMaxSize().clickable { onImagePressed(imageUrl) },

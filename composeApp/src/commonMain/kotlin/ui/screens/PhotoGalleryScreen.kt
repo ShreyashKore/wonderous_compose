@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,14 +44,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
 import ui.composables.SimpleGrid
 import ui.theme.black
 import ui.utils.eightWaySwipeDetector
@@ -223,7 +219,6 @@ private fun UnsplashImage(
 ) {
     val animSpec = tween<Float>(durationMillis = 800)
     val imageScale by animateFloatAsState(if (isSelected) 1.1f else 1f, animSpec)
-    val painter = asyncPainterResource(photoUrl)
 
     Box(
         modifier = modifier
@@ -232,20 +227,20 @@ private fun UnsplashImage(
             .clickable(onClick = onTap),
         contentAlignment = Alignment.Center,
     ) {
-        KamelImage(
-            resource = painter,
+        AsyncImage(
+            photoUrl,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             onLoading = {
-                CircularProgressIndicator()
+                // CircularProgressIndicator()
             },
-            onFailure = {
-                Image(
-                    painterResource(ImagePaths.noImagePlaceholder),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
+            onError = {
+                // Image(
+                //     painterResource(ImagePaths.noImagePlaceholder),
+                //     contentDescription = null,
+                //     contentScale = ContentScale.Crop,
+                // )
             }
         )
     }
@@ -258,12 +253,12 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         Modifier.fillMaxSize().background(black.copy(alpha = .6f)).clickable { onDismiss() },
         contentAlignment = Alignment.Center,
     ) {
-        KamelImage(
-            asyncPainterResource(url),
+        AsyncImage(
+            url,
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
             onLoading = {
-                CircularProgressIndicator()
+                // CircularProgressIndicator()
             }
         )
     }

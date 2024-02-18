@@ -58,9 +58,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import data.HighlightData
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+
 import kotlinx.coroutines.launch
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -110,8 +110,8 @@ fun ArtifactCarouselScreen(
                         fadeOut(tween(durationMillis = 800))
             },
         ) { imageUrl ->
-            KamelImage(
-                resource = asyncPainterResource(imageUrl),
+            AsyncImage(
+                imageUrl,
                 contentDescription = "background",
                 modifier = Modifier.blur(8.dp)
                     .background(greyStrong).fillMaxWidth()
@@ -239,8 +239,8 @@ private fun ArtifactImage(
         modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
-        KamelImage(
-            resource = asyncPainterResource(url),
+        AsyncImage(
+            url,
             contentDescription = name,
             modifier = Modifier
                 .border(1.dp, SolidColor(white), RoundedCornerShape(percent = 100))
@@ -248,19 +248,19 @@ private fun ArtifactImage(
                 .size(DpSize(width = width, height = height)),
             contentScale = ContentScale.Crop,
             onLoading = {
-                Box(
-                    Modifier.fillMaxSize().background(greyMedium),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                // Box(
+                //     Modifier.fillMaxSize().background(greyMedium),
+                //     contentAlignment = Alignment.Center
+                // ) {
+                //     CircularProgressIndicator()
+                // }
             },
-            onFailure = {
-                Image(
-                    painterResource(ImagePaths.noImagePlaceholder),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
+            onError = {
+                // Image(
+                //     painterResource(ImagePaths.noImagePlaceholder),
+                //     contentDescription = null,
+                //     contentScale = ContentScale.Crop
+                // )
             }
         )
     }

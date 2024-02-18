@@ -82,7 +82,6 @@ kotlin {
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.serialization)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.insetsx)
             implementation(libs.kotlinx.serialization.json)
             // implementation(libs.orbital)
             implementation(libs.precompose) // https://github.com/Tlaster/PreCompose/issues/69

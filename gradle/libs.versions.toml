@@ -10,13 +10,12 @@ androidx-espresso-core = "3.5.1"
 androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
 coilCompose = "3.0.0-SNAPSHOT"
-compose = "1.6.0-beta02"
-compose-plugin = "1.6.0-beta02"
+compose = "1.6.0-rc01"
+compose-plugin = "1.6.0-rc01"
 junit = "4.13.2"
 kotlin = "1.9.21"
 accompanistPermissions = "0.29.2-rc"
 composeWebviewMultiplatform = "1.7.0"
-insetsx = "0.1.0-alpha10"
 kamelImage = "0.6.0"
 mapsCompose = "2.11.2"
 orbital = "0.3.2"
@@ -87,7 +86,6 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCo
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilCompose" }
 
 # UI
-insetsx = { module = "com.moriatsushi.insetsx:insetsx", version.ref = "insetsx" }
 orbital = { module = "com.github.skydoves:orbital", version.ref = "orbital" }
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }
 

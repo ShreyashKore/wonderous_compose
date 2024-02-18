@@ -7,13 +7,3 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinx.serialization).apply(false)
 }
-
-buildscript {
-    dependencies {
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.23.2")
-    }
-}
-
-allprojects {
-    apply(plugin = "kotlinx-atomicfu")
-}

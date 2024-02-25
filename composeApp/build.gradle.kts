@@ -114,9 +114,16 @@ kotlin {
             implementation(libs.ktor.client.java)
         }
 
-//        jsMain.dependencies {
-//            implementation(compose.html.core)
-//        }
+        jsMain.dependencies {
+            // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
+            implementation(project(":composeWebInterop"))
+        }
+
+        val wasmJsMain by getting
+        wasmJsMain.dependencies {
+            // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
+            implementation(project(":composeWebInterop"))
+        }
     }
 }
 

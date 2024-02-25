@@ -64,8 +64,8 @@ fun SharedAnimationContainer(
 
     var isMenuOpen by rememberSaveable { mutableStateOf(false) }
     val pagerState =
-        rememberPagerState(initialPage = 100_000 * Wonders.size + Wonders.indexOf(initialWonder),
-            pageCount = { Int.MAX_VALUE })
+        rememberPagerState(initialPage = 1000 * Wonders.size + Wonders.indexOf(initialWonder),
+            pageCount = { 1000 * Wonders.size })
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
 
     val swipeableState = rememberSwipeableState(

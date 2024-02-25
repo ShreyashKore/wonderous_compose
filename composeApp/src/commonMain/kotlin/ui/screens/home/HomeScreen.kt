@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -100,9 +102,10 @@ fun HomeScreen(
         HorizontalPager(
             state = pagerState,
             beyondBoundsPageCount = 1,
+            pageSize = PageSize.Fill,
+            flingBehavior = PagerDefaults.flingBehavior(pagerState, snapPositionalThreshold = .2f),
             pageSpacing = 1000.dp, // large enough number to avoid overlap
             modifier = Modifier.fillMaxSize().padding(top = 80.dp),
-            key = { it }
         ) { pageNo ->
             val wonder = Wonders[pageNo % Wonders.size]
             Box(Modifier.fillMaxSize()) {

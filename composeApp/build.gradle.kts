@@ -117,12 +117,14 @@ kotlin {
         jsMain.dependencies {
             // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
             implementation(project(":composeWebInterop"))
+            implementation(npm("leaflet", "1.9.4"))
         }
 
         val wasmJsMain by getting
         wasmJsMain.dependencies {
             // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
             implementation(project(":composeWebInterop"))
+            implementation(npm("leaflet", "1.9.4"))
         }
     }
 }

@@ -17,6 +17,22 @@ actual fun MapView(
     zoomLevel: Float,
     mapType: MapType
 ) {
+    if (mapType == MapType.Satellite) {
+        HtmlView(
+            modifier = modifier,
+            factory = {
+                createElement("iframe").apply {
+                    setAttribute("width", "100%")
+                    setAttribute("height", "100%")
+                    setAttribute(
+                        "src",
+                        "//umap.openstreetmap.fr/en/map/untitled-map_1030003#7/${gps.latitude}/${gps.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
+                    )
+                }
+            }
+        )
+        return
+    }
     HtmlView(
         modifier = modifier,
         factory = {

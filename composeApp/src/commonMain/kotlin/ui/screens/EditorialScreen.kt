@@ -417,32 +417,35 @@ fun EditorialScreen(
         // 16
         surfaceItem {
             // Map
-            MapView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
-                    .height(320.dp)
-                    .widthIn(max = 450.dp)
-                    .clip(RoundedCornerShape(4.dp)),
-                gps = wonder.gps,
-                title = "Map",
-                zoomLevel = .05f,
-                mapType = MapType.Normal,
-            )
-            IconButton(
-                onClick = {
-                    openMapScreen(wonder)
-                },
-                modifier = Modifier.align(Alignment.TopEnd)
-                    .padding(8.dp)
-                    .background(white, RoundedCornerShape(100f)),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Icon(
-                    Icons.Rounded.Place,
-                    contentDescription = null,
+                IconButton(
+                    onClick = {
+                        openMapScreen(wonder)
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .background(white, RoundedCornerShape(100f)),
+                ) {
+                    Icon(
+                        Icons.Rounded.Place,
+                        contentDescription = null,
+                    )
+                }
+                MapView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, start = 12.dp, bottom = 200.dp, end = 12.dp)
+                        .height(320.dp)
+                        .widthIn(max = 450.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    gps = wonder.gps,
+                    title = "Map",
+                    zoomLevel = .05f,
+                    mapType = MapType.Normal,
                 )
             }
-
         }
     }
 }

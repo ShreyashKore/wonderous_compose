@@ -26,7 +26,7 @@ actual fun MapView(
                     setAttribute("height", "100%")
                     setAttribute(
                         "src",
-                        "//umap.openstreetmap.fr/en/map/untitled-map_1030003#7/${gps.latitude}/${gps.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
+                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${gps.latitude}/${gps.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
                     )
                 }
             }

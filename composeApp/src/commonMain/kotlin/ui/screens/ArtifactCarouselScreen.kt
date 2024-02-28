@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,7 +29,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,13 +58,10 @@ import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import data.HighlightData
-
 import kotlinx.coroutines.launch
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import ui.AppIcons
-import ui.ImagePaths
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.theme.TenorSans
@@ -94,9 +89,9 @@ fun ArtifactCarouselScreen(
     val artifacts = remember(wonder) { HighlightData.forWonder(wonder) }
 
     val pagerState = rememberPagerState(
-        initialPage = Int.MAX_VALUE / 2,
+        initialPage = 10000 / 2,
         initialPageOffsetFraction = 0f,
-        pageCount = { Int.MAX_VALUE }
+        pageCount = { 10000 }
     )
     val coroutineScope = rememberCoroutineScope()
 

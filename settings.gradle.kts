@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":composeWebInterop")

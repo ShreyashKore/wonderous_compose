@@ -6,12 +6,12 @@ import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
 import leaflet.L
 import leaflet.setupMap
-import models.GpsPosition
+import models.LatLng
 
 @Composable
 actual fun MapView(
     modifier: Modifier,
-    gps: GpsPosition,
+    latLng: LatLng,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
@@ -26,7 +26,7 @@ actual fun MapView(
                     setAttribute("height", "100%")
                     setAttribute(
                         "src",
-                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${gps.latitude}/${gps.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
+                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${latLng.latitude}/${latLng.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
                     )
                 }
             }
@@ -42,7 +42,7 @@ actual fun MapView(
             }
         },
         update = {
-            setupMap(L, "map", gps.latitude, gps.longitude, 260 * zoomLevel, 13f)
+            setupMap(L, "map", latLng.latitude, latLng.longitude, 260 * zoomLevel, 13f)
         },
     )
 }

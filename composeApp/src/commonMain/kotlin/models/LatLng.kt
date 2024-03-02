@@ -1,7 +1,7 @@
 package models
 
 
-data class GpsPosition(
+data class LatLng(
     val latitude: Double,
     val longitude: Double
 )

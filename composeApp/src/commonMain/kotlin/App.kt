@@ -87,7 +87,7 @@ fun App() {
                     val id = backStackEntry.path<String>("type")
                     val wonder = Wonder.parse(id)
                     MapScreen(
-                        gpsPosition = wonder.gps,
+                        latLng = wonder.latLng,
                         onBackClick = { navigator.goBack() }
                     )
                 }

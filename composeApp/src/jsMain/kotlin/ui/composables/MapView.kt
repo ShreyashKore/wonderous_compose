@@ -6,12 +6,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
 import external.L
-import models.GpsPosition
+import models.LatLng
 
 @Composable
 actual fun MapView(
     modifier: Modifier,
-    gps: GpsPosition,
+    latLng: LatLng,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
@@ -26,7 +26,7 @@ actual fun MapView(
                     setAttribute("height", "100%")
                     setAttribute(
                         "src",
-                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${gps.latitude}/${gps.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
+                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${latLng.latitude}/${latLng.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
                     )
                 }
             }
@@ -41,7 +41,8 @@ actual fun MapView(
             }
         },
         update = {
-            val map = L.map("map").setView(arrayOf(gps.latitude, gps.longitude), zoomLevel * 260)
+            val map =
+                L.map("map").setView(arrayOf(latLng.latitude, latLng.longitude), zoomLevel * 260)
             L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 mapOf(
@@ -49,7 +50,7 @@ actual fun MapView(
                     "attribution" to "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
                 )
             ).addTo(map)
-            L.marker(arrayOf(gps.latitude, gps.longitude)).addTo(map)
+            L.marker(arrayOf(latLng.latitude, latLng.longitude)).addTo(map)
             Unit
         },
     )

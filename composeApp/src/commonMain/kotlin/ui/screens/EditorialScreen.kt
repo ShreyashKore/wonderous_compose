@@ -440,7 +440,7 @@ fun EditorialScreen(
                         .height(320.dp)
                         .widthIn(max = 450.dp)
                         .clip(RoundedCornerShape(4.dp)),
-                    gps = wonder.gps,
+                    latLng = wonder.latLng,
                     title = "Map",
                     zoomLevel = .05f,
                     mapType = MapType.Normal,

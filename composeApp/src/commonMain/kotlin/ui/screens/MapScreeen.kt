@@ -7,7 +7,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import models.GpsPosition
+import models.LatLng
 import ui.composables.BackButton
 import ui.composables.MapType
 import ui.composables.MapView
@@ -16,7 +16,7 @@ import ui.theme.black
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
-    gpsPosition: GpsPosition,
+    latLng: LatLng,
     onBackClick: () -> Unit,
 ) = Column {
     TopAppBar(
@@ -28,7 +28,7 @@ fun MapScreen(
     )
     MapView(
         modifier = Modifier.fillMaxSize(),
-        gps = gpsPosition,
+        latLng = latLng,
         title = "Map",
         mapType = MapType.Satellite
     )

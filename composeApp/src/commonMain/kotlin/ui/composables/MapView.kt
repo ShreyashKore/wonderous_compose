@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import models.GpsPosition
+import models.LatLng
 
 @Composable
 expect fun MapView(
     modifier: Modifier,
-    gps: GpsPosition,
+    latLng: LatLng,
     title: String,
     parentScrollEnableState: MutableState<Boolean> = mutableStateOf(true),
     zoomLevel: Float = 10f,

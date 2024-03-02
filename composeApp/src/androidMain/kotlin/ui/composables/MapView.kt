@@ -8,13 +8,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import models.GpsPosition
+import com.google.android.gms.maps.model.LatLng as GmapLatLng
 import com.google.maps.android.compose.MapType as GoogleMapType
 
 
@@ -22,13 +21,13 @@ import com.google.maps.android.compose.MapType as GoogleMapType
 @Composable
 actual fun MapView(
     modifier: Modifier,
-    gps: GpsPosition,
+    latLng: models.LatLng,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
     mapType: MapType
 ) {
-    val currentLocation = LatLng(gps.latitude, gps.longitude)
+    val currentLocation = GmapLatLng(latLng.latitude, latLng.longitude)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentLocation, zoomLevel)
     }

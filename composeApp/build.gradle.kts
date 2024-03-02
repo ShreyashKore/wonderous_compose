@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinx.serialization)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
+    alias(libs.plugins.android.maps.secrets)
 }
 
 kotlin {
@@ -76,6 +76,7 @@ kotlin {
             implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.material3)
+            implementation(compose.components.uiToolingPreview)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
 
@@ -173,9 +174,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    dependencies {
-//        debugImplementation(libs.compose.ui.tooling)
     }
 }
 

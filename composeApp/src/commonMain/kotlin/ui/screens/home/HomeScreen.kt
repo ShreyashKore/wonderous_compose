@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -67,6 +68,11 @@ import ui.mainImageName
 import ui.screens.SharedScreen
 import kotlin.math.roundToInt
 
+/**
+ * large enough number to avoid overlap in smaller screens
+ */
+private val MIN_PAGER_WIDTH = 1000.dp
+
 @OptIn(
     ExperimentalFoundationApi::class, ExperimentalResourceApi::class, ExperimentalMaterialApi::class
 )
@@ -78,6 +84,7 @@ fun HomeScreen(
     openDetailScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) = BoxWithConstraints(modifier) {
+    val maxWidth = maxWidth
     val swipeProgress by remember {
         derivedStateOf {
             // `progress.fraction` resets to 1 so here we return 0
@@ -92,20 +99,22 @@ fun HomeScreen(
             state = swipeableState,
             orientation = Orientation.Vertical,
             anchors = mapOf(0f to SharedScreen.Home, -300f to SharedScreen.Details)
-        )
-
+        ),
+        contentAlignment = Alignment.Center
     ) {
         WonderIllustrationBackground(
-            wonder = currentWonder
+            currentWonder = currentWonder
         )
 
         HorizontalPager(
             state = pagerState,
             beyondBoundsPageCount = 1,
             pageSize = PageSize.Fill,
-            flingBehavior = PagerDefaults.flingBehavior(pagerState, snapPositionalThreshold = .2f),
-            pageSpacing = 1000.dp, // large enough number to avoid overlap
-            modifier = Modifier.fillMaxSize().padding(top = 80.dp),
+            flingBehavior = PagerDefaults.flingBehavior(pagerState, snapPositionalThreshold = .3f),
+            modifier = Modifier
+                .fillMaxHeight()
+                .requiredWidth(maxOf(maxWidth, MIN_PAGER_WIDTH))
+                .padding(top = 80.dp),
         ) { pageNo ->
             val wonder = Wonders[pageNo % Wonders.size]
             Box(Modifier.fillMaxSize()) {

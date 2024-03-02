@@ -16,7 +16,8 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
         common {
-            group("noJs") {
+            // intermediate source set for everything except js and wasm
+            group("nonWeb") {
                 withAndroidTarget()
                 withNative()
                 withJvm()
@@ -43,7 +44,7 @@ kotlin {
         browser()
         binaries.executable()
     }
-    
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -51,9 +52,9 @@ kotlin {
             }
         }
     }
-    
+
     jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -62,9 +63,10 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            version = "1.0"
         }
     }
-    
+
     sourceSets {
         val desktopMain by getting
 
@@ -90,7 +92,7 @@ kotlin {
             implementation(libs.coil.network.ktor)
         }
 
-        val noJsMain by getting {
+        val nonWebMain by getting {
             dependencies {
                 implementation(libs.compose.webview.multiplatform)
             }

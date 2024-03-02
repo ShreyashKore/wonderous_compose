@@ -11,10 +11,11 @@ kotlin {
         browser {
 
         }
-        binaries.executable()
+        binaries.library()
     }
     js(IR) {
-        binaries.executable()
+        binaries.library()
+        browser()
     }
 
     sourceSets {

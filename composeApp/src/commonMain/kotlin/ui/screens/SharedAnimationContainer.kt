@@ -8,6 +8,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,17 +19,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import models.GreatWall
@@ -49,7 +52,6 @@ enum class SharedScreen {
  */
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalMaterialApi::class,
 )
 @Composable
 fun SharedAnimationContainer(
@@ -68,9 +70,29 @@ fun SharedAnimationContainer(
             pageCount = { 1000 * Wonders.size })
     val currentWonder = Wonders[pagerState.currentPage % Wonders.size]
 
-    val swipeableState = rememberSwipeableState(
-        if (openHomeScreen) SharedScreen.Home else SharedScreen.Details
-    )
+    val density = LocalDensity.current
+
+    val swipeableState = remember {
+        AnchoredDraggableState(
+            initialValue = if (openHomeScreen) SharedScreen.Home else SharedScreen.Details,
+            anchors = density.run {
+                DraggableAnchors {
+                    SharedScreen.Home at 0f
+                    SharedScreen.Details at -150.dp.toPx()
+                }
+            },
+            positionalThreshold = { totalDistance: Float ->
+                0.5f * totalDistance
+            },
+            velocityThreshold = {
+                density.run {
+                    150.dp.toPx()
+                }
+            },
+            animationSpec = tween()
+        )
+    }
+
     val scope = rememberCoroutineScope()
 
 

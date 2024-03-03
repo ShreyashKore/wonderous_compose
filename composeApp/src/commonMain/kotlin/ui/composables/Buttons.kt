@@ -7,15 +7,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +31,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.AppIcons
 import ui.theme.greyStrong
 import ui.theme.white
@@ -40,7 +44,7 @@ fun AppIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    androidx.compose.material.IconButton(
+    IconButton(
         onClick = onClick,
         modifier = modifier,
     ) {
@@ -97,4 +101,21 @@ fun GithubButton() {
             .size(size)
             .clickable { uriHandler.openUri("https://github.com/ShreyashKore/wonderous_compose") },
     )
+}
+
+@Preview
+@Composable
+fun PreviewButtons() = MaterialTheme {
+    Column {
+        GithubButton()
+        LongButton(
+            label = "BUTTON TEXT",
+            onClick = { },
+        )
+        AppIconButton(
+            iconPath = AppIcons.Prev,
+            contentDescription = "Back",
+            onClick = { },
+        )
+    }
 }

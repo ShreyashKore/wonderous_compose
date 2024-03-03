@@ -128,6 +128,7 @@ kotlin {
             // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
             implementation(project(":composeWebInterop"))
             implementation(npm("leaflet", "1.9.4"))
+            implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.5-alpha")
         }
     }
 }

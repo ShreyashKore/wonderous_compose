@@ -3,6 +3,8 @@ package ui.screens
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -27,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
@@ -50,6 +53,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -75,9 +79,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.ChristRedeemer
 import models.MachuPicchu
@@ -118,20 +126,14 @@ fun EditorialScreen(
 ) = BoxWithConstraints {
     val maxWidth = maxWidth
     val density = LocalDensity.current
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                if (available.y > 15 && source == NestedScrollSource.Drag) {
-                    // We are detecting overscroll on top
-                    openHomeScreen()
-                }
-                return super.onPostScroll(consumed, available, source)
-            }
-        }
+    val overScroll = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    val nestedScrollConnection = remember(scope) {
+        BasicOverScrollConnection(
+            animatable = overScroll,
+            onExceedOverScrollLimit = openHomeScreen,
+            scope = scope
+        )
     }
     val scrollState = rememberLazyListState()
 
@@ -176,6 +178,7 @@ fun EditorialScreen(
     // Main content
     LazyColumn(
         modifier = Modifier
+            .offset { IntOffset(0, overScroll.value.toInt()) }
             .safeDrawingPadding()
             .nestedScroll(nestedScrollConnection),
         state = scrollState,
@@ -736,3 +739,51 @@ private val Wonder.cutoutShape
 
         else -> RoundedCornerShape(topStartPercent = 80, topEndPercent = 80)
     }
+
+/**
+ * Naive implementation to detect overscroll.
+ * Here we are only detecting in down direction.
+ */
+private class BasicOverScrollConnection(
+    val animatable: Animatable<Float, AnimationVector1D> = Animatable(0f),
+    val onExceedOverScrollLimit: () -> Unit,
+    val scope: CoroutineScope
+) : NestedScrollConnection {
+    var accumulated = 0f
+        private set(value) {
+            field = value
+            scope.launch {
+                animatable.snapTo(value)
+            }
+        }
+
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        if (accumulated > 0 && available.y < 0) {
+            accumulated = (accumulated + available.y).coerceAtLeast(0f)
+            return available
+        }
+        return Offset.Zero
+    }
+
+    override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource
+    ): Offset {
+        if (available.y <= 0) return Offset.Zero
+        accumulated = (accumulated + available.y).coerceAtMost(200f)
+
+        if ((available.y > 40 || accumulated > 100f) && source == NestedScrollSource.Drag) {
+            onExceedOverScrollLimit()
+        }
+        return available
+    }
+
+    override suspend fun onPreFling(available: Velocity): Velocity {
+        if (animatable.value > 0f && animatable.targetValue != 0f) {
+            animatable.animateTo(0f)
+            accumulated = 0f
+        }
+        return super.onPreFling(available)
+    }
+}

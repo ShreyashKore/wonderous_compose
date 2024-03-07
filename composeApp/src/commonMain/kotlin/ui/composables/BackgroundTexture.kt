@@ -19,7 +19,7 @@ fun BackgroundTexture(
     alpha: Float = 1f,
     modifier: Modifier = Modifier
 ) {
-    val image = imageResource(DrawableResource(texture))
+    val image = imageResource(DrawableResource("files/$texture"))
 
     val brush = remember(image) {
         ShaderBrush(

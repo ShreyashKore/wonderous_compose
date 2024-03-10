@@ -29,17 +29,20 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.AppIcons
 import ui.theme.greyStrong
 import ui.theme.white
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.icon_prev
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppIconButton(
-    iconPath: String,
+    icon: DrawableResource,
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -49,7 +52,7 @@ fun AppIconButton(
         modifier = modifier,
     ) {
         Icon(
-            painterResource(iconPath),
+            painterResource(icon),
             contentDescription = contentDescription,
             modifier = Modifier
                 .clip(CircleShape)
@@ -103,6 +106,7 @@ fun GithubButton() {
     )
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Preview
 @Composable
 fun PreviewButtons() = MaterialTheme {
@@ -113,7 +117,7 @@ fun PreviewButtons() = MaterialTheme {
             onClick = { },
         )
         AppIconButton(
-            iconPath = AppIcons.Prev,
+            icon = Res.drawable.icon_prev,
             contentDescription = "Back",
             onClick = { },
         )

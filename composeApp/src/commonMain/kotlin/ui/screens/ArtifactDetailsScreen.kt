@@ -1,5 +1,7 @@
 package ui.screens
 
+//import io.kamel.image.KamelImage
+//import io.kamel.image.asyncPainterResource
 import CompassDivider
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -55,11 +57,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import data.MetRepository
-//import io.kamel.image.KamelImage
-//import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.delay
 import models.ArtifactData
-import ui.AppIcons
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.composables.AppIconButton
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -69,11 +69,13 @@ import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
 import utils.prependProxy
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.icon_prev
 
 val imageMaxHeight = 400.dp
 val imageMinHeight = 250.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun ArtifactDetailsScreen(
     artifactId: String,
@@ -166,7 +168,7 @@ fun ArtifactDetailsScreen(
             title = {},
             navigationIcon = {
                 AppIconButton(
-                    iconPath = AppIcons.Prev,
+                    icon = Res.drawable.icon_prev,
                     contentDescription = "Back",
                     onClick = onClickBack
                 )

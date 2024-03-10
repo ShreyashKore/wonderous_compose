@@ -35,12 +35,14 @@ import kotlinx.coroutines.launch
 import models.GreatWall
 import models.Wonder
 import models.Wonders
-import ui.AppIcons
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.composables.AppIconButton
 import ui.composables.GithubButton
 import ui.screens.home.HomeMenu
 import ui.screens.home.HomeScreen
 import ui.theme.greyStrong
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.icon_menu
 
 
 enum class SharedScreen {
@@ -51,7 +53,7 @@ enum class SharedScreen {
  * Container around [HomeScreen] and [WonderDetailsScreen]
  */
 @OptIn(
-    ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class, ExperimentalResourceApi::class,
 )
 @Composable
 fun SharedAnimationContainer(
@@ -123,7 +125,7 @@ fun SharedAnimationContainer(
                 .align(Alignment.TopCenter)
         ) {
             AppIconButton(
-                iconPath = AppIcons.Menu,
+                icon = Res.drawable.icon_menu,
                 contentDescription = "Options",
                 onClick = { isMenuOpen = true }
             )

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.compass_full
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -47,10 +49,10 @@ fun CompassDivider(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            Divider(
-                color = linesColor ?: MaterialTheme.colorScheme.primary,
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterEnd),
                 thickness = Dp.Hairline,
-                modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterEnd)
+                color = linesColor ?: MaterialTheme.colorScheme.primary
             )
         }
         Spacer(modifier = Modifier.width(8.dp))
@@ -60,18 +62,18 @@ fun CompassDivider(
                 .graphicsLayer(
                     rotationZ = rotationAngle * 360f
                 ),
-            painter = painterResource("images/common/compass_full.xml"),
+            painter = painterResource(Res.drawable.compass_full),
             contentDescription = null,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
         Box(modifier = Modifier.weight(1f)) {
-            Divider(
-                color = linesColor ?: MaterialTheme.colorScheme.primary,
-                thickness = Dp.Hairline,
+            HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(scale).align(Alignment.CenterStart).graphicsLayer(
                     rotationX = if (isExpanded) 0f else 1f
-                )
+                ),
+                thickness = Dp.Hairline,
+                color = linesColor ?: MaterialTheme.colorScheme.primary
             )
         }
     }

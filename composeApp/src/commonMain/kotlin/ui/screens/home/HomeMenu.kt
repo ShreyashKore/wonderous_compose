@@ -21,7 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,6 +48,9 @@ import ui.homeBtn
 import ui.theme.fgColor
 import ui.theme.offWhite
 import ui.theme.white
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.compass_full
+import wonderouscompose.composeapp.generated.resources.icon_close
 
 @Composable
 fun HomeMenu(
@@ -107,13 +110,13 @@ fun HomeMenu(
                     icon = AppIcons.Timeline,
                     text = "Explore the timeline"
                 )
-                Divider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = openCollection,
                     icon = AppIcons.Collection,
                     text = "View your collections"
                 )
-                Divider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = { isAboutDialogOpen = true },
                     icon = AppIcons.Info,
@@ -126,6 +129,7 @@ fun HomeMenu(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppHeader(
     onClickClose: () -> Unit,
@@ -133,13 +137,13 @@ fun AppHeader(
 ) {
     Row(Modifier.fillMaxWidth().safeDrawingPadding().height(72.dp).padding(8.dp)) {
         AppIconButton(
-            iconPath = AppIcons.Close,
+            icon = Res.drawable.icon_close,
             contentDescription = "Close",
             onClick = onClickClose,
         )
         Spacer(Modifier.weight(1f))
         AppIconButton(
-            iconPath = AppIcons.Info,
+            icon = Res.drawable.icon_close,
             contentDescription = "Change Language",
             onClick = onToggleLanguage,
         )
@@ -171,7 +175,7 @@ fun WonderBtnsGrid(
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
-                    painterResource("images/common/compass_full.xml"),
+                    painterResource(Res.drawable.compass_full),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp)
                 )

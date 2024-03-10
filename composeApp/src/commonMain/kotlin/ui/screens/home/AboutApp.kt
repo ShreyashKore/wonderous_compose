@@ -34,6 +34,8 @@ import ui.theme.Raleway
 import ui.theme.accent1
 import ui.theme.black
 import ui.theme.offWhite
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.app_logo_plain
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
 @Composable
@@ -47,7 +49,7 @@ fun AboutApp(onDismissRequest: () -> Unit) {
         Column {
             Row {
                 Image(
-                    painterResource("images/common/app-logo-plain.png"),
+                    painterResource(Res.drawable.app_logo_plain),
                     contentDescription = "logo",
                     modifier = Modifier.background(black).padding(4.dp)
                 )

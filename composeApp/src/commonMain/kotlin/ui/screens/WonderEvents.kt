@@ -47,7 +47,6 @@ import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.composables.WonderTitleText
@@ -58,6 +57,8 @@ import ui.theme.black
 import ui.theme.greyStrong
 import ui.theme.white
 import utils.StringUtils.getYrSuffix
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.tab_timeline
 import kotlin.math.absoluteValue
 
 @OptIn(
@@ -216,7 +217,7 @@ fun WonderEvents(
         title = {},
         actions = {
             AppIconButton(
-                iconPath = "${ImagePaths.common}/tab-timeline.png",
+                icon = Res.drawable.tab_timeline,
                 contentDescription = "Open Timeline",
                 onClick = navigateToTimeLine
             )

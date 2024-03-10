@@ -61,7 +61,6 @@ import data.HighlightData
 import kotlinx.coroutines.launch
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import ui.AppIcons
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.theme.TenorSans
@@ -69,11 +68,13 @@ import ui.theme.greyMedium
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.icon_search
 import kotlin.math.absoluteValue
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalResourceApi::class
 )
 @Composable
 fun ArtifactCarouselScreen(
@@ -140,7 +141,7 @@ fun ArtifactCarouselScreen(
             },
             actions = {
                 AppIconButton(
-                    iconPath = AppIcons.Search,
+                    icon = Res.drawable.icon_search,
                     contentDescription = "Search",
                     onClick = openAllArtifactsScreen,
                 )

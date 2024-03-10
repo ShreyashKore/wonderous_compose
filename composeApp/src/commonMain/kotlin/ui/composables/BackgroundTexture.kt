@@ -15,11 +15,11 @@ import org.jetbrains.compose.resources.imageResource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun BackgroundTexture(
-    texture: String,
+    texture: DrawableResource,
     alpha: Float = 1f,
     modifier: Modifier = Modifier
 ) {
-    val image = imageResource(DrawableResource(texture))
+    val image = imageResource(texture)
 
     val brush = remember(image) {
         ShaderBrush(

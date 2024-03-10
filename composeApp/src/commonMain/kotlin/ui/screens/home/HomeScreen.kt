@@ -5,7 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -28,13 +30,10 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.SwipeableState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.KeyboardArrowDown
-import androidx.compose.material.swipeable
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -66,6 +65,9 @@ import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
 import ui.screens.SharedScreen
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.roller_1_white
+import wonderouscompose.composeapp.generated.resources.roller_2_white
 import kotlin.math.roundToInt
 
 /**
@@ -74,31 +76,32 @@ import kotlin.math.roundToInt
 private val MIN_PAGER_WIDTH = 1000.dp
 
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalResourceApi::class, ExperimentalMaterialApi::class
+    ExperimentalFoundationApi::class, ExperimentalResourceApi::class,
 )
 @Composable
 fun HomeScreen(
     currentWonder: Wonder,
     pagerState: PagerState,
-    swipeableState: SwipeableState<SharedScreen>,
+    swipeableState: AnchoredDraggableState<SharedScreen>,
     openDetailScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) = BoxWithConstraints(modifier) {
     val maxWidth = maxWidth
     val swipeProgress by remember {
         derivedStateOf {
-            // `progress.fraction` resets to 1 so here we return 0
-            if (swipeableState.progress.from == SharedScreen.Home && swipeableState.progress.to == SharedScreen.Home) 0f
-            else swipeableState.progress.fraction
+            // `progress` resets to 1 so here we return 0
+            if (swipeableState.targetValue != SharedScreen.Details && swipeableState.progress == 1f) 0f
+            else swipeableState.progress
         }
     }
+
+
     val maxHeight = maxHeight
 
     Box(
-        Modifier.fillMaxSize().swipeable(
+        Modifier.fillMaxSize().anchoredDraggable(
             state = swipeableState,
             orientation = Orientation.Vertical,
-            anchors = mapOf(0f to SharedScreen.Home, -300f to SharedScreen.Details)
         ),
         contentAlignment = Alignment.Center
     ) {
@@ -161,7 +164,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp),
-                swipeableState = swipeableState,
+                getSwipeProgress = { swipeableState.offset.roundToInt() },
                 openDetailScreen = openDetailScreen,
             )
         }
@@ -196,11 +199,10 @@ fun HorizontalSwipeDots(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VerticalSwipeIndicator(
     modifier: Modifier,
-    swipeableState: SwipeableState<SharedScreen>,
+    getSwipeProgress: () -> Int,
     openDetailScreen: () -> Unit
 ) {
     Box(modifier, contentAlignment = Alignment.BottomCenter) {
@@ -215,7 +217,7 @@ fun VerticalSwipeIndicator(
         IconButton(
             modifier = Modifier.offset {
                 IntOffset(
-                    0, swipeableState.offset.value.roundToInt()
+                    0, getSwipeProgress()
                 )
             },
             onClick = openDetailScreen,
@@ -256,9 +258,10 @@ val Wonder.bgTextureColor
         TajMahal -> Color(0xFFC96454)
     }
 
+@OptIn(ExperimentalResourceApi::class)
 val Wonder.bgTexture
     get() = when (this) {
-        ChristRedeemer, Colosseum, MachuPicchu, Petra -> ImagePaths.roller1
-        ChichenItza, GreatWall, PyramidsGiza, TajMahal -> ImagePaths.roller2
+        ChristRedeemer, Colosseum, MachuPicchu, Petra -> Res.drawable.roller_1_white
+        ChichenItza, GreatWall, PyramidsGiza, TajMahal -> Res.drawable.roller_2_white
     }
 

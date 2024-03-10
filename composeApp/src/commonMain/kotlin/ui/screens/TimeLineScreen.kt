@@ -80,10 +80,9 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import platform.Platform
 import platform.platform
-import ui.AppIcons
 import ui.composables.AppIconButton
 import ui.composables.RotatedLayout
-import ui.getAssetPath
+import ui.flattened
 import ui.theme.Raleway
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -96,6 +95,8 @@ import ui.theme.white
 import ui.utils.lerp
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.icon_prev
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -103,7 +104,7 @@ const val StartYear = -3000
 const val EndYear = 2200
 const val timelineDuration = EndYear - StartYear
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun TimeLineScreen(
     selectedWonder: Wonder? = null,
@@ -228,7 +229,7 @@ fun TimeLineScreen(
         },
         navigationIcon = {
             AppIconButton(
-                iconPath = AppIcons.Prev,
+                icon = Res.drawable.icon_prev,
                 contentDescription = "Back",
                 onClick = onClickBack
             )
@@ -412,7 +413,7 @@ fun WonderLine(
     ) {
         if (!outlineOnly)
             Image(
-                painterResource(wonder.getAssetPath("flattened.jpg")),
+                painterResource(wonder.flattened),
                 contentDescription = wonder.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

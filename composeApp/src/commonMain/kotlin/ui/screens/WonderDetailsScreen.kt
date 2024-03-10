@@ -43,10 +43,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
-import ui.getAssetPath
 import ui.screens.WonderDetailsScreen.ArtifactCarousel
 import ui.screens.WonderDetailsScreen.Editorial
 import ui.screens.WonderDetailsScreen.PhotoGallery
@@ -54,6 +53,7 @@ import ui.screens.WonderDetailsScreen.WonderEvents
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
+import ui.wonderButtonPath
 
 
 @Composable
@@ -211,7 +211,7 @@ private fun WonderButton(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painterResource(wonder.getAssetPath("wonder-button.png")),
+        painterResource(wonder.wonderButtonPath),
         contentDescription = "home",
         modifier = modifier
             .background(white, CircleShape) // padding as border
@@ -233,14 +233,14 @@ private fun NavDestinationButton(
     isSelected: Boolean = false
 ) {
     val iconImgPath =
-        "${ImagePaths.common}/3.0x/tab-${iconName}${if (isSelected) "-active" else ""}.png"
+        "drawable/tab-${iconName}${if (isSelected) "-active" else ""}.png"
     val iconTint = if (isSelected) MaterialTheme.colorScheme.primary else unSelectedColor
     IconButton(
         onClick = onClick,
         modifier = modifier,
     ) {
         Icon(
-            painterResource(iconImgPath),
+            painterResource(DrawableResource(iconImgPath)),
             contentDescription = contentDescription,
             modifier = Modifier.size(26.dp),
             tint = iconTint

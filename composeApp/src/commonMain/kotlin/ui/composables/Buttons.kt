@@ -7,15 +7,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,26 +29,30 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.AppIcons
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.theme.greyStrong
 import ui.theme.white
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.github_logo
+import wonderouscompose.composeapp.generated.resources.icon_prev
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun AppIconButton(
-    iconPath: String,
+    icon: DrawableResource,
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    androidx.compose.material.IconButton(
+    IconButton(
         onClick = onClick,
         modifier = modifier,
     ) {
         Icon(
-            painterResource(iconPath),
+            painterResource(icon),
             contentDescription = contentDescription,
             modifier = Modifier
                 .clip(CircleShape)
@@ -88,7 +95,7 @@ fun GithubButton() {
     val size by animateDpAsState(if (isHovered) 60.dp else 48.dp)
 
     Image(
-        painterResource(AppIcons.Github),
+        painterResource(Res.drawable.github_logo),
         contentDescription = "Github Repository",
         modifier = Modifier
             .pointerHoverIcon(PointerIcon.Hand)
@@ -97,4 +104,22 @@ fun GithubButton() {
             .size(size)
             .clickable { uriHandler.openUri("https://github.com/ShreyashKore/wonderous_compose") },
     )
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Preview
+@Composable
+fun PreviewButtons() = MaterialTheme {
+    Column {
+        GithubButton()
+        LongButton(
+            label = "BUTTON TEXT",
+            onClick = { },
+        )
+        AppIconButton(
+            icon = Res.drawable.icon_prev,
+            contentDescription = "Back",
+            onClick = { },
+        )
+    }
 }

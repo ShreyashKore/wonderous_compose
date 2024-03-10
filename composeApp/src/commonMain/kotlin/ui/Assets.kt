@@ -12,8 +12,8 @@ import models.Wonder
 
 
 object ImagePaths {
-    const val root = "images"
-    const val common = "images/common"
+    const val root = "files/images"
+    const val common = "$root/common"
 
     val collectibles = "$root/collectibles"
     val particle = "$common/particle-21x23.png"
@@ -48,6 +48,8 @@ fun Wonder.getAssetPath(name: String): String {
     return "$assetPath/$name"
 }
 
+val Wonder.wonderButtonPath: String get() = getAssetPath("wonder-button.png")
+
 val Wonder.mainImageName: String
     get() = when (this) {
         ChichenItza -> "chichen.png"
@@ -61,19 +63,19 @@ val Wonder.mainImageName: String
     }
 
 val Wonder.homeBtn: String
-    get() = "${this.assetPath}/wonder-button.png"
+    get() = getAssetPath("wonder-button.png")
 
 val Wonder.photo1: String
-    get() = "${this.assetPath}/photo-1.jpg"
+    get() = getAssetPath("photo-1.jpg")
 
 val Wonder.photo2: String
-    get() = "${this.assetPath}/photo-2.jpg"
+    get() = getAssetPath("photo-2.jpg")
 
 val Wonder.photo3: String
-    get() = "${this.assetPath}/photo-3.jpg"
+    get() = getAssetPath("photo-3.jpg")
 
 val Wonder.photo4: String
-    get() = "${this.assetPath}/photo-4.jpg"
+    get() = getAssetPath("photo-4.jpg")
 
 val Wonder.flattened: String
-    get() = "${this.assetPath}/flattened.jpg"
+    get() = getAssetPath("flattened.jpg")

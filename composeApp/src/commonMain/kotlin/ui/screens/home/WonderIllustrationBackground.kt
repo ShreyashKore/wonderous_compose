@@ -46,10 +46,12 @@ import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
 import ui.composables.BackgroundTexture
 import ui.composables.IllustrationPiece
+import ui.getAssetPath
 import ui.theme.fgColor
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.cloud_white
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 import kotlin.random.Random
@@ -148,7 +150,7 @@ private fun BoxWithConstraintsScope.AnimatedCloud(
         exit = slideOut(tween(1500)) { IntOffset(-maxWidthPx * 2, 0) } + fadeOut(tween(1000)),
     ) {
         Image(
-            painterResource(ImagePaths.common + "/" + "cloud-white.png"),
+            painterResource(Res.drawable.cloud_white),
             contentDescription = null,
             modifier = Modifier.alpha(.4f).fillMaxSize()
         )

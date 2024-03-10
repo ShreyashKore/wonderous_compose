@@ -65,6 +65,9 @@ import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
 import ui.screens.SharedScreen
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.roller_1_white
+import wonderouscompose.composeapp.generated.resources.roller_2_white
 import kotlin.math.roundToInt
 
 /**
@@ -255,9 +258,10 @@ val Wonder.bgTextureColor
         TajMahal -> Color(0xFFC96454)
     }
 
+@OptIn(ExperimentalResourceApi::class)
 val Wonder.bgTexture
     get() = when (this) {
-        ChristRedeemer, Colosseum, MachuPicchu, Petra -> ImagePaths.roller1
-        ChichenItza, GreatWall, PyramidsGiza, TajMahal -> ImagePaths.roller2
+        ChristRedeemer, Colosseum, MachuPicchu, Petra -> Res.drawable.roller_1_white
+        ChichenItza, GreatWall, PyramidsGiza, TajMahal -> Res.drawable.roller_2_white
     }
 

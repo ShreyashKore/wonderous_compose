@@ -33,10 +33,10 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.AppIcons
 import ui.theme.greyStrong
 import ui.theme.white
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.github_logo
 import wonderouscompose.composeapp.generated.resources.icon_prev
 
 @OptIn(ExperimentalResourceApi::class)
@@ -95,7 +95,7 @@ fun GithubButton() {
     val size by animateDpAsState(if (isHovered) 60.dp else 48.dp)
 
     Image(
-        painterResource(AppIcons.Github),
+        painterResource(Res.drawable.github_logo),
         contentDescription = "Github Repository",
         modifier = Modifier
             .pointerHoverIcon(PointerIcon.Hand)

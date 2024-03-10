@@ -91,6 +91,7 @@ import models.ChristRedeemer
 import models.MachuPicchu
 import models.PyramidsGiza
 import models.Wonder
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.BackgroundTexture
@@ -103,6 +104,10 @@ import ui.composables.firstItemScrollProgress
 import ui.composables.scrollProgressFor
 import ui.getAssetPath
 import ui.mainImageName
+import ui.photo1
+import ui.photo2
+import ui.photo3
+import ui.photo4
 import ui.screens.home.bgTexture
 import ui.theme.B612Mono
 import ui.theme.Cinzel
@@ -275,7 +280,7 @@ fun EditorialScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painterResource(wonder.getAssetPath("photo-1.jpg")),
+                    painterResource(wonder.photo1),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .height(imageHeight)
@@ -320,7 +325,7 @@ fun EditorialScreen(
             }
 
             PullQuote1(
-                bgImage = wonder.getAssetPath("photo-2.jpg"),
+                bgImage = wonder.photo2,
                 pullQuote1Top = wonder.pullQuote1Top,
                 pullQuote1Bottom = wonder.pullQuote1Bottom,
                 pullQuote1Progress = pullQuote1Progress,
@@ -390,8 +395,8 @@ fun EditorialScreen(
             }
             ParallaxImages(
                 parallaxProgress = parallaxProgress,
-                topImagePath = wonder.getAssetPath("photo-3.jpg"),
-                bottomImagePath = wonder.getAssetPath("photo-4.jpg"),
+                topImagePath = wonder.photo3,
+                bottomImagePath = wonder.photo4,
             )
         }
         // 12
@@ -555,7 +560,7 @@ fun InfoTitle(
                 }
             ) {
                 Image(
-                    painterResource(it.imagePath),
+                    painterResource(DrawableResource(it.imagePath)),
                     contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
@@ -725,7 +730,7 @@ enum class InfoSection(val title: String, val imageName: String) {
     Location("LOCATION", "geography.png")
 }
 
-val InfoSection.imagePath get() = "images/common/$imageName"
+val InfoSection.imagePath get() = "drawable/$imageName"
 
 private val Wonder.cutoutShape
     get() = when (this) {

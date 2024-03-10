@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import models.Wonder
 import models.Wonders
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.AppIcons
 import ui.composables.AppIconButton
 import ui.composables.SimpleGrid
 import ui.homeBtn
@@ -51,7 +51,11 @@ import ui.theme.white
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.compass_full
 import wonderouscompose.composeapp.generated.resources.icon_close
+import wonderouscompose.composeapp.generated.resources.icon_collection
+import wonderouscompose.composeapp.generated.resources.icon_info
+import wonderouscompose.composeapp.generated.resources.icon_timeline
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun HomeMenu(
     data: Wonder,
@@ -107,19 +111,19 @@ fun HomeMenu(
             ) {
                 BottomButton(
                     onClick = openTimeline,
-                    icon = AppIcons.Timeline,
+                    icon = Res.drawable.icon_timeline,
                     text = "Explore the timeline"
                 )
                 HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = openCollection,
-                    icon = AppIcons.Collection,
+                    icon = Res.drawable.icon_collection,
                     text = "View your collections"
                 )
                 HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = { isAboutDialogOpen = true },
-                    icon = AppIcons.Info,
+                    icon = Res.drawable.icon_info,
                     text = "About this app"
                 )
             }
@@ -206,7 +210,7 @@ fun WonderBtnsGrid(
 @Composable
 private fun BottomButton(
     onClick: () -> Unit,
-    icon: String,
+    icon: DrawableResource,
     text: String
 ) {
     TextButton(

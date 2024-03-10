@@ -82,7 +82,7 @@ import platform.Platform
 import platform.platform
 import ui.composables.AppIconButton
 import ui.composables.RotatedLayout
-import ui.getAssetPath
+import ui.flattened
 import ui.theme.Raleway
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -413,7 +413,7 @@ fun WonderLine(
     ) {
         if (!outlineOnly)
             Image(
-                painterResource(wonder.getAssetPath("flattened.jpg")),
+                painterResource(wonder.flattened),
                 contentDescription = wonder.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

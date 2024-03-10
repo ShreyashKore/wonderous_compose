@@ -17,24 +17,20 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.getAssetPath
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun IllustrationPiece(
-    currentWonder: Wonder,
-    wonder: Wonder,
-    imageName: String,
+    isVisible: Boolean,
+    imagePath: String,
     verticalSwipeProgress: Float = 0f,
     modifier: Modifier,
     hiddenStateOffset: () -> Offset = { Offset(1f, 1f) },
     hiddenStateScale: Float = 0.5f,
 ) {
-    val imagePainter = painterResource(wonder.getAssetPath(imageName))
     fun getHiddenStateOffset(intSize: IntSize): IntOffset {
         val (x, y) = hiddenStateOffset()
         return IntOffset((intSize.width * x).roundToInt(), (intSize.height * y).roundToInt())
@@ -43,7 +39,7 @@ fun IllustrationPiece(
     val animSpec = tween<Float>(durationMillis = 1000)
     val translationSpec = tween<IntOffset>(durationMillis = 1000)
     AnimatedVisibility(
-        visible = currentWonder == wonder,
+        visible = isVisible,
         enter = scaleIn(animSpec, initialScale = hiddenStateScale) + fadeIn(animSpec) + slideIn(
             translationSpec,
             initialOffset = ::getHiddenStateOffset
@@ -59,7 +55,7 @@ fun IllustrationPiece(
         }.wrapContentSize(unbounded = true) then modifier,
     ) {
         Image(
-            imagePainter,
+            painterResource(imagePath),
             contentDescription = null,
             contentScale = ContentScale.FillHeight
         )

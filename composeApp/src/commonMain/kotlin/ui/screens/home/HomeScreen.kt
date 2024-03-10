@@ -60,7 +60,6 @@ import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import ui.ImagePaths
 import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
@@ -89,7 +88,7 @@ fun HomeScreen(
     val maxWidth = maxWidth
     val swipeProgress by remember {
         derivedStateOf {
-            // `progress` resets to 1 so here we return 0
+            // `progress` resets to 1 once settled so here we return 0
             if (swipeableState.targetValue != SharedScreen.Details && swipeableState.progress == 1f) 0f
             else swipeableState.progress
         }
@@ -129,17 +128,17 @@ fun HomeScreen(
                         scaleX = scale
                         scaleY = scale
                     }
-                        .align(if (wonder == ChristRedeemer) Alignment.BottomCenter else Alignment.Center)
-                        .padding(bottom = if (wonder == ChristRedeemer) 0.dp else 140.dp)
+                        .align(wonder.mainImageAlignment)
+                        .padding(bottom = wonder.mainImageBottomPadding)
                         .wrapContentSize(unbounded = true)
-                        .requiredHeight(maxHeight * wonder.fractionalScale),
+                        .requiredHeight(maxHeight * wonder.mainImageFractionalHeight),
                     contentScale = ContentScale.FillHeight,
                 )
             }
         }
 
         WonderIllustrationForeground(
-            wonder = currentWonder, verticalSwipeProgress = swipeProgress
+            currentWonder = currentWonder, verticalSwipeProgress = swipeProgress
         )
 
         Box {
@@ -153,9 +152,9 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 16.dp),
                     enableShadows = true
                 )
-                HorizontalSwipeDots(
-                    currentDot = pagerState.currentPage % Wonders.size,
-                    totalDots = Wonders.size,
+                PageIndicator(
+                    currentPage = pagerState.currentPage % Wonders.size,
+                    totalPages = Wonders.size,
                     modifier = Modifier.padding(vertical = 24.dp).height(120.dp).fillMaxWidth()
                 )
             }
@@ -174,17 +173,17 @@ fun HomeScreen(
 
 
 @Composable
-fun HorizontalSwipeDots(
-    currentDot: Int,
-    totalDots: Int,
+fun PageIndicator(
+    currentPage: Int,
+    totalPages: Int,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier,
         horizontalArrangement = Arrangement.Center
     ) {
-        repeat(totalDots) { i ->
-            val width = if (currentDot == i) 14.dp else 8.dp
+        repeat(totalPages) { i ->
+            val width = if (currentPage == i) 14.dp else 8.dp
             Box(
                 modifier = Modifier
                     .animateContentSize(tween(500))
@@ -216,9 +215,7 @@ fun VerticalSwipeIndicator(
         )
         IconButton(
             modifier = Modifier.offset {
-                IntOffset(
-                    0, getSwipeProgress()
-                )
+                IntOffset(0, getSwipeProgress())
             },
             onClick = openDetailScreen,
         ) {
@@ -232,8 +229,19 @@ fun VerticalSwipeIndicator(
     }
 }
 
+private val Wonder.mainImageBottomPadding
+    get() = when (this) {
+        ChristRedeemer -> 0.dp
+        else -> 140.dp
+    }
 
-private val Wonder.fractionalScale
+private val Wonder.mainImageAlignment
+    get() = when (this) {
+        ChristRedeemer -> Alignment.BottomCenter
+        else -> Alignment.Center
+    }
+
+private val Wonder.mainImageFractionalHeight
     get() = when (this) {
         ChichenItza -> .4f
         ChristRedeemer -> .95f

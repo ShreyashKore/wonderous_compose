@@ -22,11 +22,12 @@ import models.Wonder
 import models.Wonders
 import ui.composables.IllustrationPiece
 import ui.composables.fractionalOffset
+import ui.getAssetPath
 import ui.theme.bgColor
 
 @Composable
 fun WonderIllustrationForeground(
-    wonder: Wonder,
+    currentWonder: Wonder,
     verticalSwipeProgress: Float,
 ) {
     BoxWithConstraints(
@@ -38,17 +39,16 @@ fun WonderIllustrationForeground(
             drawRect(
                 Brush.verticalGradient(
                     gradientTopStop to Color.Transparent,
-                    gradientBottomStop to wonder.bgColor.copy(gradientBottomAlpha)
+                    gradientBottomStop to currentWonder.bgColor.copy(gradientBottomAlpha)
                 ),
             )
         },
     ) {
-        Wonders.map { w ->
-            for (config in w.foregroundIllustrations) {
+        for (wonder in Wonders) {
+            for (config in wonder.foregroundIllustrations) {
                 IllustrationPiece(
-                    wonder = w,
-                    imageName = config.imageName,
-                    currentWonder = wonder,
+                    imagePath = wonder.getAssetPath(config.imageName),
+                    isVisible = currentWonder == wonder,
                     verticalSwipeProgress = verticalSwipeProgress,
                     modifier = Modifier
                         .fractionalOffset(config.fractionalOffset.x, config.fractionalOffset.y)

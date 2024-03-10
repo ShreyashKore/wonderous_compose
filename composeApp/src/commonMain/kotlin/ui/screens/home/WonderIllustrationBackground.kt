@@ -74,21 +74,18 @@ fun WonderIllustrationBackground(
             modifier = Modifier.fillMaxSize()
         )
     }
-    // Place all the elements for all the wonders
-    // The elements for only the currentWonder will show up
+    // Place sun/moon and clouds for each wonders
+    // Only show the ones for currentWonder
     for (wonder in Wonders) {
-        val cloudConfigs = remember { wonder.getCloudConfigs() }
+        val cloudConfigs = remember(wonder) { wonder.getCloudConfigs() }
         CelestialBody(
-            wonder = wonder,
-            currentWonder = currentWonder,
-            modifier = Modifier
-                .height(wonder.celestialBodyConfig.height * maxHeight)
-                .align(wonder.celestialBodyConfig.alignment)
+            isVisible = currentWonder == wonder,
+            imagePath = wonder.getAssetPath(wonder.celestialBodyImageName),
+            celestialBodyConfig = wonder.celestialBodyConfig,
         )
         cloudConfigs.forEach { cloudConfig ->
             AnimatedCloud(
-                wonder = wonder,
-                currentWonder = currentWonder,
+                isVisible = currentWonder == wonder,
                 maxWidthPx = maxWidthPx,
                 cloudConfig = cloudConfig,
                 maxCloudHeight = (maxHeight * .1f).coerceAtLeast(150.dp),
@@ -99,16 +96,17 @@ fun WonderIllustrationBackground(
 }
 
 @Composable
-private fun CelestialBody(
-    wonder: Wonder,
-    currentWonder: Wonder,
-    modifier: Modifier = Modifier,
+private fun BoxWithConstraintsScope.CelestialBody(
+    imagePath: String,
+    celestialBodyConfig: CelestialBodyConfig,
+    isVisible: Boolean,
 ) = IllustrationPiece(
-    currentWonder = currentWonder,
-    wonder = wonder,
-    imageName = wonder.celestialBodyImageName,
-    modifier = modifier,
-    hiddenStateOffset = { Offset(0f, wonder.celestialBodyConfig.hiddenStateYOffset) },
+    isVisible = isVisible,
+    imagePath = imagePath,
+    modifier = Modifier
+        .height(celestialBodyConfig.height * maxHeight)
+        .align(celestialBodyConfig.alignment),
+    hiddenStateOffset = { Offset(0f, celestialBodyConfig.hiddenStateYOffset) },
     hiddenStateScale = .8f
 )
 
@@ -116,8 +114,7 @@ private fun CelestialBody(
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun BoxWithConstraintsScope.AnimatedCloud(
-    wonder: Wonder,
-    currentWonder: Wonder,
+    isVisible: Boolean,
     maxWidthPx: Int,
     maxCloudHeight: Dp,
     cloudConfig: CloudConfig
@@ -136,7 +133,7 @@ private fun BoxWithConstraintsScope.AnimatedCloud(
     )
 
     AnimatedVisibility(
-        currentWonder == wonder,
+        isVisible,
         modifier = Modifier
             .graphicsLayer {
                 translationX = offsetX.value * maxWidthPx
@@ -245,7 +242,7 @@ private data class CloudConfig(
 private const val CLOUD_COUNT = 3
 
 /**
- * Returns list of [CloudConfig]s with randomised values using [Wonder]'s hascode as seed.
+ * Returns list of [CloudConfig]s with randomised values using [Wonder]'s hashcode as seed.
  */
 private fun Wonder.getCloudConfigs(): List<CloudConfig> {
     val random = Random(this.hashCode())

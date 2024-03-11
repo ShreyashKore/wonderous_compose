@@ -6,9 +6,16 @@
 ![badge windows][badge-windows]
 ![badge macos][badge-macos]
 ![badge web javascript][badge-js]
+![badge web wasm][badge-wasm]
 
-Checkout live web version (based on JS) here
-https://wonderous.shreyashkore.com
+Checkout live web version based on WASM here
+[shreyashkore.github.io/wonderous-compose-wasm/](https://shreyashkore.github.io/wonderous-compose-wasm/)
+
+For the version based on JS see
+[shreyashkore.github.io/wonderous-compose-js/](https://shreyashkore.github.io/wonderous-compose-js/)
+
+> Note: Some gestures do not work on the web/desktop platforms. For scrolling horizontally
+> use `Shift + Scroll`.
 
 > 🚧 WORK IN PROGRESS 🚧
 
@@ -32,22 +39,55 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 
 ## Outline
 
-* For navigation, the PreCompose library is used. This has a similar API to the AndroidX navigation
+* For navigation, the [PreCompose](https://github.com/Tlaster/PreCompose/) library is used. This has
+  a similar API to the AndroidX navigation
   library.
-* HomeScreen shows the usage of HorizontalPager along with AnimatedVisibility for animating
+* [Home Screen](composeApp/src/commonMain/kotlin/ui/screens/home/HomeScreen.kt) shows the usage of
+  HorizontalPager along with AnimatedVisibility for animating
   foreground and background elements
-* ArtifactListScreen uses a ViewModel to store business logic.
-* ArtifactDetailsScreen demonstrates writing business logic in the UI layer itself.
-* Editorial Screen uses LazyColumn layout and usage of scroll APIs to drive animations for elements
+* [ArtifactList Screen](composeApp/src/commonMain/kotlin/ui/screens/ArtifactListScreen.kt) uses a
+  ViewModel to store business logic.
+* [ArtifactDetails Screen](composeApp/src/commonMain/kotlin/ui/screens/ArtifactDetailsScreen.kt)
+  demonstrates writing business logic in the UI layer itself.
+* [Editorial Screen](composeApp/src/commonMain/kotlin/ui/screens/EditorialScreen.kt) uses LazyColumn
+  layout and usage of scroll APIs to
+  drive animations for elements
   when they appear on the screen.
 * Map View demonstrates how KMP and Compose's interoperability layer can be used to embed native UIs
-  in Compose.
-* The Photo Gallery screen makes use of a custom layout and also uses a custom gesture detection
+  in Compose. For web [Wasm Html interop](https://github.com/Hamamas/Kotlin-Wasm-Html-Interop)
+  library is used (Currently copied in the project).
+* The [Photo Gallery screen](composeApp/src/commonMain/kotlin/ui/screens/PhotoGalleryScreen.kt)
+  makes use of a custom layout and also uses a custom gesture detection
   modifier.
+
+## Source Sets
+
+This project uses experimental DSL to configure custom hierarchy.
+
+```kotlin
+applyDefaultHierarchyTemplate {
+    common {
+        group("nonWeb") {
+            withAndroidTarget()
+            withNative()
+            withJvm()
+        }
+        group("jsWasm") {
+            withJs()
+            withWasm()
+        }
+    }
+}
+```
+
+Here 2 additional intermediate source sets are created to share code among web platforms.
+
+- `nonWeb` contains all the targets except JS and WASM.
+- `jsWasm` contains only the JS and WASM targets
 
 ## TODO
 
-* WASM support
+* ~~WASM support~~
 * Collectibles and My Collection Screen
 * Localization
 * Gesture support on Web and Desktop platforms

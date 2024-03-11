@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 include(":composeWebInterop")
+include(":mapview-desktop")

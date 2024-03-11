@@ -3,7 +3,7 @@ package data
 import models.ArtifactData
 
 class MetRepository {
-    private val artifactsCache: MutableMap<String, ArtifactData> = mutableMapOf();
+    private val artifactsCache: MutableMap<String, ArtifactData> = mutableMapOf()
 
     private val metApiService = MetApiService()
 

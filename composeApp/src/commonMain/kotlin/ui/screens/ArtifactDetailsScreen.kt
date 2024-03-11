@@ -319,7 +319,7 @@ fun DataInfoRow(label: String, value: String?, animIndex: Long = 1) {
     var isVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         delay(animIndex * 100)
-        isVisible = true;
+        isVisible = true
     }
     AnimatedVisibility(
         isVisible,

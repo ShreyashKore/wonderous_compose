@@ -265,6 +265,6 @@ private fun ArtifactImage(
 
 fun ContentScale.Companion.cropScaled(scale: Float = 1f) = object : ContentScale {
     override fun computeScaleFactor(srcSize: Size, dstSize: Size): ScaleFactor {
-        return ContentScale.Crop.computeScaleFactor(srcSize, dstSize) * scale
+        return Crop.computeScaleFactor(srcSize, dstSize) * scale
     }
 }

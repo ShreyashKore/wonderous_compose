@@ -43,8 +43,8 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Place
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -217,14 +217,14 @@ fun EditorialScreen(
                     Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Divider(Modifier.weight(1f))
+                    HorizontalDivider(Modifier.weight(1f))
                     Text(
                         wonder.subTitle,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.titleSmall,
                         color = onPrimaryColor
                     )
-                    Divider(Modifier.weight(1f))
+                    HorizontalDivider(Modifier.weight(1f))
                 }
                 WonderTitleText(
                     wonder,

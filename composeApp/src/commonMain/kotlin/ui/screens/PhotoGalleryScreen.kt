@@ -299,4 +299,4 @@ private fun Modifier.roundedRectangularCutout(
 /**
  * Not actual orientation; but perceived orientation based on aspect ration
  */
-val BoxWithConstraintsScope.orientation get() = if (maxWidth > maxHeight) Orientation.Horizontal else Orientation.Vertical;
+val BoxWithConstraintsScope.orientation get() = if (maxWidth > maxHeight) Orientation.Horizontal else Orientation.Vertical

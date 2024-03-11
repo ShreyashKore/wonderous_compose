@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 import models.ArtifactData
 
 class MetApiService {
-    private val ktor = HttpClient() {
+    private val ktor = HttpClient {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
         }

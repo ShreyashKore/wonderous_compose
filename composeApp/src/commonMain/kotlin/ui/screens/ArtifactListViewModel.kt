@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 // import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import models.Wonder
 
-open class ViewModel()
+open class ViewModel
 
 class ArtifactListViewModel(wonder: Wonder) : ViewModel() {
 

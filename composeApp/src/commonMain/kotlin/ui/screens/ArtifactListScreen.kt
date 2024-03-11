@@ -1,5 +1,7 @@
 package ui.screens
 
+// import dev.icerock.moko.mvvm.compose.getViewModel
+// import dev.icerock.moko.mvvm.compose.viewModelFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -19,10 +21,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,8 +37,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-// import dev.icerock.moko.mvvm.compose.getViewModel
-// import dev.icerock.moko.mvvm.compose.viewModelFactory
 import models.Wonder
 import ui.composables.BackButton
 import ui.theme.Raleway
@@ -99,7 +98,7 @@ fun ArtifactListScreen(
                     "SUGGESTIONS",
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                 )
-                Divider()
+                HorizontalDivider()
                 Column(
                     modifier = Modifier.heightIn(max = 250.dp).verticalScroll(rememberScrollState())
                 ) {

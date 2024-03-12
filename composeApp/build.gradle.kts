@@ -115,6 +115,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.ktor.client.java)
+            implementation(project(":mapview-desktop"))
         }
 
         jsMain.dependencies {

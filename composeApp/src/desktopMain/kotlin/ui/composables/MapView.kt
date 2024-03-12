@@ -1,11 +1,7 @@
 package ui.composables
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import models.LatLng
 
@@ -18,12 +14,12 @@ actual fun MapView(
     zoomLevel: Float,
     mapType: MapType
 ) {
-    Column(
+    example.map.MapView(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Text("Map Not implemented")
-        Text("Lat: ${latLng.latitude}, Lng: ${latLng.longitude}")
-    }
+        userAgent = "ComposeMapViewExample",
+        latitude = latLng.latitude,
+        longitude = latLng.longitude,
+        startScale = 60 / zoomLevel.toDouble(),
+        consumeScroll = false
+    )
 }

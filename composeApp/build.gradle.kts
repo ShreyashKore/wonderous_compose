@@ -187,6 +187,16 @@ compose.desktop {
             packageName = "com.shreyashkore.wonderouscompose"
             packageVersion = "1.0.0"
             modules("java.net.http")
+
+            macOS {
+                iconFile.set(project.file("./launcher_icons/app_icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("./launcher_icons/app_icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("./launcher_icons/app_icon.png"))
+            }
         }
     }
 }

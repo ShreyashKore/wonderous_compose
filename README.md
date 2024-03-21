@@ -54,8 +54,17 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
   drive animations for elements
   when they appear on the screen.
 * Map View demonstrates how KMP and Compose's interoperability layer can be used to embed native UIs
-  in Compose. For web [Wasm Html interop](https://github.com/Hamamas/Kotlin-Wasm-Html-Interop)
-  library is used (Currently copied in the project).
+  in Compose.
+    * For Android Google Map compose library is used.
+    * For IOS MKMapView is used.
+    * For web [Wasm Html interop](https://github.com/Hamamas/Kotlin-Wasm-Html-Interop) library is
+      used to draw DOM elements on canvas. This allows us to
+      use [leaflet.js](https://leafletjs.com/) and an iframe(for the satellite view) to show the
+      map.
+    * For desktop; mapview-desktop module is
+      copied from the official
+      [compose samples](https://github.com/JetBrains/compose-multiplatform/tree/master/examples/imageviewer/mapview-desktop).
+      This sample uses OpenStreetMap data to draw map tiles on Compose Canvas.
 * The [Photo Gallery screen](composeApp/src/commonMain/kotlin/ui/screens/PhotoGalleryScreen.kt)
   makes use of a custom layout and also uses a custom gesture detection
   modifier.

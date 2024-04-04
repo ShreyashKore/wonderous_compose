@@ -68,12 +68,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -133,10 +135,14 @@ fun EditorialScreen(
     val density = LocalDensity.current
     val overScroll = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
+    val hapticFeedback = LocalHapticFeedback.current
     val nestedScrollConnection = remember(scope) {
         BasicOverScrollConnection(
             animatable = overScroll,
-            onExceedOverScrollLimit = openHomeScreen,
+            onExceedOverScrollLimit = {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                openHomeScreen()
+            },
             scope = scope
         )
     }
@@ -762,6 +768,8 @@ private class BasicOverScrollConnection(
             }
         }
 
+    private var exceededNotified = false
+
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         if (accumulated > 0 && available.y < 0) {
             accumulated = (accumulated + available.y).coerceAtLeast(0f)
@@ -779,7 +787,12 @@ private class BasicOverScrollConnection(
         accumulated = (accumulated + available.y).coerceAtMost(200f)
 
         if ((available.y > 40 || accumulated > 100f) && source == NestedScrollSource.Drag) {
-            onExceedOverScrollLimit()
+            if (!exceededNotified) {
+                onExceedOverScrollLimit()
+                exceededNotified = true
+            }
+        } else {
+            exceededNotified = false
         }
         return available
     }

@@ -58,8 +58,10 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -75,6 +77,7 @@ import models.MachuPicchu
 import models.Petra
 import models.PyramidsGiza
 import models.TajMahal
+import models.TimelineEvent
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -129,6 +132,7 @@ fun TimeLineScreen(
         )
     }
 
+
     val scrollFraction by remember {
         derivedStateOf {
             ((scrollState.value) / scrollState.maxValue.toFloat()).coerceIn(0f, 1f)
@@ -138,6 +142,15 @@ fun TimeLineScreen(
     fun getScrollFraction() = scrollFraction
 
     val currentYear = (scrollFraction * timelineDuration - 3000).roundToInt()
+
+    val currentTimelineEvent =
+        remember(currentYear) { AllTimeLineEvents.firstOrNull { it.year in currentYear.eventHighlightRange } }
+
+    val hapticFeedback = LocalHapticFeedback.current
+    LaunchedEffect(currentTimelineEvent) {
+        if (currentTimelineEvent != null)
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
 
     Box(
         Modifier.fillMaxWidth()
@@ -157,6 +170,7 @@ fun TimeLineScreen(
                 currentYear = currentYear,
                 range = StartYear..EndYear,
                 step = 100,
+                allEvents = AllTimeLineEvents,
                 modifier = Modifier.weight(1f).fillMaxHeight().padding(start = 16.dp),
             )
 
@@ -188,7 +202,7 @@ fun TimeLineScreen(
 
     // Events popup
     AnimatedContent(
-        targetState = AllTimeLineEvents.firstOrNull { it.year in currentYear.eventHighlightRange },
+        targetState = currentTimelineEvent,
         modifier = Modifier
             .align(Alignment.TopCenter)
             .widthIn(max = 800.dp)
@@ -436,7 +450,8 @@ private fun TimeStripAndEventMarkers(
     currentYear: Int,
     range: IntRange,
     step: Int,
-    modifier: Modifier = Modifier,
+    allEvents: List<TimelineEvent>,
+    modifier: Modifier = Modifier
 ) = Row(modifier) {
     val i = range.step(step)
     LazyColumn(
@@ -452,7 +467,7 @@ private fun TimeStripAndEventMarkers(
         }
     }
     Box(Modifier.weight(.6f).fillMaxHeight()) {
-        AllTimeLineEvents.map {
+        allEvents.map {
             val highLighted = it.year in currentYear.eventHighlightRange
             val verticalBias = lerp(
                 start = -1f,

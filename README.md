@@ -101,7 +101,7 @@ Here 2 additional intermediate source sets are created to share code among web p
 * Localization
 * Gesture support on Web and Desktop platforms
 * Shared Element Transition on the home screen
-* Haptics
+* ~~Haptics~~
 
 ## Set up the environment
 

@@ -39,8 +39,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -111,6 +113,11 @@ fun PhotoGallery(
     }
 
     var showFullScreenImage by remember { mutableStateOf(false) }
+
+    val hapticFeedback = LocalHapticFeedback.current
+    LaunchedEffect(currentIndex) {
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
 
     fun onTap(i: Int) {
         if (i == currentIndex) {

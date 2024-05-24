@@ -82,7 +82,6 @@ import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import platform.Platform
-import platform.platform
 import ui.composables.AppIconButton
 import ui.composables.RotatedLayout
 import ui.flattened
@@ -425,6 +424,7 @@ fun WonderLine(
             else this
         }
     ) {
+        val platform = platform.platform
         if (!outlineOnly)
             Image(
                 painterResource(wonder.flattened),

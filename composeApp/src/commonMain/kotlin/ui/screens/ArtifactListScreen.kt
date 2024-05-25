@@ -1,7 +1,5 @@
 package ui.screens
 
-// import dev.icerock.moko.mvvm.compose.getViewModel
-// import dev.icerock.moko.mvvm.compose.viewModelFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -25,10 +23,14 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +39,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import data.search_data.TajMahalSearchData
+import data.search_data.TajMahalSearchSuggestions
+import models.SearchData
+import models.TajMahal
 import models.Wonder
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.BackButton
 import ui.theme.Raleway
 import ui.theme.TenorSans
@@ -50,12 +57,17 @@ import utils.prependProxy
 @Composable
 fun ArtifactListScreen(
     wonder: Wonder,
-    onBackClick: () -> Unit,
+    suggestions: List<String>,
+    filteredArtifacts: List<SearchData>,
+    searchText: String,
+    onSearch: (search: String) -> Unit,
+    onQueryChange: (query: String) -> Unit,
     onClickArtifact: (artifactId: Int) -> Unit,
+    onBackClick: () -> Unit,
 ) = BoxWithConstraints {
     // Limit max horizontal items to
     val gridItemMinSize = maxOf(180.dp, maxWidth / 6)
-    val viewModel = remember(wonder, { ArtifactListViewModel(wonder) })
+    var isSearchActive by remember { mutableStateOf(false) }
 
     Column(
         Modifier.background(color = black),
@@ -77,9 +89,9 @@ fun ArtifactListScreen(
 
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
-            query = viewModel.searchText,
+            query = searchText,
             onQueryChange = { query ->
-                viewModel.onChangeQuery(query)
+                onQueryChange(query)
             },
             leadingIcon = {
                 Icon(Icons.Rounded.Search, contentDescription = "search")
@@ -88,10 +100,11 @@ fun ArtifactListScreen(
                 Text("Search (ex. type or material)")
             },
             shape = RoundedCornerShape(8.dp),
-            active = viewModel.searchActive,
-            onActiveChange = viewModel::onChangeActive,
+            active = isSearchActive,
+            onActiveChange = { isSearchActive = true },
             onSearch = { query ->
-                viewModel.onTapSuggestion(suggestion = query)
+                isSearchActive = false
+                onSearch(query)
             },
             content = {
                 Text(
@@ -102,11 +115,14 @@ fun ArtifactListScreen(
                 Column(
                     modifier = Modifier.heightIn(max = 250.dp).verticalScroll(rememberScrollState())
                 ) {
-                    for (suggestion in viewModel.suggestions) {
+                    for (suggestion in suggestions) {
                         Text(
                             suggestion,
                             modifier = Modifier.fillMaxWidth()
-                                .clickable { viewModel.onTapSuggestion(suggestion) }
+                                .clickable {
+                                    isSearchActive = false
+                                    onSearch(suggestion)
+                                }
                                 .padding(horizontal = 12.dp, vertical = 2.dp)
                         )
                     }
@@ -124,7 +140,7 @@ fun ArtifactListScreen(
             modifier = Modifier.weight(1f),
             columns = StaggeredGridCells.Adaptive(minSize = gridItemMinSize)
         ) {
-            items(viewModel.filteredArtifacts) { artifact ->
+            items(filteredArtifacts) { artifact ->
 
                 AsyncImage(
                     artifact.imageUrl.prependProxy(),
@@ -143,4 +159,19 @@ fun ArtifactListScreen(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun ArtifactListScreenPreview() = MaterialTheme {
+    ArtifactListScreen(
+        wonder = TajMahal,
+        searchText = "Pot",
+        onSearch = {},
+        onQueryChange = {},
+        suggestions = TajMahalSearchSuggestions,
+        filteredArtifacts = TajMahalSearchData,
+        onClickArtifact = {},
+        onBackClick = {},
+    )
 }

@@ -1,4 +1,3 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
@@ -8,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.android.maps.secrets)
 }
@@ -77,18 +77,15 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.components.uiToolingPreview)
-            @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
 
-            // implementation(libs.kamel.image) // https://github.com/Kamel-Media/Kamel/issues/85
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.serialization)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
             // implementation(libs.orbital)
-            implementation(libs.precompose) // https://github.com/Tlaster/PreCompose/issues/69
-            // implementation(libs.moko.mvvm) // https://github.com/icerockdev/moko-mvvm/issues/261
+            implementation(libs.precompose)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
         }
@@ -100,7 +97,7 @@ kotlin {
         }
 
         androidMain.dependencies {
-//            implementation(libs.compose.ui.tooling.preview)
+            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.play.services.maps)

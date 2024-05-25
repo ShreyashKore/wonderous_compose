@@ -54,6 +54,15 @@ import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
 import ui.wonderButtonPath
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.tab_artifacts
+import wonderouscompose.composeapp.generated.resources.tab_artifacts_active
+import wonderouscompose.composeapp.generated.resources.tab_editorial
+import wonderouscompose.composeapp.generated.resources.tab_editorial_active
+import wonderouscompose.composeapp.generated.resources.tab_photos
+import wonderouscompose.composeapp.generated.resources.tab_photos_active
+import wonderouscompose.composeapp.generated.resources.tab_timeline
+import wonderouscompose.composeapp.generated.resources.tab_timeline_active
 
 
 @Composable
@@ -163,7 +172,8 @@ private fun NavigationBar(
 
         WonderDetailsScreen.entries.map { destination ->
             NavDestinationButton(
-                iconName = destination.icon,
+                icon = destination.icon,
+                activeIcon = destination.activeIcon,
                 contentDescription = destination.title,
                 isSelected = currentScreen == destination,
                 unSelectedColor = contentColor,
@@ -222,25 +232,24 @@ private fun WonderButton(
     )
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun NavDestinationButton(
-    iconName: String,
+    icon: DrawableResource,
+    activeIcon: DrawableResource,
     contentDescription: String,
     onClick: () -> Unit,
     unSelectedColor: Color,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false
 ) {
-    val iconImgPath =
-        "drawable/tab-${iconName}${if (isSelected) "-active" else ""}.png"
+    val curIcon = if (isSelected) activeIcon else icon
     val iconTint = if (isSelected) MaterialTheme.colorScheme.primary else unSelectedColor
     IconButton(
         onClick = onClick,
         modifier = modifier,
     ) {
         Icon(
-            painterResource(DrawableResource(iconImgPath)),
+            painterResource(curIcon),
             contentDescription = contentDescription,
             modifier = Modifier.size(26.dp),
             tint = iconTint
@@ -256,9 +265,29 @@ private enum class NavBarMode {
     BottomBar, NavRail
 }
 
-private enum class WonderDetailsScreen(val title: String, val icon: String) {
-    Editorial("Editorial", "editorial"),
-    PhotoGallery("Photo Gallery", "photos"),
-    ArtifactCarousel("Artifact Carousel", "artifacts"),
-    WonderEvents("Wonder Events", "timeline")
+private enum class WonderDetailsScreen(
+    val title: String,
+    val icon: DrawableResource,
+    val activeIcon: DrawableResource,
+) {
+    Editorial(
+        "Editorial",
+        Res.drawable.tab_editorial,
+        Res.drawable.tab_editorial_active,
+    ),
+    PhotoGallery(
+        "Photo Gallery",
+        Res.drawable.tab_photos,
+        Res.drawable.tab_photos_active,
+    ),
+    ArtifactCarousel(
+        "Artifact Carousel",
+        Res.drawable.tab_artifacts,
+        Res.drawable.tab_artifacts_active,
+    ),
+    WonderEvents(
+        "Wonder Events",
+        Res.drawable.tab_timeline,
+        Res.drawable.tab_timeline_active,
+    ),
 }

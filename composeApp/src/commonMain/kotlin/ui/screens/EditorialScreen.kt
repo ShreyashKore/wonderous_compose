@@ -118,6 +118,10 @@ import ui.theme.bgColor
 import ui.theme.fgColor
 import ui.theme.white
 import utils.StringUtils
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.construction
+import wonderouscompose.composeapp.generated.resources.geography
+import wonderouscompose.composeapp.generated.resources.history
 
 
 @OptIn(
@@ -566,7 +570,7 @@ fun InfoTitle(
                 }
             ) {
                 Image(
-                    painterResource(DrawableResource(it.imagePath)),
+                    painterResource(it.imageDrawable),
                     contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
@@ -730,13 +734,11 @@ fun ParallaxImages(
     }
 }
 
-enum class InfoSection(val title: String, val imageName: String) {
-    FactsAndHistory("FACTS & HISTORY", "history.png"),
-    Construction("CONSTRUCTION", "construction.png"),
-    Location("LOCATION", "geography.png")
+enum class InfoSection(val title: String, val imageDrawable: DrawableResource) {
+    FactsAndHistory("FACTS & HISTORY", Res.drawable.history),
+    Construction("CONSTRUCTION", Res.drawable.construction),
+    Location("LOCATION", Res.drawable.geography)
 }
-
-val InfoSection.imagePath get() = "drawable/$imageName"
 
 private val Wonder.cutoutShape
     get() = when (this) {

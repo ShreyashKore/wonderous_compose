@@ -3,9 +3,11 @@ import androidx.compose.animation.slideOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.IntOffset
+import androidx.lifecycle.viewmodel.compose.viewModel
 import models.Wonder
 import models.parse
 import moe.tlaster.precompose.PreComposeApp
+import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.query
@@ -13,6 +15,7 @@ import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.screens.ArtifactDetailsScreen
 import ui.screens.ArtifactListScreen
+import ui.screens.ArtifactListViewModel
 import ui.screens.MapScreen
 import ui.screens.SharedAnimationContainer
 import ui.screens.TimeLineScreen
@@ -73,10 +76,16 @@ fun App() {
                 ) { backStackEntry ->
                     val id = backStackEntry.path<String>("type")
                     val wonder = Wonder.parse(id)
+                    val viewModel = viewModel { ArtifactListViewModel(wonder) }
                     ArtifactListScreen(
                         wonder = wonder,
+                        searchText = viewModel.searchText.collectAsStateWithLifecycle().value,
+                        onSearch = viewModel::onSearch,
+                        onQueryChange = viewModel::onQueryChange,
+                        suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value,
+                        filteredArtifacts = viewModel.filteredArtifacts.collectAsStateWithLifecycle().value,
+                        onClickArtifact = { navigator.navigate("/artifact/${it}") },
                         onBackClick = { navigator.goBack() },
-                        onClickArtifact = { navigator.navigate("/artifact/${it}") }
                     )
                 }
 

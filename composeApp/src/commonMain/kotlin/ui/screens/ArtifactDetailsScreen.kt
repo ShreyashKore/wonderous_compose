@@ -59,7 +59,7 @@ import coil3.compose.AsyncImage
 import data.MetRepository
 import kotlinx.coroutines.delay
 import models.ArtifactData
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.AppIconButton
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -75,18 +75,37 @@ import wonderouscompose.composeapp.generated.resources.icon_prev
 val imageMaxHeight = 400.dp
 val imageMinHeight = 250.dp
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+/**
+ * This screen demonstrates data fetching in Composable function itself.
+ * This should ideally be done in the ViewModel.
+ * But since this screen is relatively simple; data fetching inside compose is demonstrated.
+ *
+ * Data fetching logic is extracted into this separate [ArtifactDetailsScreen].
+ */
 @Composable
 fun ArtifactDetailsScreen(
     artifactId: String,
     onClickBack: () -> Unit,
-) = BoxWithConstraints {
+) {
     // Not an ideal way to handle data fetching. Use ViewModel instead.
     val repo = remember { MetRepository() }
     var result by remember { mutableStateOf<Result<ArtifactData?>?>(null) }
     LaunchedEffect(artifactId) {
         result = repo.getArtifactById(artifactId)
     }
+    ArtifactDetailsScreen(
+        result = result,
+        onClickBack = onClickBack
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ArtifactDetailsScreen(
+    result: Result<ArtifactData?>?,
+    onClickBack: () -> Unit,
+) = BoxWithConstraints {
+
     val scrollState = rememberScrollState()
 
     val density = LocalDensity.current
@@ -156,7 +175,7 @@ fun ArtifactDetailsScreen(
             CircularProgressIndicator(
                 Modifier.align(Alignment.Center)
             )
-        } else if (result!!.isFailure || (result!!.getOrNull() == null)) {
+        } else if (result.isFailure || (result.getOrNull() == null)) {
             ArtifactNotFoundError()
         } else {
             if (orientation == Orientation.Vertical)
@@ -340,4 +359,19 @@ fun DataInfoRow(label: String, value: String?, animIndex: Long = 1) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun ArtifactDetailsScreenPreview() {
+    ArtifactDetailsScreen(
+        result = Result.success(
+            ArtifactData(
+                12,
+                "Title",
+                "https://www.metmuseum.org/art/collection/search/1",
+            )
+        ),
+        onClickBack = { }
+    )
 }

@@ -9,6 +9,12 @@ fun painterResource(resource: String) =
     painterResource(
         DrawableResource(
             resource,
-            items = setOf(ResourceItem(setOf(), resource, -1, -1))
+            items = setOf(
+                ResourceItem(
+                    setOf(),
+                    "composeResources/wonderouscompose.composeapp.generated.resources/$resource",
+                    -1, -1
+                )
+            )
         )
     )

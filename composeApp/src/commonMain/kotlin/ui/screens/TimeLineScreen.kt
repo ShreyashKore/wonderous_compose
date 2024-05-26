@@ -15,6 +15,7 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +33,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -42,11 +42,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -65,6 +63,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
@@ -79,7 +78,8 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.TimelineEvent
 import models.Wonder
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import platform.Platform
 import ui.composables.AppIconButton
 import ui.composables.RotatedLayout
@@ -102,11 +102,7 @@ import wonderouscompose.composeapp.generated.resources.icon_prev
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-const val StartYear = -3000
-const val EndYear = 2200
-const val timelineDuration = EndYear - StartYear
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeLineScreen(
     selectedWonder: Wonder? = null,
@@ -114,76 +110,61 @@ fun TimeLineScreen(
 ) = BoxWithConstraints(
     Modifier.background(black).windowInsetsPadding(WindowInsets.safeDrawing)
 ) {
-    val scrollState = rememberScrollState()
-    var scale by remember { mutableStateOf(1.dp) }
-    val timelineHeight = timelineDuration * scale
-    val padding = maxHeight / 2
+    val timelineState = remember(selectedWonder) { TimelineState() }
+    val verticalPadding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
-        // Bring the selected wonder into view when screen opens up
-        val initialScrollPos = (((selectedWonder?.startYr?.minus(StartYear))?.toFloat()
-            ?: 200f) / timelineDuration * scrollState.maxValue).toInt()
-        // first snap timeline to scroll pos just above the selected wonder
-        scrollState.scrollTo(initialScrollPos - 2000)
-        scrollState.animateScrollTo(
-            initialScrollPos,
-            animationSpec = tween(durationMillis = 2000)
-        )
+        selectedWonder?.let { timelineState.animateRevealYear(it.startYr) }
     }
 
-
-    val scrollFraction by remember {
-        derivedStateOf {
-            ((scrollState.value) / scrollState.maxValue.toFloat()).coerceIn(0f, 1f)
-        }
-    }
-
-    fun getScrollFraction() = scrollFraction
-
-    val currentYear = (scrollFraction * timelineDuration - 3000).roundToInt()
-
-    val currentTimelineEvent =
-        remember(currentYear) { AllTimeLineEvents.firstOrNull { it.year in currentYear.eventHighlightRange } }
+    val currentTimelineEvent = timelineState.currentTimelineEvent
 
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(currentTimelineEvent) {
-        if (currentTimelineEvent != null)
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+        if (currentTimelineEvent != null) hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
     }
 
     Box(
-        Modifier.fillMaxWidth()
-            .pointerInput(Unit) {
-                detectTransformGestures { _, _, zoom, _ ->
-                    scale = (scale * zoom).coerceIn(0.5f.dp, 2.dp)
-                }
+        Modifier.fillMaxWidth().pointerInput(Unit) {
+            detectTransformGestures { _, _, zoom, _ ->
+                timelineState.setScale(zoom)
             }
-            .verticalScroll(scrollState)
-            .padding(vertical = padding)
-            .height(timelineHeight),
-        contentAlignment = Alignment.Center
+        }.verticalScroll(timelineState.scrollState).padding(vertical = verticalPadding)
+            .height(timelineState.timelineHeight), contentAlignment = Alignment.Center
     ) {
 
         Row(Modifier.widthIn(max = 600.dp)) {
-            TimeStripAndEventMarkers(
-                currentYear = currentYear,
-                range = StartYear..EndYear,
+
+            Spacer(Modifier.width(16.dp))
+
+            TimeMarkers(
+                yearRange = StartYear..EndYear,
                 step = 100,
-                allEvents = AllTimeLineEvents,
-                modifier = Modifier.weight(1f).fillMaxHeight().padding(start = 16.dp),
+                modifier = Modifier.weight(0.4f).fillMaxHeight(),
             )
 
-            WonderLines(
-                getScrollFraction = ::getScrollFraction,
-                selectedWonder = selectedWonder,
-                modifier = Modifier.weight(4f)
+            EventMarkers(
+                yearRange = StartYear..EndYear,
+                currentYearHighlightRange = timelineState.currentYearHighlightRange,
+                allEvents = AllTimeLineEvents,
+                modifier = Modifier.weight(0.4f).fillMaxHeight(),
             )
+
+            TimelineTracksLayout(
+                modifier = Modifier.weight(4f)
+            ) { wonder ->
+                WonderTrackWithStickyImage(
+                    wonder = wonder,
+                    isSelected = selectedWonder == wonder,
+                    getCurrentYear = { timelineState.currentYear },
+                )
+            }
         }
     }
 
     CurrentYearLine(
-        currentYear = currentYear,
-        modifier = Modifier.align(Alignment.Center)
+        currentYear = timelineState.currentYear,
+        modifier = Modifier.align(Alignment.Center),
     )
 
     // Small bottom timeline
@@ -191,9 +172,9 @@ fun TimeLineScreen(
         Modifier.widthIn(max = 800.dp).align(Alignment.BottomCenter).padding(20.dp)
     ) {
         SmallTimeLine(
-            ::getScrollFraction,
-            modifier = Modifier.clip(RoundedCornerShape(8.dp))
-                .background(greyStrong).fillMaxWidth().height(72.dp),
+            getScrollFraction = { timelineState.scrollFraction },
+            modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(greyStrong).fillMaxWidth()
+                .height(72.dp),
             highLightedWonder = selectedWonder
         )
     }
@@ -202,21 +183,9 @@ fun TimeLineScreen(
     // Events popup
     AnimatedContent(
         targetState = currentTimelineEvent,
-        modifier = Modifier
-            .align(Alignment.TopCenter)
-            .widthIn(max = 800.dp)
-            .padding(top = 80.dp)
+        modifier = Modifier.align(Alignment.TopCenter).widthIn(max = 800.dp).padding(top = 80.dp)
             .padding(horizontal = 20.dp, vertical = 10.dp),
-        transitionSpec = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                animationSpec = tween(durationMillis = 500, delayMillis = 500)
-            ) + fadeIn(tween(delayMillis = 500)) togetherWith
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Up,
-                        animationSpec = tween(delayMillis = 2000)
-                    ) + fadeOut()
-        },
+        transitionSpec = { eventPopupTransitionSpec },
         contentAlignment = Alignment.Center
     ) { event ->
         if (event == null) {
@@ -226,8 +195,7 @@ fun TimeLineScreen(
                 year = event.year,
                 text = event.description,
                 darkMode = false,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -235,7 +203,7 @@ fun TimeLineScreen(
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = black,
-            titleContentColor = white
+            titleContentColor = white,
         ),
         title = {
             Text("GLOBAL TIMELINE", fontSize = 14.sp, fontFamily = Raleway)
@@ -244,9 +212,9 @@ fun TimeLineScreen(
             AppIconButton(
                 icon = Res.drawable.icon_prev,
                 contentDescription = "Back",
-                onClick = onClickBack
+                onClick = onClickBack,
             )
-        }
+        },
     )
 }
 
@@ -266,8 +234,7 @@ fun CurrentYearLine(
         val textShadow = Shadow(offset = Offset(1f, 1f), blurRadius = 2f)
 
         Row(
-            Modifier.padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 "${currentYear.absoluteValue}",
@@ -287,11 +254,9 @@ fun CurrentYearLine(
 
         }
         Spacer(
-            Modifier.fillMaxWidth().height(1.dp)
-                .dashedBorder(
-                    BorderStroke(Dp.Hairline, Color.White),
-                    on = 2.dp, off = 4.dp
-                )
+            Modifier.fillMaxWidth().height(1.dp).dashedBorder(
+                BorderStroke(Dp.Hairline, Color.White), on = 2.dp, off = 4.dp
+            )
         )
     }
 }
@@ -305,12 +270,16 @@ fun SmallTimeLine(
 ) = RotatedLayout(rotationDegrees = -90f, modifier = modifier) {
 
     BoxWithConstraints {
-        WonderLines(
-            getScrollFraction = { 0f },
+        TimelineTracksLayout(
             modifier = Modifier.padding(12.dp),
-            outlineOnly = true,
-            selectedWonder = highLightedWonder
-        )
+        ) { wonder ->
+            val shape = RoundedCornerShape(percent = 100)
+            val bgColor = if (highLightedWonder == wonder) accent2 else Color.Transparent
+            // A simple rounded box with border is shown in small timeline
+            Box(
+                Modifier.fillMaxSize().background(bgColor, shape).border(1.dp, accent2, shape)
+            )
+        }
         if (getScrollFraction != null) {
             // Scroll Thumb : only shown when scroll info is provided
             Box(
@@ -326,158 +295,127 @@ fun SmallTimeLine(
 
 
 @Composable
-fun WonderLines(
-    getScrollFraction: () -> Float,
-    selectedWonder: Wonder? = null,
-    outlineOnly: Boolean = false,
+fun TimelineTracksLayout(
     modifier: Modifier = Modifier,
+    trackItemContent: @Composable (wonder: Wonder) -> Unit,
 ) {
     Row(
-        modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Spacer(Modifier.weight(.2f))
-        Box(Modifier.weight(1f).fillMaxHeight()) {
-            WonderLine(
-                wonder = PyramidsGiza,
-                highLighted = selectedWonder == PyramidsGiza,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction
-            )
-            WonderLine(
-                wonder = GreatWall,
-                highLighted = selectedWonder == GreatWall,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction
-            )
-            WonderLine(
-                wonder = ChristRedeemer,
-                highLighted = selectedWonder == ChristRedeemer,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction
-            )
+        BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()) {
+            TrackItem(wonder = PyramidsGiza, content = trackItemContent)
+            TrackItem(wonder = GreatWall, content = trackItemContent)
+            TrackItem(wonder = ChristRedeemer, content = trackItemContent)
         }
         Spacer(Modifier.weight(.2f))
-        Box(Modifier.weight(1f).fillMaxHeight()) {
-            WonderLine(
-                wonder = Petra,
-                highLighted = selectedWonder == Petra,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction,
-            )
-            WonderLine(
-                wonder = MachuPicchu,
-                highLighted = selectedWonder == MachuPicchu,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction,
-            )
+        BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()) {
+            TrackItem(wonder = Petra, content = trackItemContent)
+            TrackItem(wonder = MachuPicchu, content = trackItemContent)
         }
         Spacer(Modifier.weight(.2f))
-        Box(Modifier.weight(1f).fillMaxHeight()) {
-            WonderLine(
-                wonder = Colosseum,
-                highLighted = selectedWonder == Colosseum,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction,
-            )
-            WonderLine(
-                wonder = ChichenItza,
-                highLighted = selectedWonder == ChichenItza,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction,
-            )
-            WonderLine(
-                wonder = TajMahal,
-                highLighted = selectedWonder == TajMahal,
-                outlineOnly = outlineOnly,
-                getScroll = getScrollFraction,
-            )
+        BoxWithConstraints(Modifier.weight(1f).fillMaxHeight()) {
+            TrackItem(wonder = Colosseum, content = trackItemContent)
+            TrackItem(wonder = ChichenItza, content = trackItemContent)
+            TrackItem(wonder = TajMahal, content = trackItemContent)
         }
         Spacer(Modifier.weight(.2f))
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+fun debugPrint(any: Any) = println("TIMEEE: $any")
+
 @Composable
-fun WonderLine(
+inline fun BoxWithConstraintsScope.TrackItem(
     wonder: Wonder,
-    highLighted: Boolean = true,
-    outlineOnly: Boolean = false,
-    getScroll: () -> Float,
+    content: @Composable (wonder: Wonder) -> Unit,
 ) {
-    val bgColor =
-        if (outlineOnly)
-            if (highLighted) accent2 else Color.Transparent
-        else wonder.fgColor
+    val start = (wonder.startYr.toFloat() - StartYear) / TimelineDuration * maxHeight
+    val end = (wonder.endYr.toFloat() - StartYear) / TimelineDuration * maxHeight
+    val minRange = maxWidth * 1.5f // should be at least as high as it is wide
 
-    Line(
-        start = wonder.startYr,
-        end = wonder.endYr,
-        totalRangeStart = StartYear,
-        totalRangeEnd = EndYear,
-        getScroll = getScroll,
-        modifier = Modifier.background(
-            color = bgColor,
-            shape = RoundedCornerShape(percent = 100),
-        ).run {
-            if (outlineOnly) border(1.dp, accent2, RoundedCornerShape(percent = 100))
-            else this
-        }
+    val range = end - start
+    // For some wonders their range is too small to display correctly so we define safeRange
+    val safeRange = maxOf(range, minRange)
+    Box(
+        Modifier.fillMaxWidth().height(safeRange).offset(0.dp, start),
     ) {
-        val platform = platform.platform
-        if (!outlineOnly)
-            Image(
-                filePainterResource(wonder.flattenedImage),
-                contentDescription = wonder.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(6.dp)
-                    .fillMaxSize()
-                    .clip(CircleShape),
-                colorFilter = if (highLighted) null else ColorFilter.tint(
-                    color = wonder.fgColor,
-                    // Color blend mode is not supported on Android versions below 29
-                    blendMode = if (platform is Platform.Android && platform.version < 29) BlendMode.Overlay
-                    else BlendMode.Color
-                ),
-            )
+        content(wonder)
     }
 }
 
 
 @Composable
-private fun TimeStripAndEventMarkers(
-    currentYear: Int,
-    range: IntRange,
-    step: Int,
+fun WonderTrackWithStickyImage(
+    wonder: Wonder,
+    isSelected: Boolean,
+    getCurrentYear: () -> Int,
+) {
+    BoxWithConstraints(
+        Modifier.fillMaxSize().background(
+            color = wonder.fgColor,
+            shape = RoundedCornerShape(percent = 100),
+        ).padding(6.dp)
+    ) {
+        val startYear = wonder.startYr
+        val yearRange = wonder.endYr - wonder.startYr
+        val offsetEnd = (maxHeight - ThumbSize).coerceAtLeast(minimumValue = 0.dp)
+
+        Image(
+            painter = filePainterResource(wonder.flattenedImage),
+            modifier = Modifier.fillMaxWidth().height(ThumbSize)
+                .offset {
+                    val curFraction =
+                        ((getCurrentYear().toFloat() - startYear) / yearRange).coerceIn(0f, 1f)
+                    val vertOffset = lerp(0, offsetEnd.toPx().roundToInt(), curFraction)
+                    IntOffset(0, vertOffset)
+                }.clip(CircleShape),
+            contentDescription = wonder.title,
+            contentScale = ContentScale.Crop,
+            colorFilter = if (isSelected) null else ColorFilter.tint(
+                color = wonder.fgColor, blendMode = blendMode
+            ),
+        )
+    }
+}
+
+@Composable
+private fun TimeMarkers(
+    yearRange: IntRange, step: Int, modifier: Modifier = Modifier
+) {
+    val years = remember(yearRange) { yearRange.step(step) }
+    LazyColumn(
+        modifier, verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        items(years.count()) {
+            Text(
+                "${years.elementAt(it).absoluteValue}", color = white, fontSize = 13.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun EventMarkers(
+    yearRange: IntRange,
+    currentYearHighlightRange: IntRange,
     allEvents: List<TimelineEvent>,
     modifier: Modifier = Modifier
-) = Row(modifier) {
-    val i = range.step(step)
-    LazyColumn(
-        Modifier.weight(1f).fillMaxHeight(),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        items(i.count()) {
-            Text(
-                "${i.elementAt(it).absoluteValue}",
-                color = white,
-                fontSize = 13.sp
-            )
-        }
-    }
-    Box(Modifier.weight(.6f).fillMaxHeight()) {
+) {
+    Box(modifier) {
         allEvents.map {
-            val highLighted = it.year in currentYear.eventHighlightRange
+            val highlighted = it.year in currentYearHighlightRange
             val verticalBias = lerp(
                 start = -1f,
                 stop = 1f,
-                fraction = (it.year.toFloat() + 3000) / (range.last - range.first).toFloat()
+                fraction = (it.year.toFloat() - yearRange.first) / (yearRange.last - yearRange.first).toFloat()
             )
-            EventMarker(
-                highLighted = highLighted,
-                modifier = Modifier.align(BiasAlignment(0f, verticalBias))
-            )
+            key(it) {
+                EventMarker(
+                    highLighted = highlighted,
+                    modifier = Modifier.align(BiasAlignment(0f, verticalBias))
+                )
+            }
         }
     }
 }
@@ -490,65 +428,36 @@ private fun EventMarker(
     val size by animateDpAsState(if (highLighted) 8.dp else 3.dp)
     val blurRadius by animateDpAsState(if (highLighted) 10.dp else 1.dp)
     Box(
-        modifier
-            .offset(y = (-4).dp)
-            .size(size)
-            .background(accent1, CircleShape)
+        modifier.offset(y = (-4).dp).size(size).background(accent1, CircleShape)
             .blur(blurRadius, edgeTreatment = BlurredEdgeTreatment.Unbounded)
             .background(accent1, CircleShape)
     )
 }
 
 
-@Composable
-fun Line(
-    start: Int,
-    end: Int,
-    totalRangeStart: Int,
-    totalRangeEnd: Int,
-    getScroll: () -> Float,
-    modifier: Modifier = Modifier,
-    content: @Composable (() -> Unit)? = null,
-) = BoxWithConstraints {
-    val totalRange = totalRangeEnd - totalRangeStart
-    val dpPerUnit = maxHeight / totalRange
-
-    val minRange = maxOf(100, (maxWidth / dpPerUnit).toInt())
-
-    val range = end - start
-    // For some wonders their range is too small to display correctly so we define minRange
-    val safeStart =
-        (if (range < minRange) start - (minRange - range) / 2 else start) - totalRangeStart
-    val safeRange = maxOf(range, minRange)
-
-
-    val fractionOfTotalRange = safeRange.toFloat() / totalRange
-    val safeStartOffset = dpPerUnit * safeStart.toFloat()
-    val safeHeightDp = dpPerUnit * safeRange
-    val thumbSize = maxOf(maxWidth, minOf(safeHeightDp, 300.dp))
-
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(fractionOfTotalRange)
-            .offset(y = safeStartOffset) then modifier,
-    ) {
-        if (content != null) {
-            Box(Modifier.fillMaxWidth().height(thumbSize).offset {
-                val startFraction = safeStart / totalRange.toFloat()
-                val thumbMaxOffsetDp = safeHeightDp - thumbSize
-                val scroll = ((getScroll() - startFraction) / fractionOfTotalRange).coerceIn(0f, 1f)
-                val offsetPx = lerp(0, thumbMaxOffsetDp.roundToPx(), scroll)
-                IntOffset(0, offsetPx)
-            }) {
-                content()
-            }
-        }
-    }
-}
-
-
 /**
- * Range of year in which the event popup is shown and event marker is highlighted
+ * Color blend mode is not supported on Android versions below 29
  */
-private val Int.eventHighlightRange get() = (this - 4..this + 4)
+val blendMode: BlendMode
+    get() {
+        val platform = platform.platform
+        return if (platform is Platform.Android && platform.version < 29) BlendMode.Overlay else BlendMode.Color
+    }
+
+private val AnimatedContentTransitionScope<TimelineEvent?>.eventPopupTransitionSpec
+    get() = slideIntoContainer(
+        towards = AnimatedContentTransitionScope.SlideDirection.Down,
+        animationSpec = tween(durationMillis = 500, delayMillis = 500)
+    ) + fadeIn(tween(delayMillis = 500)) togetherWith slideOutOfContainer(
+        towards = AnimatedContentTransitionScope.SlideDirection.Up,
+        animationSpec = tween(delayMillis = 2000)
+    ) + fadeOut()
+
+val ThumbSize = 200.dp
+
+
+@Preview
+@Composable
+fun TimelineScreenPreview() {
+    TimeLineScreen(selectedWonder = TajMahal, onClickBack = {})
+}

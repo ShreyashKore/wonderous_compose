@@ -18,8 +18,8 @@ import ui.screens.ArtifactListScreen
 import ui.screens.ArtifactListViewModel
 import ui.screens.MapScreen
 import ui.screens.SharedAnimationContainer
-import ui.screens.TimeLineScreen
 import ui.screens.YoutubeVideoScreen
+import ui.screens.timeline.TimelineScreen
 import ui.theme.ColorScheme
 import ui.theme.Typography
 
@@ -53,7 +53,7 @@ fun App() {
                 ) { backStackEntry ->
                     val id = backStackEntry.query<String>("type")
                     val wonder = Wonder.parse(id)
-                    TimeLineScreen(
+                    TimelineScreen(
                         selectedWonder = wonder,
                         onClickBack = { navigator.goBack() },
                     )

@@ -1,4 +1,4 @@
-package ui.screens
+package ui.screens.timeline
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -10,7 +10,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,7 +66,7 @@ import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
-import models.AllTimeLineEvents
+import models.AllTimelineEvents
 import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
@@ -78,20 +77,18 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.TimelineEvent
 import models.Wonder
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import platform.Platform
 import ui.composables.AppIconButton
-import ui.composables.RotatedLayout
 import ui.flattenedImage
+import ui.screens.timeline.components.SmallTimeline
+import ui.screens.timeline.components.TimelineEventCard
 import ui.theme.Raleway
 import ui.theme.TenorSans
 import ui.theme.accent1
-import ui.theme.accent2
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.greyStrong
-import ui.theme.offWhite
 import ui.theme.white
 import ui.utils.filePainterResource
 import ui.utils.lerp
@@ -104,13 +101,14 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeLineScreen(
+fun TimelineScreen(
     selectedWonder: Wonder? = null,
     onClickBack: () -> Unit,
 ) = BoxWithConstraints(
     Modifier.background(black).windowInsetsPadding(WindowInsets.safeDrawing)
 ) {
-    val timelineState = remember(selectedWonder) { TimelineState() }
+    val timelineState = rememberTimelineState()
+
     val verticalPadding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
@@ -146,7 +144,7 @@ fun TimeLineScreen(
             EventMarkers(
                 yearRange = StartYear..EndYear,
                 currentYearHighlightRange = timelineState.currentYearHighlightRange,
-                allEvents = AllTimeLineEvents,
+                allEvents = AllTimelineEvents,
                 modifier = Modifier.weight(0.4f).fillMaxHeight(),
             )
 
@@ -171,7 +169,7 @@ fun TimeLineScreen(
     Box(
         Modifier.widthIn(max = 800.dp).align(Alignment.BottomCenter).padding(20.dp)
     ) {
-        SmallTimeLine(
+        SmallTimeline(
             getScrollFraction = { timelineState.scrollFraction },
             modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(greyStrong).fillMaxWidth()
                 .height(72.dp),
@@ -261,38 +259,6 @@ fun CurrentYearLine(
     }
 }
 
-@Composable
-fun SmallTimeLine(
-    getScrollFraction: (() -> Float)? = null,
-    scrollThumbWidth: Dp = 72.dp,
-    modifier: Modifier = Modifier,
-    highLightedWonder: Wonder? = null,
-) = RotatedLayout(rotationDegrees = -90f, modifier = modifier) {
-
-    BoxWithConstraints {
-        TimelineTracksLayout(
-            modifier = Modifier.padding(12.dp),
-        ) { wonder ->
-            val shape = RoundedCornerShape(percent = 100)
-            val bgColor = if (highLightedWonder == wonder) accent2 else Color.Transparent
-            // A simple rounded box with border is shown in small timeline
-            Box(
-                Modifier.fillMaxSize().background(bgColor, shape).border(1.dp, accent2, shape)
-            )
-        }
-        if (getScrollFraction != null) {
-            // Scroll Thumb : only shown when scroll info is provided
-            Box(
-                Modifier.offset {
-                    val offset = ((maxHeight - scrollThumbWidth) * getScrollFraction()).roundToPx()
-                    IntOffset(0, offset)
-                }.border(1.dp, offWhite, RoundedCornerShape(8.dp)).fillMaxWidth()
-                    .height(scrollThumbWidth)
-            )
-        }
-    }
-}
-
 
 @Composable
 fun TimelineTracksLayout(
@@ -323,7 +289,6 @@ fun TimelineTracksLayout(
     }
 }
 
-fun debugPrint(any: Any) = println("TIMEEE: $any")
 
 @Composable
 inline fun BoxWithConstraintsScope.TrackItem(
@@ -459,5 +424,5 @@ val ThumbSize = 200.dp
 @Preview
 @Composable
 fun TimelineScreenPreview() {
-    TimeLineScreen(selectedWonder = TajMahal, onClickBack = {})
+    TimelineScreen(selectedWonder = TajMahal, onClickBack = {})
 }

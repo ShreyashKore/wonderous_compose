@@ -1,17 +1,20 @@
-package ui.screens
+package ui.screens.timeline
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import models.AllTimeLineEvents
+import models.AllTimelineEvents
 import kotlin.math.roundToInt
 
 const val StartYear = -3000
@@ -26,8 +29,13 @@ val Int.eventHighlightRange get() = (this - 4..this + 4)
 val MinZoomScale = 0.5f.dp
 val MaxZoomScale = 2f.dp
 
-class TimelineState {
-    val scrollState = ScrollState(0)
+@Composable
+fun rememberTimelineState() = rememberSaveable(saver = TimelineState.Saver) {
+    TimelineState(0)
+}
+
+class TimelineState(initialScroll: Int = 0) {
+    val scrollState = ScrollState(initialScroll)
     var scale by mutableStateOf(1.dp)
         private set
 
@@ -44,7 +52,7 @@ class TimelineState {
     val currentYearHighlightRange get() = currentYear.eventHighlightRange
 
     val currentTimelineEvent by derivedStateOf {
-        AllTimeLineEvents.firstOrNull { it.year in currentYearHighlightRange }
+        AllTimelineEvents.firstOrNull { it.year in currentYearHighlightRange }
     }
 
     fun setScale(zoom: Float) {
@@ -69,7 +77,6 @@ class TimelineState {
 
     private suspend fun scrollToYear(year: Int) {
         val scrollPositionPx = calculateScrollPosFromYear(year)
-        debugPrint("scrolling to year $year $scrollPositionPx")
         scrollState.scrollTo(scrollPositionPx)
     }
 
@@ -78,12 +85,18 @@ class TimelineState {
         animationSpec: AnimationSpec<Float> = tween(1000)
     ) {
         val scrollPositionPx = calculateScrollPosFromYear(year)
-        debugPrint("animate scrolling to $year $scrollPositionPx")
         scrollState.animateScrollTo(scrollPositionPx, animationSpec)
     }
 
     private fun calculateScrollPosFromYear(year: Int): Int {
         val scrollFraction = (year - StartYear).toFloat() / TimelineDuration
         return (scrollFraction * scrollState.maxValue).toInt()
+    }
+
+    companion object {
+        val Saver = Saver<TimelineState, Int>(
+            save = { it.scrollState.value },
+            restore = { TimelineState(it) }
+        )
     }
 }

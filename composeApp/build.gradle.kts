@@ -12,6 +12,9 @@ plugins {
     alias(libs.plugins.android.maps.secrets)
 }
 
+// Project Version
+version = libs.versions.versionName.get()
+
 kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
@@ -63,7 +66,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            version = "1.0"
         }
     }
 
@@ -147,8 +149,8 @@ android {
         applicationId = "com.shreyashkore.wonderouscompose"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
     }
     packaging {
         resources {

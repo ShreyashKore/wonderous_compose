@@ -1,3 +1,3 @@
 package platform
 
-actual val platform: Platform = Platform.Web
+actual val platform: Platform = Platform.Web.Js

@@ -25,9 +25,9 @@ kotlin {
                 withNative()
                 withJvm()
             }
-            group("jsWasm") {
+            group("web") {
                 withJs()
-                withWasm()
+                withWasmJs()
             }
         }
     }

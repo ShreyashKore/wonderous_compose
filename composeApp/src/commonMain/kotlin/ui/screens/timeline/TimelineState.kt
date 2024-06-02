@@ -24,7 +24,7 @@ const val TimelineDuration = EndYear - StartYear
 /**
  * Range of year in which the event popup is shown and event marker is highlighted
  */
-val Int.eventHighlightRange get() = (this - 4..this + 4)
+val Int.eventHighlightRange get(): IntRange = (this - 4..this + 4)
 
 val MinZoomScale = 0.5f.dp
 val MaxZoomScale = 2f.dp
@@ -34,6 +34,12 @@ fun rememberTimelineState() = rememberSaveable(saver = TimelineState.Saver) {
     TimelineState(0)
 }
 
+/**
+ * Contains a `ScrollState` and exposes scrolling related logic in terms of "Timeline Year".
+ *
+ * For example [currentYear] returns the year corresponding to the current scroll position.
+ * Similarly [scrollToYear] can be used to scroll to a particular year without knowing its position in pixels.
+ */
 class TimelineState(initialScroll: Int = 0) {
     val scrollState = ScrollState(initialScroll)
     var scale by mutableStateOf(1.dp)
@@ -60,7 +66,7 @@ class TimelineState(initialScroll: Int = 0) {
     }
 
     /**
-     * First snaps 1000 years above and then animates from there to the selected year
+     * Scrolls to the [year] starting from 1000 years above it.
      */
     suspend fun animateRevealYear(year: Int) {
         val startYear = (year - 1000).coerceAtLeast(StartYear)
@@ -75,11 +81,17 @@ class TimelineState(initialScroll: Int = 0) {
         )
     }
 
+    /**
+     * Snaps to given [year]
+     */
     private suspend fun scrollToYear(year: Int) {
         val scrollPositionPx = calculateScrollPosFromYear(year)
         scrollState.scrollTo(scrollPositionPx)
     }
 
+    /**
+     * Scroll to given [year] with animation
+     */
     private suspend fun animateScrollToYear(
         year: Int,
         animationSpec: AnimationSpec<Float> = tween(1000)
@@ -88,12 +100,18 @@ class TimelineState(initialScroll: Int = 0) {
         scrollState.animateScrollTo(scrollPositionPx, animationSpec)
     }
 
+    /**
+     * Returns scroll position in pixel from the [year]
+     */
     private fun calculateScrollPosFromYear(year: Int): Int {
         val scrollFraction = (year - StartYear).toFloat() / TimelineDuration
         return (scrollFraction * scrollState.maxValue).toInt()
     }
 
     companion object {
+        /**
+         * This is used to save [TimelineState] in an event of Activity or Process recreation
+         */
         val Saver = Saver<TimelineState, Int>(
             save = { it.scrollState.value },
             restore = { TimelineState(it) }

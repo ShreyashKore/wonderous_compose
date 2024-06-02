@@ -112,6 +112,7 @@ fun TimelineScreen(
     val verticalPadding = maxHeight / 2
 
     LaunchedEffect(selectedWonder) {
+        // If a wonder is selected; animate to the start year of that wonder
         selectedWonder?.let { timelineState.animateRevealYear(it.startYr) }
     }
 
@@ -119,6 +120,7 @@ fun TimelineScreen(
 
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(currentTimelineEvent) {
+        // Whenever we encounter an event perform a haptic feedback
         if (currentTimelineEvent != null) hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
     }
 

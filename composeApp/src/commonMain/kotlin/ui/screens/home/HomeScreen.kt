@@ -59,11 +59,11 @@ import models.TajMahal
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
 import ui.screens.SharedScreen
+import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.roller_1_white
 import wonderouscompose.composeapp.generated.resources.roller_2_white
@@ -121,7 +121,7 @@ fun HomeScreen(
             val wonder = Wonders[pageNo % Wonders.size]
             Box(Modifier.fillMaxSize()) {
                 Image(
-                    painterResource(wonder.getAssetPath(wonder.mainImageName)),
+                    filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                     contentDescription = "main",
                     modifier = Modifier.graphicsLayer {
                         val scale = 1 - swipeProgress * .01f

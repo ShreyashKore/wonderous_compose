@@ -80,11 +80,10 @@ import models.TajMahal
 import models.TimelineEvent
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import platform.Platform
 import ui.composables.AppIconButton
 import ui.composables.RotatedLayout
-import ui.flattened
+import ui.flattenedImage
 import ui.theme.Raleway
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -94,6 +93,7 @@ import ui.theme.fgColor
 import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
+import ui.utils.filePainterResource
 import ui.utils.lerp
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
@@ -427,7 +427,7 @@ fun WonderLine(
         val platform = platform.platform
         if (!outlineOnly)
             Image(
-                painterResource(wonder.flattened),
+                filePainterResource(wonder.flattenedImage),
                 contentDescription = wonder.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

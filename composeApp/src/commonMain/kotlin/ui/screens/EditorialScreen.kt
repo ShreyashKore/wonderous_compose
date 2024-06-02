@@ -117,6 +117,7 @@ import ui.theme.accent1
 import ui.theme.bgColor
 import ui.theme.fgColor
 import ui.theme.white
+import ui.utils.filePainterResource
 import utils.StringUtils
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.construction
@@ -178,7 +179,7 @@ fun EditorialScreen(
             )
         }
         Image(
-            painterResource(wonder.getAssetPath(wonder.mainImageName)),
+            filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(280.dp)
@@ -290,7 +291,7 @@ fun EditorialScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painterResource(wonder.photo1),
+                    filePainterResource(wonder.photo1),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .height(imageHeight)
@@ -648,7 +649,7 @@ fun PullQuote1(
     ) {
         val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
         Image(
-            painterResource(bgImage),
+            filePainterResource(bgImage),
             modifier = Modifier.fillMaxSize()
                 .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
                 .padding(8.dp)
@@ -705,7 +706,7 @@ fun ParallaxImages(
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            painterResource(topImagePath),
+            filePainterResource(topImagePath),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.align(Alignment.TopEnd)
@@ -716,7 +717,7 @@ fun ParallaxImages(
                 }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
         )
         Image(
-            painterResource(bottomImagePath),
+            filePainterResource(bottomImagePath),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.align(Alignment.BottomStart)

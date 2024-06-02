@@ -1,5 +1,7 @@
 # Wonderous Compose
 
+Contributions are welcome!
+
 ![badge android][badge-android]
 ![badge ios][badge-ios]
 ![badge linux][badge-linux]

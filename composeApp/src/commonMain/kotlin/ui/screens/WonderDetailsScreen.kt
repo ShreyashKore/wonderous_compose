@@ -53,6 +53,7 @@ import ui.screens.WonderDetailsScreen.WonderEvents
 import ui.theme.black
 import ui.theme.fgColor
 import ui.theme.white
+import ui.utils.filePainterResource
 import ui.wonderButtonPath
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.tab_artifacts
@@ -221,7 +222,7 @@ private fun WonderButton(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painterResource(wonder.wonderButtonPath),
+        filePainterResource(wonder.wonderButtonPath),
         contentDescription = "home",
         modifier = modifier
             .background(white, CircleShape) // padding as border

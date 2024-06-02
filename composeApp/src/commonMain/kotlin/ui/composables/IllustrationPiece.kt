@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import ui.utils.filePainterResource
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalResourceApi::class)
@@ -55,7 +55,7 @@ fun IllustrationPiece(
         }.wrapContentSize(unbounded = true) then modifier,
     ) {
         Image(
-            painterResource(imagePath),
+            filePainterResource(imagePath),
             contentDescription = null,
             contentScale = ContentScale.FillHeight
         )

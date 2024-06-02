@@ -46,16 +46,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.composables.WonderTitleText
-import ui.flattened
+import ui.flattenedImage
 import ui.theme.TenorSans
 import ui.theme.accent2
 import ui.theme.black
 import ui.theme.greyStrong
 import ui.theme.white
+import ui.utils.filePainterResource
 import utils.StringUtils.getYrSuffix
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.tab_timeline
@@ -119,7 +119,7 @@ fun WonderEvents(
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Image(
-                    painterResource(wonder.flattened),
+                    filePainterResource(wonder.flattenedImage),
                     modifier = Modifier
                         .fillMaxWidth(0.65f)
                         .fillMaxHeight()

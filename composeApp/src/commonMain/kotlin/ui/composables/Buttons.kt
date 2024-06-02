@@ -46,10 +46,12 @@ fun AppIconButton(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled
     ) {
         Icon(
             painterResource(icon),

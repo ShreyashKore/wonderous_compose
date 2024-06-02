@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +49,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
@@ -59,6 +61,7 @@ import models.TajMahal
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import ui.composables.PreviousNextNavigation
 import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
@@ -85,7 +88,10 @@ fun HomeScreen(
     openDetailScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) = BoxWithConstraints(modifier) {
+    val scope = rememberCoroutineScope()
     val maxWidth = maxWidth
+    val maxHeight = maxHeight
+
     val swipeProgress by remember {
         derivedStateOf {
             // `progress` resets to 1 once settled so here we return 0
@@ -95,79 +101,96 @@ fun HomeScreen(
     }
 
 
-    val maxHeight = maxHeight
-
-    Box(
-        Modifier.fillMaxSize().anchoredDraggable(
-            state = swipeableState,
-            orientation = Orientation.Vertical,
-        ),
-        contentAlignment = Alignment.Center
+    PreviousNextNavigation(
+        onPreviousPressed = {
+            scope.launch {
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+            }
+        },
+        onNextPressed = {
+            scope.launch {
+                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+            }
+        },
+        enabled = maxWidth > 600.dp,
+        modifier = Modifier.fillMaxSize()
     ) {
-        WonderIllustrationBackground(
-            currentWonder = currentWonder
-        )
-
-        HorizontalPager(
-            state = pagerState,
-            beyondBoundsPageCount = 1,
-            pageSize = PageSize.Fill,
-            flingBehavior = PagerDefaults.flingBehavior(pagerState, snapPositionalThreshold = .3f),
-            modifier = Modifier
-                .fillMaxHeight()
-                .requiredWidth(maxOf(maxWidth, MIN_PAGER_WIDTH))
-                .padding(top = 80.dp),
-        ) { pageNo ->
-            val wonder = Wonders[pageNo % Wonders.size]
-            Box(Modifier.fillMaxSize()) {
-                Image(
-                    filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
-                    contentDescription = "main",
-                    modifier = Modifier.graphicsLayer {
-                        val scale = 1 - swipeProgress * .01f
-                        scaleX = scale
-                        scaleY = scale
-                    }
-                        .align(wonder.mainImageAlignment)
-                        .padding(bottom = wonder.mainImageBottomPadding)
-                        .wrapContentSize(unbounded = true)
-                        .requiredHeight(maxHeight * wonder.mainImageFractionalHeight),
-                    contentScale = ContentScale.FillHeight,
-                )
-            }
-        }
-
-        WonderIllustrationForeground(
-            currentWonder = currentWonder, verticalSwipeProgress = swipeProgress
-        )
-
-        Box {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
-                WonderTitleText(
-                    currentWonder,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    enableShadows = true
-                )
-                PageIndicator(
-                    currentPage = pagerState.currentPage % Wonders.size,
-                    totalPages = Wonders.size,
-                    modifier = Modifier.padding(vertical = 24.dp).height(120.dp).fillMaxWidth()
-                )
-            }
-
-            VerticalSwipeIndicator(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp),
-                getSwipeProgress = { swipeableState.offset.roundToInt() },
-                openDetailScreen = openDetailScreen,
+        Box(
+            Modifier.fillMaxSize().anchoredDraggable(
+                state = swipeableState,
+                orientation = Orientation.Vertical,
+            ),
+            contentAlignment = Alignment.Center
+        ) {
+            WonderIllustrationBackground(
+                currentWonder = currentWonder
             )
-        }
 
+            HorizontalPager(
+                state = pagerState,
+                beyondBoundsPageCount = 1,
+                pageSize = PageSize.Fill,
+                flingBehavior = PagerDefaults.flingBehavior(
+                    pagerState,
+                    snapPositionalThreshold = .3f
+                ),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .requiredWidth(maxOf(maxWidth, MIN_PAGER_WIDTH))
+                    .padding(top = 80.dp),
+            ) { pageNo ->
+                val wonder = Wonders[pageNo % Wonders.size]
+                Box(Modifier.fillMaxSize()) {
+                    Image(
+                        filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
+                        contentDescription = "main",
+                        modifier = Modifier.graphicsLayer {
+                            val scale = 1 - swipeProgress * .01f
+                            scaleX = scale
+                            scaleY = scale
+                        }
+                            .align(wonder.mainImageAlignment)
+                            .padding(bottom = wonder.mainImageBottomPadding)
+                            .wrapContentSize(unbounded = true)
+                            .requiredHeight(maxHeight * wonder.mainImageFractionalHeight),
+                        contentScale = ContentScale.FillHeight,
+                    )
+                }
+            }
+
+            WonderIllustrationForeground(
+                currentWonder = currentWonder, verticalSwipeProgress = swipeProgress
+            )
+
+            Box {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                ) {
+                    WonderTitleText(
+                        currentWonder,
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        enableShadows = true
+                    )
+                    PageIndicator(
+                        currentPage = pagerState.currentPage % Wonders.size,
+                        totalPages = Wonders.size,
+                        modifier = Modifier.padding(vertical = 24.dp).height(120.dp).fillMaxWidth()
+                    )
+                }
+
+
+                VerticalSwipeIndicator(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                    getSwipeProgress = { swipeableState.offset.roundToInt() },
+                    openDetailScreen = openDetailScreen,
+                )
+            }
+
+        }
     }
 }
 

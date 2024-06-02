@@ -2,6 +2,7 @@ package ui.screens
 
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -96,6 +97,7 @@ import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
 import ui.composables.MapType
@@ -123,6 +125,7 @@ import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.construction
 import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
+import wonderouscompose.composeapp.generated.resources.icon_next
 
 
 @OptIn(
@@ -466,6 +469,20 @@ fun EditorialScreen(
                 )
             }
         }
+    }
+
+    AnimatedVisibility(
+        visible = scrollState.firstItemScrollProgress < 0.6f,
+        modifier = Modifier.align(Alignment.TopEnd)
+    ) {
+        AppIconButton(
+            Res.drawable.icon_next,
+            contentDescription = "Next",
+            onClick = openHomeScreen,
+            modifier = Modifier
+                .rotate(-90f)
+                .padding(16.dp)
+        )
     }
 }
 

@@ -1,6 +1,6 @@
-# Wonderous Compose
+[![Banner](./readme_images/banner.png)](https://youtube.com/shorts/f-wM_MCiQmo?feature=share)
 
-Contributions are welcome!
+# Wonderous Compose
 
 ![badge android][badge-android]
 ![badge ios][badge-ios]
@@ -21,7 +21,7 @@ For the version based on JS see
 
 > 🚧 WORK IN PROGRESS 🚧
 
-[![Banner](./readme_images/banner.png)](https://youtube.com/shorts/f-wM_MCiQmo?feature=share)
+> Contributions are welcome!
 
 Wonderous Compose is a port of Wonderous
 in [Compose Multiplatform.](https://www.jetbrains.com/lp/compose-multiplatform/)
@@ -46,14 +46,15 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
   library.
 * [Home Screen](composeApp/src/commonMain/kotlin/ui/screens/home/HomeScreen.kt) shows the usage of
   HorizontalPager along with AnimatedVisibility for animating
-  foreground and background elements
-* [ArtifactList Screen](composeApp/src/commonMain/kotlin/ui/screens/ArtifactListScreen.kt) uses a
-  ViewModel to store business logic.
+  foreground and background elements.
+* [ArtifactList Screen](composeApp/src/commonMain/kotlin/ui/screens/ArtifactListScreen.kt)
+  uses [`ArtifactListViewModel`](composeApp/src/commonMain/kotlin/ui/screens/ArtifactListViewModel.kt)
+  view model for business logic.
 * [ArtifactDetails Screen](composeApp/src/commonMain/kotlin/ui/screens/ArtifactDetailsScreen.kt)
   demonstrates writing business logic in the UI layer itself.
 * [Editorial Screen](composeApp/src/commonMain/kotlin/ui/screens/EditorialScreen.kt) uses LazyColumn
-  layout and usage of scroll APIs to
-  drive animations for elements
+  layout and its scroll APIs to
+  drive animations/transitions for elements
   when they appear on the screen.
 * Map View demonstrates how KMP and Compose's interoperability layer can be used to embed native UIs
   in Compose.
@@ -70,6 +71,22 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 * The [Photo Gallery screen](composeApp/src/commonMain/kotlin/ui/screens/PhotoGalleryScreen.kt)
   makes use of a custom layout and also uses a custom gesture detection
   modifier.
+* [Timeline screen](composeApp/src/commonMain/kotlin/ui/screens/timeline/TimelineScreen.kt)
+  uses [`TimelineState`](composeApp/src/commonMain/kotlin/ui/screens/timeline/TimelineScreen.kt)
+  which
+  is kind of a view controller for managing state of timeline. It manages conversion
+  of year to scroll position and vice versa.
+
+## Libraries Used
+
+- [Ktor](https://ktor.io/): HTTP networking
+- [PreCompose](https://github.com/Tlaster/PreCompose): Navigation
+- [Coil](https://github.com/coil-kt/coil): Image Loading
+- [compose-webview-multiplatform](https://github.com/KevinnZou/compose-webview-multiplatform):
+  WebView for Android, IOS
+  and Desktop
+- [maps-compose](https://developers.google.com/maps/documentation/android-sdk/maps-compose): Maps on
+  Android
 
 ## Source Sets
 
@@ -83,7 +100,7 @@ applyDefaultHierarchyTemplate {
             withNative()
             withJvm()
         }
-        group("jsWasm") {
+        group("web") {
             withJs()
             withWasm()
         }
@@ -94,7 +111,7 @@ applyDefaultHierarchyTemplate {
 Here 2 additional intermediate source sets are created to share code among web platforms.
 
 - `nonWeb` contains all the targets except JS and WASM.
-- `jsWasm` contains only the JS and WASM targets
+- `web` contains only the JS and WASM targets
 
 ## TODO
 
@@ -106,10 +123,6 @@ Here 2 additional intermediate source sets are created to share code among web p
 * ~~Haptics~~
 
 ## Set up the environment
-
-> **Warning**
-> You need a Mac with macOS to write and run iOS-specific code on simulated or real devices.
-> This is an Apple requirement.
 
 > For compose multiplatform setup information
 > checkout its [template repo](https://github.com/JetBrains/compose-multiplatform-template).

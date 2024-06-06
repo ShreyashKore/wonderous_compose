@@ -44,10 +44,11 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.AppIconButton
 import ui.composables.SimpleGrid
-import ui.homeBtn
+import ui.homeBtnImage
 import ui.theme.fgColor
 import ui.theme.offWhite
 import ui.theme.white
+import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.compass_full
 import wonderouscompose.composeapp.generated.resources.icon_close
@@ -186,7 +187,7 @@ fun WonderBtnsGrid(
             }
         else
             Image(
-                painterResource(wonder.homeBtn),
+                filePainterResource(wonder.homeBtnImage),
                 contentDescription = wonder.title,
                 modifier = Modifier
                     .size(btnSize)

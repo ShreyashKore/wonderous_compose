@@ -25,9 +25,9 @@ kotlin {
                 withNative()
                 withJvm()
             }
-            group("jsWasm") {
+            group("web") {
                 withJs()
-                withWasm()
+                withWasmJs()
             }
         }
     }
@@ -80,6 +80,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
+            implementation(libs.lifecycle.viewmodel.compose)
 
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)

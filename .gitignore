@@ -17,5 +17,5 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 journey/
-.kotlin/metadata/
+.kotlin/
 composeApp/release/

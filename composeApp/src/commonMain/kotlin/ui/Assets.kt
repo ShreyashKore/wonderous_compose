@@ -13,21 +13,7 @@ import models.Wonder
 
 object ImagePaths {
     const val root = "files/images"
-    const val common = "$root/common"
-
     val collectibles = "$root/collectibles"
-    val particle = "$common/particle-21x23.png"
-    val ribbonEnd = "$common/ribbon-end.png"
-
-    val textures = "$common/texture"
-    val icons = "$common/icons"
-
-    val roller1 = "$textures/roller-1-white.gif"
-    val roller2 = "$textures/roller-2-white.gif"
-
-    val appLogo = "$common/app-logo.png"
-    val appLogoPlain = "$common/app-logo-plain.png"
-    val noImagePlaceholder = "$common/no-image-placeholder.png"
 }
 
 
@@ -62,7 +48,7 @@ val Wonder.mainImageName: String
         TajMahal -> "taj-mahal.png"
     }
 
-val Wonder.homeBtn: String
+val Wonder.homeBtnImage: String
     get() = getAssetPath("wonder-button.png")
 
 val Wonder.photo1: String
@@ -77,5 +63,5 @@ val Wonder.photo3: String
 val Wonder.photo4: String
     get() = getAssetPath("photo-4.jpg")
 
-val Wonder.flattened: String
+val Wonder.flattenedImage: String
     get() = getAssetPath("flattened.jpg")

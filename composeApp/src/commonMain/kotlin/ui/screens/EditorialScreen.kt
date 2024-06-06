@@ -2,6 +2,7 @@ package ui.screens
 
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -96,6 +97,7 @@ import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
 import ui.composables.MapType
@@ -117,11 +119,13 @@ import ui.theme.accent1
 import ui.theme.bgColor
 import ui.theme.fgColor
 import ui.theme.white
+import ui.utils.filePainterResource
 import utils.StringUtils
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.construction
 import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
+import wonderouscompose.composeapp.generated.resources.icon_next
 
 
 @OptIn(
@@ -178,7 +182,7 @@ fun EditorialScreen(
             )
         }
         Image(
-            painterResource(wonder.getAssetPath(wonder.mainImageName)),
+            filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(280.dp)
@@ -290,7 +294,7 @@ fun EditorialScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painterResource(wonder.photo1),
+                    filePainterResource(wonder.photo1),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .height(imageHeight)
@@ -465,6 +469,20 @@ fun EditorialScreen(
                 )
             }
         }
+    }
+
+    AnimatedVisibility(
+        visible = scrollState.firstItemScrollProgress < 0.6f,
+        modifier = Modifier.align(Alignment.TopEnd)
+    ) {
+        AppIconButton(
+            Res.drawable.icon_next,
+            contentDescription = "Next",
+            onClick = openHomeScreen,
+            modifier = Modifier
+                .rotate(-90f)
+                .padding(16.dp)
+        )
     }
 }
 
@@ -648,7 +666,7 @@ fun PullQuote1(
     ) {
         val shape = RoundedCornerShape(topStartPercent = 100, topEndPercent = 100)
         Image(
-            painterResource(bgImage),
+            filePainterResource(bgImage),
             modifier = Modifier.fillMaxSize()
                 .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
                 .padding(8.dp)
@@ -705,7 +723,7 @@ fun ParallaxImages(
         contentAlignment = Alignment.Center,
     ) {
         Image(
-            painterResource(topImagePath),
+            filePainterResource(topImagePath),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.align(Alignment.TopEnd)
@@ -716,7 +734,7 @@ fun ParallaxImages(
                 }.clip(RoundedCornerShape(topStartPercent = 100, topEndPercent = 100))
         )
         Image(
-            painterResource(bottomImagePath),
+            filePainterResource(bottomImagePath),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.align(Alignment.BottomStart)

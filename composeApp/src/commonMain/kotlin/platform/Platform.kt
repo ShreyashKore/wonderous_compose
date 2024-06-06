@@ -4,7 +4,12 @@ sealed interface Platform {
     data class Android(val version: Int) : Platform
     data class Ios(val version: Int) : Platform
     data object Desktop : Platform
-    data object Web : Platform
+
+    sealed interface Web : Platform {
+        data object Js : Web
+        data object Wasm : Web
+    }
+
     companion object
 }
 

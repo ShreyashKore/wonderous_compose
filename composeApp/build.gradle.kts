@@ -186,6 +186,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.shreyashkore.wonderouscompose"
             packageVersion = "1.0.0"
+            description = "Port of Wonderous in Compose Multiplatform"
+            copyright = "© 2024 Shreyash Kore. All rights reserved."
+            vendor = "Gyanoba"
+            licenseFile.set(project.file("../LICENSE.txt"))
             modules("java.net.http")
 
             macOS {

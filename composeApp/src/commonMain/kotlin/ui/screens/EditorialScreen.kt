@@ -3,7 +3,10 @@ package ui.screens
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
@@ -44,7 +47,6 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Place
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -130,14 +132,15 @@ import wonderouscompose.composeapp.generated.resources.icon_next
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalResourceApi::class, ExperimentalStdlibApi::class, ExperimentalMaterial3Api::class
+    ExperimentalSharedTransitionApi::class
 )
 @Composable
-fun EditorialScreen(
+fun SharedTransitionScope.EditorialScreen(
     wonder: Wonder,
     openHomeScreen: () -> Unit,
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) = BoxWithConstraints {
     val maxWidth = maxWidth
     val density = LocalDensity.current
@@ -184,6 +187,10 @@ fun EditorialScreen(
         Image(
             filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
             modifier = Modifier
+                .sharedBounds(
+                    rememberSharedContentState("image-${wonder.title}"),
+                    animatedVisibilityScope
+                )
                 .fillMaxWidth()
                 .height(280.dp)
                 .padding(top = 10.dp)
@@ -242,6 +249,11 @@ fun EditorialScreen(
                 }
                 WonderTitleText(
                     wonder,
+                    Modifier.sharedBounds(
+                        rememberSharedContentState(wonder.title),
+                        animatedVisibilityScope,
+                        zIndexInOverlay = 1f
+                    )
                 )
                 Text(
                     wonder.regionTitle,

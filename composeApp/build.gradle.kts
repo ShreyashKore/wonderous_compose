@@ -81,6 +81,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
             implementation(libs.lifecycle.viewmodel.compose)
+            implementation(libs.androidx.navigation.compose)
 
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)

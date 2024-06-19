@@ -1,80 +1,116 @@
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import models.ChichenItza
 import models.Wonder
 import models.parse
-import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
-import moe.tlaster.precompose.navigation.NavHost
-import moe.tlaster.precompose.navigation.path
-import moe.tlaster.precompose.navigation.query
-import moe.tlaster.precompose.navigation.rememberNavigator
-import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.screens.ArtifactDetailsScreen
 import ui.screens.ArtifactListScreen
 import ui.screens.ArtifactListViewModel
 import ui.screens.MapScreen
-import ui.screens.SharedAnimationContainer
+import ui.screens.WonderDetailsScreen
 import ui.screens.YoutubeVideoScreen
+import ui.screens.home.HomeScreen
 import ui.screens.timeline.TimelineScreen
 import ui.theme.ColorScheme
 import ui.theme.Typography
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun App() {
     MaterialTheme(
         colorScheme = ColorScheme,
         typography = Typography,
     ) {
-        PreComposeApp {
-            val navigator = rememberNavigator()
+        val navigator = rememberNavController()
+
+        SharedTransitionLayout {
+
             NavHost(
-                navigator = navigator,
-                initialRoute = "/wonder/chichenitza"
+                navController = navigator,
+                startDestination = "home"
             ) {
-                scene("/wonder/{type}") { backStackEntry ->
-                    val id = backStackEntry.path<String>("type")
+                composable(
+                    "home",
+                    enterTransition = { DefaultEnterTransition },
+                    exitTransition = { DefaultExitTransition },
+                    popEnterTransition = { DefaultEnterTransition },
+                    popExitTransition = { DefaultExitTransition },
+                ) { _ ->
+                    HomeScreen(
+                        initialWonder = ChichenItza,
+                        openDetailScreen = {
+                            navigator.navigate("home/wonder/${it.title}")
+                        },
+                        openTimelineScreen = {
+                            navigator.navigate("/timeline?type=${it.title}")
+                        },
+                        animatedVisibilityScope = this,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                    )
+
+                }
+
+                composable(
+                    "home/wonder/{type}",
+                    enterTransition = { DefaultEnterTransition },
+                    exitTransition = { DefaultExitTransition },
+                    popEnterTransition = { DefaultEnterTransition },
+                    popExitTransition = { DefaultExitTransition },
+                ) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
-                    SharedAnimationContainer(
-                        initialWonder = wonder,
+                    WonderDetailsScreen(
+                        wonder = wonder,
+                        onPressHome = { navigator.popBackStack() },
                         openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
                         openArtifactListScreen = { navigator.navigate("/search/${it.title}") },
                         openMapScreen = { navigator.navigate("/maps/${it.title}") },
                         openVideoScreen = { navigator.navigate("/video/$it") },
+                        animatedVisibilityScope = this,
+                        sharedTransitionScope = this@SharedTransitionLayout,
                     )
                 }
-                scene(
+                composable(
                     "/timeline",
-                    navTransition = DefaultNavTransition
+                    enterTransition = { DefaultEnterTransition },
                 ) { backStackEntry ->
-                    val id = backStackEntry.query<String>("type")
+                    val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
                     TimelineScreen(
                         selectedWonder = wonder,
-                        onClickBack = { navigator.goBack() },
+                        onClickBack = { navigator.popBackStack() },
                     )
                 }
 
-                scene(
+                composable(
                     "/artifact/{id}",
-                    navTransition = DefaultNavTransition
+                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
-                    val id = backStackEntry.path<String>("id")!!
+                    val id = backStackEntry.arguments?.getString("id")!!
                     ArtifactDetailsScreen(
                         artifactId = id,
-                        onClickBack = { navigator.goBack() },
+                        onClickBack = { navigator.popBackStack() },
                     )
                 }
 
-                scene(
+                composable(
                     "/search/{type}",
-                    navTransition = DefaultNavTransition
+                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
-                    val id = backStackEntry.path<String>("type")
+                    val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
                     val viewModel = viewModel { ArtifactListViewModel(wonder) }
                     ArtifactListScreen(
@@ -85,30 +121,30 @@ fun App() {
                         suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value,
                         filteredArtifacts = viewModel.filteredArtifacts.collectAsStateWithLifecycle().value,
                         onClickArtifact = { navigator.navigate("/artifact/${it}") },
-                        onBackClick = { navigator.goBack() },
+                        onBackClick = { navigator.popBackStack() },
                     )
                 }
 
-                scene(
+                composable(
                     "/maps/{type}",
-                    navTransition = DefaultNavTransition
+                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
-                    val id = backStackEntry.path<String>("type")
+                    val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
                     MapScreen(
                         latLng = wonder.latLng,
-                        onBackClick = { navigator.goBack() }
+                        onBackClick = { navigator.popBackStack() }
                     )
                 }
 
-                scene(
+                composable(
                     "/video/{id}",
-                    navTransition = DefaultNavTransition
+                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
-                    val id = backStackEntry.path<String>("id")!!
+                    val id = backStackEntry.arguments?.getString("id")!!
                     YoutubeVideoScreen(
                         id = id,
-                        onBackClick = { navigator.goBack() }
+                        onBackClick = { navigator.popBackStack() }
                     )
                 }
             }
@@ -116,7 +152,8 @@ fun App() {
     }
 }
 
-private val DefaultNavTransition = NavTransition(
-    createTransition = slideIn { IntOffset(it.width, 0) },
-    destroyTransition = slideOut { IntOffset(it.width, 0) },
-)
+private val DefaultEnterTransition
+    get() = fadeIn()
+
+private val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultExitTransition
+    get() = fadeOut() + ExitTransition.KeepUntilTransitionsFinished

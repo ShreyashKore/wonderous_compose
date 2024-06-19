@@ -10,11 +10,12 @@ android-minSdk = "24"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.0"
 coilCompose = "3.0.0-alpha06"
-compose-plugin = "1.6.10"
+compose-plugin = "1.7.0-dev1686"
 kotlin = "2.0.0"
 composeWebviewMultiplatform = "1.8.8"
 kamelImage = "0.9.2-wasm"
 lifecycleViewmodelCompose = "2.8.0"
+androidx-navigation = "2.8.0-alpha02"
 mapsCompose = "2.11.2"
 playServicesLocation = "21.2.0"
 playServicesMaps = "18.2.0"
@@ -35,6 +36,7 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 
 # Compose
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 
 # Android
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }

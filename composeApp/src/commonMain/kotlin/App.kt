@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
@@ -14,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 import models.ChichenItza
 import models.Wonder
 import models.parse
-import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import ui.screens.ArtifactDetailsScreen
 import ui.screens.ArtifactListScreen
 import ui.screens.ArtifactListViewModel

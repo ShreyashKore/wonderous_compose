@@ -35,10 +35,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -188,7 +190,8 @@ fun SharedTransitionScope.EditorialScreen(
                     .background(wonder.bgColor)
             )
         }
-        Box(Modifier.height(250.dp).fillMaxWidth()) {
+        val mainImageContainerHeight = 250.dp
+        Box(Modifier.padding(top = 20.dp).height(mainImageContainerHeight).fillMaxWidth()) {
             Image(
                 filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                 modifier = Modifier
@@ -196,8 +199,9 @@ fun SharedTransitionScope.EditorialScreen(
                         rememberSharedContentState("image-${wonder.title}"),
                         animatedVisibilityScope
                     )
-                    .align(Alignment.BottomCenter)
-                    .fillMaxHeight(wonder.mainImageFractionalHeight)
+                    .align(wonder.mainImageAlignment)
+                    .wrapContentHeight(Alignment.Top, true)
+                    .requiredHeight(mainImageContainerHeight * wonder.mainImageFractionalHeight)
                     .zIndex(wonder.mainImageZIndex),
                 contentDescription = null,
                 contentScale = ContentScale.FillHeight,
@@ -859,4 +863,10 @@ private val Wonder.mainImageZIndex
     get() = when (this) {
         ChristRedeemer -> -0.1f
         else -> 0.1f
+    }
+
+private val Wonder.mainImageAlignment
+    get() = when (this) {
+        ChristRedeemer -> Alignment.TopCenter
+        else -> Alignment.BottomCenter
     }

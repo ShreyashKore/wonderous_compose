@@ -57,11 +57,11 @@ import kotlin.math.sign
 import kotlin.random.Random
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun WonderIllustrationBackground(
     currentWonder: Wonder,
-) = BoxWithConstraints(Modifier.fillMaxSize().background(currentWonder.fgColor)) {
+    modifier: Modifier = Modifier
+) = BoxWithConstraints(modifier.background(currentWonder.fgColor)) {
     val maxWidthPx = LocalDensity.current.run { maxWidth.roundToPx() }
 
     AnimatedContent(

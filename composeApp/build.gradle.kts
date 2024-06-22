@@ -81,14 +81,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
             implementation(libs.lifecycle.viewmodel.compose)
+            implementation(libs.lifecycle.runtime.compose)
+            implementation(libs.androidx.navigation.compose)
 
             implementation(libs.ktor.core)
             implementation(libs.ktor.contentNegotiation)
             implementation(libs.ktor.serialization)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            // implementation(libs.orbital)
-            implementation(libs.precompose)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
         }

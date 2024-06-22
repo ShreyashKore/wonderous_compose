@@ -3,7 +3,10 @@ package ui.screens
 import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
@@ -32,10 +35,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -44,7 +49,6 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Place
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -91,8 +95,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.ChristRedeemer
+import models.Colosseum
+import models.GreatWall
 import models.MachuPicchu
+import models.Petra
 import models.PyramidsGiza
+import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -130,14 +138,15 @@ import wonderouscompose.composeapp.generated.resources.icon_next
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalResourceApi::class, ExperimentalStdlibApi::class, ExperimentalMaterial3Api::class
+    ExperimentalSharedTransitionApi::class
 )
 @Composable
-fun EditorialScreen(
+fun SharedTransitionScope.EditorialScreen(
     wonder: Wonder,
     openHomeScreen: () -> Unit,
     openMapScreen: (Wonder) -> Unit,
     openVideoScreen: (videoId: String) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) = BoxWithConstraints {
     val maxWidth = maxWidth
     val density = LocalDensity.current
@@ -181,17 +190,24 @@ fun EditorialScreen(
                     .background(wonder.bgColor)
             )
         }
-        Image(
-            filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(280.dp)
-                .padding(top = 10.dp)
-                .zIndex(0.1f),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            alignment = Alignment.BottomCenter,
-        )
+        val mainImageContainerHeight = 250.dp
+        Box(Modifier.padding(top = 20.dp).height(mainImageContainerHeight).fillMaxWidth()) {
+            Image(
+                filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
+                modifier = Modifier
+                    .sharedBounds(
+                        rememberSharedContentState("image-${wonder.title}"),
+                        animatedVisibilityScope
+                    )
+                    .align(wonder.mainImageAlignment)
+                    .wrapContentHeight(Alignment.Top, true)
+                    .requiredHeight(mainImageContainerHeight * wonder.mainImageFractionalHeight)
+                    .zIndex(wonder.mainImageZIndex),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                alignment = Alignment.BottomCenter,
+            )
+        }
     }
 
     // Main content
@@ -242,6 +258,11 @@ fun EditorialScreen(
                 }
                 WonderTitleText(
                     wonder,
+                    Modifier.sharedBounds(
+                        rememberSharedContentState(wonder.title),
+                        animatedVisibilityScope,
+                        zIndexInOverlay = 1f
+                    )
                 )
                 Text(
                     wonder.regionTitle,
@@ -473,7 +494,7 @@ fun EditorialScreen(
 
     AnimatedVisibility(
         visible = scrollState.firstItemScrollProgress < 0.6f,
-        modifier = Modifier.align(Alignment.TopEnd)
+        modifier = Modifier.safeDrawingPadding().align(Alignment.TopEnd)
     ) {
         AppIconButton(
             Res.drawable.icon_next,
@@ -825,3 +846,27 @@ private class BasicOverScrollConnection(
         return super.onPreFling(available)
     }
 }
+
+private val Wonder.mainImageFractionalHeight
+    get() = when (this) {
+        ChichenItza -> 0.6f
+        ChristRedeemer -> 2f
+        Colosseum -> 0.9f
+        GreatWall -> 0.9f
+        MachuPicchu -> 0.8f
+        Petra -> 0.8f
+        PyramidsGiza -> 0.9f
+        TajMahal -> 0.8f
+    }
+
+private val Wonder.mainImageZIndex
+    get() = when (this) {
+        ChristRedeemer -> -0.1f
+        else -> 0.1f
+    }
+
+private val Wonder.mainImageAlignment
+    get() = when (this) {
+        ChristRedeemer -> Alignment.TopCenter
+        else -> Alignment.BottomCenter
+    }

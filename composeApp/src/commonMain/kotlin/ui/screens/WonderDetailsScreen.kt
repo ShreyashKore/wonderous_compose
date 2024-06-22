@@ -1,6 +1,9 @@
 package ui.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -66,15 +69,18 @@ import wonderouscompose.composeapp.generated.resources.tab_timeline
 import wonderouscompose.composeapp.generated.resources.tab_timeline_active
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun WonderDetailsScreen(
-    onPressHome: () -> Unit,
-    navigateToTimeline: () -> Unit,
-    openArtifactDetailsScreen: (id: String) -> Unit,
-    openArtifactsScreen: () -> Unit,
-    openMapScreen: (Wonder) -> Unit,
-    openVideoScreen: (videoId: String) -> Unit,
     wonder: Wonder,
+    onPressHome: () -> Unit,
+    openTimelineScreen: (wonder: Wonder?) -> Unit,
+    openArtifactDetailsScreen: (id: String) -> Unit,
+    openArtifactListScreen: (wonder: Wonder) -> Unit,
+    openMapScreen: (wonder: Wonder) -> Unit,
+    openVideoScreen: (videoId: String) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope,
 ) = BoxWithConstraints {
     var currentScreen by rememberSaveable { mutableStateOf(Editorial) }
     val navbarMode = if (maxWidth > 800.dp) NavBarMode.NavRail else NavBarMode.BottomBar
@@ -105,21 +111,27 @@ fun WonderDetailsScreen(
             }
         ) { currentSelected ->
             when (currentSelected) {
-                Editorial -> EditorialScreen(
-                    wonder = wonder,
-                    openHomeScreen = onPressHome,
-                    openMapScreen = openMapScreen,
-                    openVideoScreen = openVideoScreen,
-                )
+                Editorial -> with(sharedTransitionScope) {
+                    EditorialScreen(
+                        wonder = wonder,
+                        openHomeScreen = onPressHome,
+                        openMapScreen = openMapScreen,
+                        openVideoScreen = openVideoScreen,
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    )
+                }
 
                 PhotoGallery -> PhotoGallery(wonder = wonder)
                 ArtifactCarousel -> ArtifactCarouselScreen(
                     wonder = wonder,
                     openArtifactDetailsScreen = openArtifactDetailsScreen,
-                    openAllArtifactsScreen = openArtifactsScreen,
+                    openAllArtifactsScreen = { openArtifactListScreen(wonder) },
                 )
 
-                WonderEvents -> WonderEvents(wonder = wonder, navigateToTimeline)
+                WonderEvents -> WonderEvents(
+                    wonder = wonder,
+                    navigateToTimeline = { openTimelineScreen(wonder) },
+                )
             }
         }
 

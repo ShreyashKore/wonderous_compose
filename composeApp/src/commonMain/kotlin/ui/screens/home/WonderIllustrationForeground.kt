@@ -1,7 +1,6 @@
 package ui.screens.home
 
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,9 +28,11 @@ import ui.theme.bgColor
 fun WonderIllustrationForeground(
     currentWonder: Wonder,
     verticalSwipeProgress: Float,
+    isVisible: Boolean = true,
+    modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(
-        Modifier.fillMaxSize().drawWithContent {
+        modifier.drawWithContent {
             val gradientTopStop = .4f - verticalSwipeProgress * .2f
             val gradientBottomStop = 10f - verticalSwipeProgress * .2f
             val gradientBottomAlpha = (.9f + verticalSwipeProgress * .2f).coerceIn(0f, 1f)
@@ -48,7 +49,7 @@ fun WonderIllustrationForeground(
             for (config in wonder.foregroundIllustrations) {
                 IllustrationPiece(
                     imagePath = wonder.getAssetPath(config.imageName),
-                    isVisible = currentWonder == wonder,
+                    isVisible = currentWonder == wonder && isVisible,
                     verticalSwipeProgress = verticalSwipeProgress,
                     modifier = Modifier
                         .fractionalOffset(config.fractionalOffset.x, config.fractionalOffset.y)

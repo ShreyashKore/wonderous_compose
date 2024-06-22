@@ -2,6 +2,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.MaterialTheme
@@ -39,19 +40,19 @@ fun App() {
 
             NavHost(
                 navController = navigator,
-                startDestination = "home"
+                startDestination = "/home",
+                enterTransition = { DefaultEnterTransition },
+                exitTransition = { DefaultExitTransition },
+                popEnterTransition = { DefaultPopEnterTransition },
+                popExitTransition = { DefaultPopExitTransition },
             ) {
                 composable(
-                    "home",
-                    enterTransition = { DefaultEnterTransition },
-                    exitTransition = { DefaultExitTransition },
-                    popEnterTransition = { DefaultEnterTransition },
-                    popExitTransition = { DefaultExitTransition },
+                    "/home",
                 ) { _ ->
                     HomeScreen(
                         initialWonder = ChichenItza,
                         openDetailScreen = {
-                            navigator.navigate("home/wonder/${it.title}")
+                            navigator.navigate("/home/wonder/${it.title}")
                         },
                         openTimelineScreen = {
                             navigator.navigate("/timeline?type=${it.title}")
@@ -63,11 +64,7 @@ fun App() {
                 }
 
                 composable(
-                    "home/wonder/{type}",
-                    enterTransition = { DefaultEnterTransition },
-                    exitTransition = { DefaultExitTransition },
-                    popEnterTransition = { DefaultEnterTransition },
-                    popExitTransition = { DefaultExitTransition },
+                    "/home/wonder/{type}",
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
@@ -85,7 +82,6 @@ fun App() {
                 }
                 composable(
                     "/timeline",
-                    enterTransition = { DefaultEnterTransition },
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
@@ -97,7 +93,6 @@ fun App() {
 
                 composable(
                     "/artifact/{id}",
-                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("id")!!
                     ArtifactDetailsScreen(
@@ -108,7 +103,6 @@ fun App() {
 
                 composable(
                     "/search/{type}",
-                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
@@ -121,13 +115,12 @@ fun App() {
                         suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value,
                         filteredArtifacts = viewModel.filteredArtifacts.collectAsStateWithLifecycle().value,
                         onClickArtifact = { navigator.navigate("/artifact/${it}") },
-                        onBackClick = { navigator.popBackStack() },
+                        onBackClick = { navigator.navigateUp() },
                     )
                 }
 
                 composable(
                     "/maps/{type}",
-                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("type")
                     val wonder = Wonder.parse(id)
@@ -139,7 +132,6 @@ fun App() {
 
                 composable(
                     "/video/{id}",
-                    enterTransition = { DefaultEnterTransition }
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getString("id")!!
                     YoutubeVideoScreen(
@@ -153,7 +145,14 @@ fun App() {
 }
 
 private val DefaultEnterTransition
-    get() = fadeIn()
+    get() = fadeIn(tween(500))
 
-private val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultExitTransition
-    get() = fadeOut() + ExitTransition.KeepUntilTransitionsFinished
+val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultExitTransition
+    get() = fadeOut(tween(600, delayMillis = 100)) +
+            ExitTransition.KeepUntilTransitionsFinished
+
+private val DefaultPopEnterTransition
+    get() = fadeIn(tween(200))
+
+val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultPopExitTransition
+    get() = fadeOut(tween(500)) + ExitTransition.KeepUntilTransitionsFinished

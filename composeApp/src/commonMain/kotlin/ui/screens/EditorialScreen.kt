@@ -93,8 +93,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.ChristRedeemer
+import models.Colosseum
+import models.GreatWall
 import models.MachuPicchu
+import models.Petra
 import models.PyramidsGiza
+import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -184,21 +188,22 @@ fun SharedTransitionScope.EditorialScreen(
                     .background(wonder.bgColor)
             )
         }
-        Image(
-            filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
-            modifier = Modifier
-                .sharedBounds(
-                    rememberSharedContentState("image-${wonder.title}"),
-                    animatedVisibilityScope
-                )
-                .fillMaxWidth()
-                .height(280.dp)
-                .padding(top = 10.dp)
-                .zIndex(0.1f),
-            contentDescription = null,
-            contentScale = ContentScale.FillHeight,
-            alignment = Alignment.BottomCenter,
-        )
+        Box(Modifier.height(250.dp).fillMaxWidth()) {
+            Image(
+                filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
+                modifier = Modifier
+                    .sharedBounds(
+                        rememberSharedContentState("image-${wonder.title}"),
+                        animatedVisibilityScope
+                    )
+                    .align(Alignment.BottomCenter)
+                    .fillMaxHeight(wonder.mainImageFractionalHeight)
+                    .zIndex(wonder.mainImageZIndex),
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                alignment = Alignment.BottomCenter,
+            )
+        }
     }
 
     // Main content
@@ -485,7 +490,7 @@ fun SharedTransitionScope.EditorialScreen(
 
     AnimatedVisibility(
         visible = scrollState.firstItemScrollProgress < 0.6f,
-        modifier = Modifier.align(Alignment.TopEnd)
+        modifier = Modifier.safeDrawingPadding().align(Alignment.TopEnd)
     ) {
         AppIconButton(
             Res.drawable.icon_next,
@@ -837,3 +842,21 @@ private class BasicOverScrollConnection(
         return super.onPreFling(available)
     }
 }
+
+private val Wonder.mainImageFractionalHeight
+    get() = when (this) {
+        ChichenItza -> 0.6f
+        ChristRedeemer -> 2f
+        Colosseum -> 0.9f
+        GreatWall -> 0.9f
+        MachuPicchu -> 0.8f
+        Petra -> 0.8f
+        PyramidsGiza -> 0.9f
+        TajMahal -> 0.8f
+    }
+
+private val Wonder.mainImageZIndex
+    get() = when (this) {
+        ChristRedeemer -> -0.1f
+        else -> 0.1f
+    }

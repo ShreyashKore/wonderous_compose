@@ -67,6 +67,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.ChristRedeemer
@@ -85,6 +86,7 @@ import ui.composables.PreviousNextNavigation
 import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
+import ui.theme.black
 import ui.theme.greyStrong
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
@@ -119,6 +121,10 @@ fun HomeScreen(
     val maxWidth = maxWidth
     val maxHeight = maxHeight
     var isMenuOpen by rememberSaveable { mutableStateOf(false) }
+    var entryAnimationDone by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        entryAnimationDone = true
+    }
     val pagerState =
         rememberPagerState(initialPage = 500 * Wonders.size + Wonders.indexOf(initialWonder),
             pageCount = { 1000 * Wonders.size })
@@ -173,9 +179,9 @@ fun HomeScreen(
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             }
         },
-        enabled = maxWidth > 600.dp,
+        enabled = maxWidth > 600.dp && entryAnimationDone,
         modifier = Modifier.fillMaxSize().run {
-            if (isMenuOpen) blur(12.dp) else this
+            if (isMenuOpen) blur(12.dp).background(black.copy(0.2f)) else this
         }
     ) {
         Box(
@@ -186,7 +192,8 @@ fun HomeScreen(
             contentAlignment = Alignment.Center
         ) {
             WonderIllustrationBackground(
-                currentWonder = currentWonder
+                currentWonder = currentWonder,
+                Modifier.fillMaxSize()
             )
 
             HorizontalPager(
@@ -227,10 +234,13 @@ fun HomeScreen(
             }
 
             WonderIllustrationForeground(
-                currentWonder = currentWonder, verticalSwipeProgress = swipeProgress
+                currentWonder = currentWonder,
+                verticalSwipeProgress = swipeProgress,
+                isVisible = entryAnimationDone,
+                modifier = Modifier.zIndex(10f).fillMaxSize()
             )
 
-            Box {
+            Box(Modifier.zIndex(11f)) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Bottom,

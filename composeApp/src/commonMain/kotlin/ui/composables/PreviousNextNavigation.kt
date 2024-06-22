@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
@@ -25,9 +27,12 @@ fun PreviousNextNavigation(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    val rememberContent = remember(content) {
+        movableContentOf(content)
+    }
 
     if (!enabled) {
-        content()
+        rememberContent()
         return
     }
 
@@ -50,7 +55,7 @@ fun PreviousNextNavigation(
                 }
             }
     ) {
-        content()
+        rememberContent()
         Row(
             modifier = Modifier
                 .widthIn(max = 840.dp)

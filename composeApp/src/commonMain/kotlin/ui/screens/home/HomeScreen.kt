@@ -116,6 +116,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
     sharedTransitionScope: SharedTransitionScope,
+    onChangeCurrentWonder: (Wonder) -> Unit,
 ) = BoxWithConstraints(modifier) {
     val scope = rememberCoroutineScope()
     val maxWidth = maxWidth
@@ -166,6 +167,10 @@ fun HomeScreen(
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(currentWonder) {
         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
+    // Temporary fix as current Wonder is not being remembered when in backstack
+    LaunchedEffect(currentWonder) {
+        onChangeCurrentWonder(currentWonder)
     }
 
     PreviousNextNavigation(

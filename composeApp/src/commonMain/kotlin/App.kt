@@ -13,7 +13,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import models.ChichenItza
 import models.Wonder
 import models.parse
 import ui.screens.ArtifactDetailsScreen
@@ -48,9 +47,13 @@ fun App() {
             ) {
                 composable(
                     "/home",
-                ) { _ ->
+                ) { backStackEntry ->
+                    // Temporary fix as current Wonder is not being remembered when in backstack
+                    val savedStateHandle = backStackEntry.savedStateHandle
+                    val currentWonderName = savedStateHandle.get<String>("currentWonder")
+                    val currentWonder = Wonder.parse(currentWonderName)
                     HomeScreen(
-                        initialWonder = ChichenItza,
+                        initialWonder = currentWonder,
                         openDetailScreen = {
                             navigator.navigate("/home/wonder/${it.title}")
                         },
@@ -59,6 +62,9 @@ fun App() {
                         },
                         animatedVisibilityScope = this,
                         sharedTransitionScope = this@SharedTransitionLayout,
+                        onChangeCurrentWonder = {
+                            savedStateHandle["currentWonder"] = it.title
+                        }
                     )
 
                 }

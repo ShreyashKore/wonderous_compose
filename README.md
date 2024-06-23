@@ -41,9 +41,6 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 
 ## Outline
 
-* For navigation, the [PreCompose](https://github.com/Tlaster/PreCompose/) library is used. This has
-  a similar API to the AndroidX navigation
-  library.
 * [Home Screen](composeApp/src/commonMain/kotlin/ui/screens/home/HomeScreen.kt) shows the usage of
   HorizontalPager along with AnimatedVisibility for animating
   foreground and background elements.
@@ -80,7 +77,8 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 ## Libraries Used
 
 - [Ktor](https://ktor.io/): HTTP networking
-- [PreCompose](https://github.com/Tlaster/PreCompose): Navigation
+- [AndroidX Navigation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation-routing.html):
+  Navigation
 - [Coil](https://github.com/coil-kt/coil): Image Loading
 - [compose-webview-multiplatform](https://github.com/KevinnZou/compose-webview-multiplatform):
   WebView for Android, IOS
@@ -115,22 +113,38 @@ Here 2 additional intermediate source sets are created to share code among web p
 
 ## TODO
 
-* ~~WASM support~~
-* Collectibles and My Collection Screen
-* Localization
-* Gesture support on Web and Desktop platforms
-* Shared Element Transition on the home screen
-* ~~Haptics~~
+- [x] WASM support
+
+- [ ] Collectibles and My Collection Screen
+
+- [ ] Localization
+
+- [ ] Gesture support on Web and Desktop platforms
+
+- [X] Shared Element Transition on the home screen
+
+- [x] Haptics
 
 ## Set up the environment
 
 > For compose multiplatform setup information
-> checkout its [template repo](https://github.com/JetBrains/compose-multiplatform-template).
+> checkout the
+> [documentation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-setup.html).
 
 - Add Google Maps key in `local.properties` at the project root.
 
 ```properties
 MAPS_API_KEY=YOUR_KEY
+```
+
+- Add `key.properties` at the project root (For the lazy ones like me; Just remove `signingConfigs`
+  and `keyProp` block from `composeApp/build.gradle.kts`).
+
+```properties
+storePassword=storePassword
+keyPassword=keyPassword
+alias=myKey
+path=path/To/key.jks
 ```
 
 [badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat

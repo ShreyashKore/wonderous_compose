@@ -185,7 +185,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.shreyashkore.wonderouscompose"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.versionName.get()
             description = "Port of Wonderous in Compose Multiplatform"
             copyright = "© 2024 Shreyash Kore. All rights reserved."
             vendor = "Gyanoba"

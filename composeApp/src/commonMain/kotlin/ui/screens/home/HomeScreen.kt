@@ -58,6 +58,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -88,6 +89,7 @@ import ui.getAssetPath
 import ui.mainImageName
 import ui.theme.black
 import ui.theme.greyStrong
+import ui.theme.white
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.icon_menu
@@ -245,11 +247,11 @@ fun HomeScreen(
                 modifier = Modifier.zIndex(10f).fillMaxSize()
             )
 
-            Box(Modifier.zIndex(11f)) {
+            Box(Modifier.zIndex(11f).align(Alignment.BottomCenter)) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier.align(Alignment.TopCenter)
                 ) {
                     with(sharedTransitionScope) {
                         WonderTitleText(
@@ -265,17 +267,19 @@ fun HomeScreen(
                     PageIndicator(
                         currentPage = pagerState.currentPage % Wonders.size,
                         totalPages = Wonders.size,
-                        modifier = Modifier.padding(vertical = 24.dp).height(120.dp).fillMaxWidth()
+                        modifier = Modifier.padding(vertical = 24.dp).fillMaxWidth()
                     )
+                    Spacer(Modifier.height(50.dp))
                 }
 
 
-                VerticalSwipeIndicator(
+                SwipeUpIndicator(
                     modifier = Modifier
+                        .height(200.dp)
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
                     getSwipeProgress = { swipeableState.offset.roundToInt() },
-                    openDetailScreen = { openDetailScreen(currentWonder) },
+                    onClick = { openDetailScreen(currentWonder) },
                 )
             }
 
@@ -353,27 +357,44 @@ fun PageIndicator(
     }
 }
 
-
+/**
+ * An down icon button with a gradient background to indicate swipe up
+ *
+ * @param getSwipeProgress returns the progress of the swipe in pixels.
+ * It is a lambda to defer reads to layout/draw phase. This improves performance and avoids unnecessary recompositions.
+ */
 @Composable
-fun VerticalSwipeIndicator(
+fun SwipeUpIndicator(
     modifier: Modifier,
     getSwipeProgress: () -> Int,
-    openDetailScreen: () -> Unit
+    onClick: () -> Unit
 ) {
-    Box(modifier, contentAlignment = Alignment.BottomCenter) {
+    BoxWithConstraints(modifier, contentAlignment = Alignment.BottomCenter) {
+        val maxHeightPx = LocalDensity.current.run { maxHeight.toPx() }
+        // Background Gradient
         Box(
-            Modifier.fillMaxHeight().background(
-                Brush.verticalGradient(
-                    0f to Color.Transparent,
-                    1f to Color.White
-                ),
-            ).clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
+            Modifier.fillMaxHeight().width(48.dp).clip(
+                RoundedCornerShape(bottomEndPercent = 100, bottomStartPercent = 100)
+            ).drawBehind {
+                // Instead of `background` Modifier we are using `drawBehind`
+                // which will read the swipeProgress in draw phase
+                val gradientProgress = 2 * -(getSwipeProgress() / maxHeightPx)
+                drawRoundRect(
+                    Brush.verticalGradient(
+                        1f - gradientProgress to Color.Transparent,
+                        1f to white.copy(gradientProgress.coerceAtMost(0.4f)),
+                        startY = 0.0f,
+                    )
+                )
+            }
         )
+        // Down Icon button
         IconButton(
             modifier = Modifier.offset {
+                // Note we are using lambda version of offset to defer reads to layout stage
                 IntOffset(0, getSwipeProgress())
             },
-            onClick = openDetailScreen,
+            onClick = onClick,
         ) {
             Icon(
                 Icons.Sharp.KeyboardArrowDown,

@@ -1,3 +1,5 @@
 package platform
 
-actual val platform: Platform = Platform.Ios(0)
+import platform.Foundation.NSFoundationVersionNumber
+
+actual val platform: Platform = Platform.Ios(NSFoundationVersionNumber)

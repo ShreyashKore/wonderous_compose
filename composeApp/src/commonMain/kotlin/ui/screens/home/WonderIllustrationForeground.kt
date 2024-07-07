@@ -27,15 +27,16 @@ import ui.theme.bgColor
 @Composable
 fun WonderIllustrationForeground(
     currentWonder: Wonder,
-    verticalSwipeProgress: Float,
+    getSwipeUpProgress: () -> Float,
     isVisible: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(
         modifier.drawWithContent {
-            val gradientTopStop = .4f - verticalSwipeProgress * .2f
-            val gradientBottomStop = 10f - verticalSwipeProgress * .2f
-            val gradientBottomAlpha = (.9f + verticalSwipeProgress * .2f).coerceIn(0f, 1f)
+            val swipeUpProgress = getSwipeUpProgress()
+            val gradientTopStop = .4f - swipeUpProgress * .2f
+            val gradientBottomStop = 10f - swipeUpProgress * .2f
+            val gradientBottomAlpha = (.9f + swipeUpProgress * .2f).coerceIn(0f, 1f)
             drawContent()
             drawRect(
                 Brush.verticalGradient(
@@ -50,7 +51,7 @@ fun WonderIllustrationForeground(
                 IllustrationPiece(
                     imagePath = wonder.getAssetPath(config.imageName),
                     isVisible = currentWonder == wonder && isVisible,
-                    verticalSwipeProgress = verticalSwipeProgress,
+                    getSwipeUpProgress = getSwipeUpProgress,
                     modifier = Modifier
                         .fractionalOffset(config.fractionalOffset.x, config.fractionalOffset.y)
                         .align(config.alignment)

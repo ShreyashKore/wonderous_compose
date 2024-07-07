@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 fun IllustrationPiece(
     isVisible: Boolean,
     imagePath: String,
-    verticalSwipeProgress: Float = 0f,
+    getSwipeUpProgress: () -> Float = { 0f },
     modifier: Modifier,
     hiddenStateOffset: () -> Offset = { Offset(1f, 1f) },
     hiddenStateScale: Float = 0.5f,
@@ -49,7 +49,7 @@ fun IllustrationPiece(
             targetOffset = ::getHiddenStateOffset
         ),
         modifier = Modifier.graphicsLayer {
-            val scale = 1 + verticalSwipeProgress * .03f
+            val scale = 1 + getSwipeUpProgress() * .03f
             scaleX = scale
             scaleY = scale
         }.wrapContentSize(unbounded = true) then modifier,

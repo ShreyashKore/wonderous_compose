@@ -161,11 +161,9 @@ fun HomeScreen(
             }
         )
     }
-    val swipeProgress by remember {
+    val swipeUpProgress by remember {
         derivedStateOf {
-            // `progress` resets to 1 once settled so here we return 0
-            if (swipeableState.targetValue != SwipeState.End && swipeableState.progress == 1f) 0f
-            else swipeableState.progress
+            swipeableState.progress(SwipeState.Start, SwipeState.End)
         }
     }
 
@@ -229,7 +227,7 @@ fun HomeScreen(
                                 rememberSharedContentState("image-${wonder.title}"),
                                 animatedVisibilityScope
                             ).graphicsLayer {
-                                val scale = 1 - swipeProgress * .01f
+                                val scale = 1 - swipeUpProgress * .01f
                                 scaleX = scale
                                 scaleY = scale
                             }
@@ -245,7 +243,7 @@ fun HomeScreen(
 
             WonderIllustrationForeground(
                 currentWonder = currentWonder,
-                verticalSwipeProgress = swipeProgress,
+                getSwipeUpProgress = { swipeUpProgress },
                 isVisible = entryAnimationDone,
                 modifier = Modifier.zIndex(10f).fillMaxSize()
             )

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,17 +17,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.UrlAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withAnnotation
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.theme.Raleway
 import ui.theme.accent1
@@ -37,7 +33,7 @@ import ui.theme.offWhite
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.app_logo_plain
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutApp(onDismissRequest: () -> Unit) {
     BasicAlertDialog(
@@ -97,18 +93,10 @@ fun AboutApp(onDismissRequest: () -> Unit) {
                 append(" Photography from ")
                 appendLink("Unsplash.", url = "https://unsplash.com/@gskinner/collections")
             }
-            val uriHandler = LocalUriHandler.current
 
-            ClickableText(
+            Text(
                 text,
                 style = MaterialTheme.typography.bodyMedium,
-                onClick = { offset ->
-                    val url = text.getUrlAnnotations(offset, offset).firstOrNull()?.item?.url
-                    println("$url")
-                    url?.let {
-                        uriHandler.openUri(it)
-                    }
-                }
             )
             Spacer(Modifier.height(24.dp))
             Row(Modifier.align(Alignment.End)) {
@@ -124,11 +112,10 @@ fun AboutApp(onDismissRequest: () -> Unit) {
 }
 
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun AnnotatedString.Builder.appendLink(str: String, url: String) =
     withStyle(linkStyle) {
-        withAnnotation(UrlAnnotation(url)) {
+        withLink(LinkAnnotation.Url(url)) {
             append(str)
         }
     }

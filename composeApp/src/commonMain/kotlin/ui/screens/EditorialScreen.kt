@@ -827,7 +827,7 @@ private class BasicOverScrollConnection(
         if (available.y <= 0) return Offset.Zero
         accumulated = (accumulated + available.y).coerceAtMost(200f)
 
-        if ((available.y > 40 || accumulated > 100f) && source == NestedScrollSource.Drag) {
+        if ((available.y > 40 || accumulated > 100f) && source == NestedScrollSource.UserInput) {
             if (!exceededNotified) {
                 onExceedOverScrollLimit()
                 exceededNotified = true

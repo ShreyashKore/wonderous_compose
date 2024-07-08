@@ -49,16 +49,20 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Place
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -97,6 +101,7 @@ import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
 import models.GreatWall
+import models.LatLng
 import models.MachuPicchu
 import models.Petra
 import models.PyramidsGiza
@@ -108,6 +113,7 @@ import org.jetbrains.compose.resources.painterResource
 import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
+import ui.composables.Coordinate
 import ui.composables.MapType
 import ui.composables.MapView
 import ui.composables.WonderTitleText
@@ -476,6 +482,12 @@ fun SharedTransitionScope.EditorialScreen(
                         contentDescription = null,
                     )
                 }
+                var selectedLocation by remember { mutableStateOf(Coordinate(wonder.latLng.latitude, wonder.latLng.longitude)) }
+                TextButton(
+                    onClick = {},
+                    content = { Text(text = "Hello") },
+                    enabled = selectedLocation.latitude != wonder.latLng.latitude,
+                )
                 MapView(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -483,11 +495,16 @@ fun SharedTransitionScope.EditorialScreen(
                         .height(320.dp)
                         .widthIn(max = 450.dp)
                         .clip(RoundedCornerShape(4.dp)),
-                    latLng = wonder.latLng,
+                    latLng = LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                    selectedPos = selectedLocation,
                     title = "Map",
                     zoomLevel = .05f,
                     mapType = MapType.Normal,
+                    onMapClick = {
+                        selectedLocation = it
+                    }
                 )
+
             }
         }
     }

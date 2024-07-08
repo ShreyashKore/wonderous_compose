@@ -9,10 +9,12 @@ import models.LatLng
 actual fun MapView(
     modifier: Modifier,
     latLng: LatLng,
+    selectedPos: Coordinate,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
-    mapType: MapType
+    mapType: MapType,
+    onMapClick: (Coordinate) -> Unit,
 ) {
     example.map.MapView(
         modifier = modifier,

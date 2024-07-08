@@ -32,7 +32,7 @@ fun <K, T> ContentRepository<K, T>.decorateWithLimitRequestsInParallel(
                                 element.deferred.complete(result)
                             } catch (t: Throwable) {
                                 val message =
-                                    "caught exception in decorateWithLimitRequestsInParallel"
+                                    "caught exception in decorateWithLimitRequestsInParallel $t"
                                 element.deferred.completeExceptionally(Exception(message, t))
                             } finally {
                                 store.send(Intent.ElementComplete())

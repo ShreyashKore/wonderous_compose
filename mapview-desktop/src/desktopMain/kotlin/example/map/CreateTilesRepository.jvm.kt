@@ -6,12 +6,10 @@ import androidx.compose.runtime.remember
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.UserAgent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import java.io.File
-import kotlin.coroutines.CoroutineContext
 
 @Composable
-internal fun rememberTilesRepository(
+internal actual fun rememberTilesRepository(
     userAgent: String,
     ioScope: CoroutineScope
 ): ContentRepository<Tile, TileImage> = remember {
@@ -26,5 +24,3 @@ internal fun rememberTilesRepository(
         .adapter { TileImage(it.toImageBitmap()) }
         .decorateWithDistinctDownloader(ioScope)
 }
-
-internal fun getDispatcherIO(): CoroutineContext = Dispatchers.Default

@@ -22,10 +22,12 @@ import com.google.maps.android.compose.MapType as GoogleMapType
 actual fun MapView(
     modifier: Modifier,
     latLng: models.LatLng,
+    selectedPos: Coordinate,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
-    mapType: MapType
+    mapType: MapType,
+    onMapClick: (Coordinate) -> Unit,
 ) {
     val currentLocation = GmapLatLng(latLng.latitude, latLng.longitude)
     val cameraPositionState = rememberCameraPositionState {

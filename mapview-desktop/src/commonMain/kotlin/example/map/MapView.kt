@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -35,8 +37,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import java.awt.Desktop
-import java.net.URL
 
 data class MapState(
     val latitude: Double,
@@ -243,22 +243,19 @@ fun InternalMapState.toExternalState() =
 
 @Composable
 private fun LinkText(text: String, link: String) {
+    val uriHandler = LocalUriHandler.current
     Text(
         text = text,
         color = Color.Blue,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.clickable {
-            navigateToUrl(link)
+            uriHandler.openUri(link)
         }
             .padding(4.dp)
             .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(5.dp))
             .padding(10.dp)
             .clip(RoundedCornerShape(5.dp))
     )
-}
-
-private fun navigateToUrl(url: String) {
-    Desktop.getDesktop().browse(URL(url).toURI())
 }
 
 private var inMemoryCache: Map<Tile, TileImage> by mutableStateOf(mapOf())

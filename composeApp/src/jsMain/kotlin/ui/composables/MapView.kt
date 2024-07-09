@@ -6,6 +6,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
 import external.L
+import kotlinx.browser.window
 import models.LatLng
 
 @Composable

@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
-import leaflet.L
-import leaflet.setupMap
 import models.LatLng
 
 @Composable
@@ -42,7 +40,10 @@ actual fun MapView(
             }
         },
         update = {
-            setupMap(L, "map", latLng.latitude, latLng.longitude, 260 * zoomLevel, 13f)
+
+//            map()
+
+//            setupMap(L, "map", latLng.latitude, latLng.longitude, 260 * zoomLevel, 13f)
         },
     )
 }

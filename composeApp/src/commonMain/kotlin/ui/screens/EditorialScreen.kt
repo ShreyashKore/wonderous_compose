@@ -215,6 +215,7 @@ fun SharedTransitionScope.EditorialScreen(
             )
         }
     }
+    val userScrollEnabled = remember { mutableStateOf(true) }
 
     // Main content
     LazyColumn(
@@ -223,6 +224,7 @@ fun SharedTransitionScope.EditorialScreen(
             .safeDrawingPadding()
             .nestedScroll(nestedScrollConnection),
         state = scrollState,
+        userScrollEnabled = userScrollEnabled.value,
     ) {
         // 0
         item {
@@ -502,7 +504,8 @@ fun SharedTransitionScope.EditorialScreen(
                     mapType = MapType.Normal,
                     onMapClick = {
                         selectedLocation = it
-                    }
+                    },
+                    parentScrollEnableState = userScrollEnabled
                 )
 
             }

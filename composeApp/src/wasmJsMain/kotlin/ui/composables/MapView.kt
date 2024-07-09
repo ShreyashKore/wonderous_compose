@@ -29,7 +29,8 @@ actual fun MapView(
             onMapClick != null
         },
         startScale = startScale,
-        consumeScroll = false
+        consumeScroll = true,
+        enableParentScroll = { enabled -> parentScrollEnableState.value = enabled },
     )
 }
 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -28,13 +26,14 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.isPrimaryPressed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
@@ -79,6 +78,8 @@ fun MapView(
     userAgent: String,
     latitude: Double? = null,
     longitude: Double? = null,
+    markerLatitude: Double? = latitude,
+    markerLongitude: Double? = longitude,
     startScale: Double? = null,
     state: State<MapState> = remember {
         mutableStateOf(MapState(latitude ?: 0.0, longitude ?: 0.0, startScale ?: 1.0))
@@ -86,6 +87,7 @@ fun MapView(
     onStateChange: (MapState) -> Unit = { (state as? MutableState<MapState>)?.value = it },
     onMapViewClick: (latitude: Double, longitude: Double) -> Boolean = { _, _ -> true },
     consumeScroll: Boolean = true,
+    enableParentScroll: (enabled: Boolean) -> Unit,
 ) {
     val viewScope = rememberCoroutineScope()
     val ioScope = remember {
@@ -128,6 +130,24 @@ fun MapView(
         tilesToDisplay
     }
 
+    val markerPt = remember(markerLatitude, markerLongitude) {
+        if (markerLatitude != null && markerLongitude != null) {
+            createGeoPt(markerLatitude, markerLongitude)
+        } else {
+            null
+        }
+    }
+
+    val markerPoint by derivedStateOf {
+        if (markerPt != null) {
+            internalState.geoToDisplay(
+                markerPt
+            )
+        } else {
+            null
+        }
+    }
+
     val onZoom = { pt: DisplayPoint?, change: Double ->
         onStateChange(internalState.zoom(pt, change).toExternalState())
     }
@@ -145,10 +165,22 @@ fun MapView(
     var previousMoveDownPos by remember<MutableState<Offset?>> { mutableStateOf(null) }
     var previousPressTime by remember { mutableStateOf(0L) }
     var previousPressPos by remember<MutableState<Offset?>> { mutableStateOf(null) }
+
+    var reEnableParentScrollJob by remember {
+        mutableStateOf<Job?>(null)
+    }
+    val scope = rememberCoroutineScope()
+
     fun Modifier.applyPointerInput() = pointerInput(Unit) {
         while (true) {
             val event = awaitPointerEventScope {
                 awaitPointerEvent()
+            }
+            reEnableParentScrollJob?.cancel()
+            enableParentScroll(false)
+            reEnableParentScrollJob = scope.launch {
+                delay(100)
+                enableParentScroll(true)
             }
             val current = event.changes.firstOrNull()?.position
             if (event.type == PointerEventType.Scroll) {
@@ -208,7 +240,7 @@ fun MapView(
             width = p1
             height = p2
             onStateChange(internalState.copy(width = p1, height = p2).toExternalState())
-            clipRect() {
+            clipRect {
                 displayTiles.forEach { (t, img) ->
                     if (img != null) {
                         val size = IntSize(t.size, t.size)
@@ -222,14 +254,12 @@ fun MapView(
                         )
                     }
                 }
+                markerPoint?.let {
+                    val center = Offset(x = it.x.toFloat(), y = it.y.toFloat())
+                    drawCircle(color = Color.Red, radius = 8f, center = center, alpha = 0.6f)
+                    drawCircle(color = Color.Red, radius = 24f, center = center, alpha = 0.2f)
+                }
             }
-//            drawPath(path = Path().apply<Path> {
-//                addRect(Rect(0f, 0f, size.width, size.height))
-//            }, color = Color.Red, style = Stroke(4f))
-        }
-        Row(Modifier.align(Alignment.BottomCenter)) {
-            LinkText("OpenStreetMap license", Config.OPENSTREET_MAP_LICENSE)
-            LinkText("Usage policy", Config.OPENSTREET_MAP_POLICY)
         }
     }
 }

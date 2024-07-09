@@ -22,6 +22,7 @@ actual fun MapView(
         latitude = latLng.latitude,
         longitude = latLng.longitude,
         startScale = 60 / zoomLevel.toDouble(),
-        consumeScroll = false
+        consumeScroll = true,
+        enableParentScroll = { enabled -> parentScrollEnableState.value = enabled },
     )
 }

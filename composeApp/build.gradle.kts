@@ -45,6 +45,7 @@ kotlin {
     js(IR) {
         browser()
         binaries.executable()
+        useEsModules()
     }
 
     androidTarget {

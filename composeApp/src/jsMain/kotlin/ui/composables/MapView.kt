@@ -1,13 +1,30 @@
 package ui.composables
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
-import external.L
+import js.jsArrayOf
 import models.LatLng
+import openlayers.Feature
+import openlayers.LonLat
+import openlayers.OSM
+import openlayers.Point
+import openlayers.TileLayer
+import openlayers.TileLayerOptions
+import openlayers.Vector
+import openlayers.VectorOptions
+import openlayers.VectorSource
+import openlayers.VectorSourceOptions
+import openlayers.VectorStyle
+import openlayers.View
+import openlayers.ViewOptions
+import openlayers.XYZ
+import openlayers.XYZOptions
+import openlayers.fromLonLat
 
+@OptIn(ExperimentalJsCollectionsApi::class)
 @Composable
 actual fun MapView(
     modifier: Modifier,
@@ -17,22 +34,9 @@ actual fun MapView(
     zoomLevel: Float,
     mapType: MapType
 ) {
-    if (mapType == MapType.Satellite) {
-        HtmlView(
-            modifier = modifier,
-            factory = {
-                createElement("iframe").apply {
-                    setAttribute("width", "100%")
-                    setAttribute("height", "100%")
-                    setAttribute(
-                        "src",
-                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${latLng.latitude}/${latLng.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
-                    )
-                }
-            }
-        )
-        return
-    }
+    val map = remember { openlayers.Map() }
+    val adjustedZoomLevel = zoomLevel * 5f
+
     HtmlView(
         modifier = modifier,
         factory = {
@@ -41,17 +45,50 @@ actual fun MapView(
             }
         },
         update = {
-            val map =
-                L.map("map").setView(arrayOf(latLng.latitude, latLng.longitude), zoomLevel * 260)
-            L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                mapOf(
-                    "maxZoom" to 13,
-                    "attribution" to "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+            val center = fromLonLat(LonLat(latLng.longitude, latLng.latitude))
+            val tileLayer = TileLayer(TileLayerOptions(source = mapType.toOlSource()))
+            val vectorLayerForMaker = Vector(
+                VectorOptions(
+                    source = VectorSource(VectorSourceOptions(feature = Feature(Point(center)))),
+                    style = DEFAULT_MARKER_STYLE,
+                ),
+            )
+            val view = View(
+                ViewOptions(
+                    center = center,
+                    zoom = adjustedZoomLevel,
+                    maxZoom = MAX_ZOOM
                 )
-            ).addTo(map)
-            L.marker(arrayOf(latLng.latitude, latLng.longitude)).addTo(map)
-            Unit
+            )
+            map.apply {
+                setTarget("map")
+                setLayers(jsArrayOf(tileLayer, vectorLayerForMaker))
+                setView(view)
+            }
         },
     )
 }
+
+/**
+ * Converts map type to OpenLayers source
+ */
+private fun MapType.toOlSource() = when (this) {
+    MapType.Normal -> OSM()
+    MapType.Satellite -> XYZ(
+        XYZOptions(
+            attributions = "Tiles © <a href=\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer\">ArcGIS</a>",
+            url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        )
+    )
+}
+
+private val DEFAULT_MARKER_STYLE: VectorStyle = VectorStyle(
+    circleFillColor = "blue",
+    circleRadius = 10f,
+    circleStrokeColor = "white",
+)
+
+/**
+ * Satellite map view doesn't provide imagery beyond this zoom level
+ */
+private const val MAX_ZOOM = 18f

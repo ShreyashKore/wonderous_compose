@@ -59,7 +59,7 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
     * For IOS MKMapView is used.
     * For web [Wasm Html interop](https://github.com/Hamamas/Kotlin-Wasm-Html-Interop) library is
       used to draw DOM elements on canvas. This allows us to
-      use [leaflet.js](https://leafletjs.com/) and an iframe(for the satellite view) to show the
+      use [OpenLayers](https://openlayers.org/) and an iframe(for the satellite view) to show the
       map.
     * For desktop; mapview-desktop module is
       copied from the official

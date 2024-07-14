@@ -3,46 +3,37 @@ package ui.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import com.hamama.kwhi.HtmlView
-import leaflet.L
-import leaflet.setupMap
 import models.LatLng
 
 @Composable
 actual fun MapView(
     modifier: Modifier,
     latLng: LatLng,
+    selectedPos: Coordinate,
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
-    mapType: MapType
+    mapType: MapType,
+    onMapClick: (Coordinate) -> Unit,
 ) {
-    if (mapType == MapType.Satellite) {
-        HtmlView(
-            modifier = modifier,
-            factory = {
-                createElement("iframe").apply {
-                    setAttribute("width", "100%")
-                    setAttribute("height", "100%")
-                    setAttribute(
-                        "src",
-                        "//umap.openstreetmap.fr/en/map/my_1030003#7/${latLng.latitude}/${latLng.longitude}?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true"
-                    )
-                }
-            }
-        )
-        return
-    }
+    val zoomLevel = .05f
 
-    HtmlView(
+    val startScale = 60 / zoomLevel.toDouble()
+    example.map.MapView(
         modifier = modifier,
-        factory = {
-            createElement("div").apply {
-                id = "map"
-            }
+        userAgent = "wasm agent",
+        latitude = latLng.latitude,
+        longitude = latLng.longitude,
+        onMapViewClick = { lat, lng ->
+            onMapClick?.invoke(Coordinate(lat, lng))
+            onMapClick != null
         },
-        update = {
-            setupMap(L, "map", latLng.latitude, latLng.longitude, 260 * zoomLevel, 13f)
-        },
+        startScale = startScale,
+        consumeScroll = true,
+        enableParentScroll = { enabled -> parentScrollEnableState.value = enabled },
     )
 }
+
+const val MAP_DIV_ID = "map"
+const val EVENT_TYPE_MAP_CLICK = "map_click_custom"
+

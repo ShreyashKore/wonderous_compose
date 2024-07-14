@@ -205,7 +205,3 @@ compose.desktop {
         }
     }
 }
-
-compose.experimental {
-    web.application {}
-}

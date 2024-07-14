@@ -55,12 +55,13 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
   when they appear on the screen.
 * Map View demonstrates how KMP and Compose's interoperability layer can be used to embed native UIs
   in Compose.
-    * For Android Google Map compose library is used.
-    * For IOS MKMapView is used.
+    * For
+      Android [Google Map compose](https://developers.google.com/maps/documentation/android-sdk/maps-compose)
+      library is used.
+    * For IOS [MKMapView](https://developer.apple.com/documentation/mapkit/mkmapview) is used.
     * For web [Wasm Html interop](https://github.com/Hamamas/Kotlin-Wasm-Html-Interop) library is
       used to draw DOM elements on canvas. This allows us to
-      use [OpenLayers](https://openlayers.org/) and an iframe(for the satellite view) to show the
-      map.
+      use [OpenLayers](https://openlayers.org/) for displaying OpenStreet maps.
     * For desktop; mapview-desktop module is
       copied from the official
       [compose samples](https://github.com/JetBrains/compose-multiplatform/tree/master/examples/imageviewer/mapview-desktop).

@@ -1,4 +1,5 @@
 @file:JsModule("ol/proj.js")
+@file:JsNonModule
 
 package openlayers
 

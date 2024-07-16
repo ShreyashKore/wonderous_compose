@@ -1,6 +1,7 @@
 package openlayers
 
 @JsModule("ol/View.js")
+@JsNonModule
 external class View(options: ViewOptions)
 
 external interface ViewOptions {

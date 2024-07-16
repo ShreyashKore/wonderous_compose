@@ -2,8 +2,8 @@ package openlayers
 
 import kotlin.js.collections.JsArray
 
-
 @JsModule("ol/source/XYZ.js")
+@JsNonModule
 open external class XYZ(options: dynamic)
 
 external interface XYZOptions {
@@ -16,10 +16,12 @@ fun XYZOptions(attributions: String? = "", url: String? = ""): XYZOptions = js(
 )
 
 @JsModule("ol/source/OSM.js")
+@JsNonModule
 external class OSM : XYZ
 
 
 @JsModule("ol/source/Vector.js")
+@JsNonModule
 external class VectorSource(options: VectorSourceOptions)
 
 fun VectorSourceOptions(feature: Feature): VectorSourceOptions = js(

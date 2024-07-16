@@ -3,6 +3,7 @@ package openlayers
 external interface Layer
 
 @JsModule("ol/layer/Tile.js")
+@JsNonModule
 external class TileLayer(options: TileLayerOptions) : Layer
 
 external interface TileLayerOptions {
@@ -13,6 +14,7 @@ fun TileLayerOptions(source: XYZ): TileLayerOptions = js("({ 'source': source })
 
 
 @JsModule("ol/layer/Vector.js")
+@JsNonModule
 external class Vector(options: VectorOptions) : Layer
 
 fun VectorOptions(

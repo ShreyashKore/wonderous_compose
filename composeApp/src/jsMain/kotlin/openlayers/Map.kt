@@ -2,6 +2,7 @@ package openlayers
 
 import kotlin.js.collections.JsArray
 
+@JsNonModule
 @JsModule("ol/Map.js")
 external class Map {
     fun setTarget(target: String)

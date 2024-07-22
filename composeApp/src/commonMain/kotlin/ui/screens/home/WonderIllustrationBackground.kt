@@ -44,7 +44,6 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import models.Wonders
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.BackgroundTexture
 import ui.composables.IllustrationPiece
@@ -111,7 +110,6 @@ private fun BoxWithConstraintsScope.CelestialBody(
 )
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun BoxWithConstraintsScope.AnimatedCloud(
     isVisible: Boolean,

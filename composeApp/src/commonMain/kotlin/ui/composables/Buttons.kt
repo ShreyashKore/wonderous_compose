@@ -30,7 +30,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.theme.greyStrong
@@ -39,7 +38,7 @@ import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.github_logo
 import wonderouscompose.composeapp.generated.resources.icon_prev
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun AppIconButton(
     icon: DrawableResource,
@@ -87,7 +86,7 @@ fun LongButton(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun GithubButton() {
     val uriHandler = LocalUriHandler.current
@@ -108,7 +107,7 @@ fun GithubButton() {
     )
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Preview
 @Composable
 fun PreviewButtons() = MaterialTheme {

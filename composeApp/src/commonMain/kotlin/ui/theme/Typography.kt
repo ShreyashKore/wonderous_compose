@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import wonderouscompose.composeapp.generated.resources.B612Mono_Regular
 import wonderouscompose.composeapp.generated.resources.CinzelDecorative_Black
@@ -27,7 +26,7 @@ import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.TenorSans_Regular
 import wonderouscompose.composeapp.generated.resources.YesevaOne_Regular
 
-@OptIn(ExperimentalResourceApi::class)
+
 val Cinzel
     @Composable get() = FontFamily(
         Font(Res.font.CinzelDecorative_Regular, FontWeight.Normal, FontStyle.Normal),
@@ -35,7 +34,7 @@ val Cinzel
         Font(Res.font.CinzelDecorative_Black, FontWeight.Black, FontStyle.Normal),
     )
 
-@OptIn(ExperimentalResourceApi::class)
+
 val Raleway
     @Composable get() = FontFamily(
         Font(Res.font.Raleway_Regular, FontWeight.Normal, FontStyle.Normal),
@@ -48,25 +47,25 @@ val Raleway
         Font(Res.font.Raleway_BoldItalic, FontWeight.Bold, FontStyle.Italic),
     )
 
-@OptIn(ExperimentalResourceApi::class)
+
 val MaShanZheng
     @Composable get() = FontFamily(
         Font(Res.font.MaShanZheng_Regular, FontWeight.Normal, FontStyle.Normal),
     )
 
-@OptIn(ExperimentalResourceApi::class)
+
 val B612Mono
     @Composable get() = FontFamily(
         Font(Res.font.B612Mono_Regular, FontWeight.Normal, FontStyle.Normal),
     )
 
-@OptIn(ExperimentalResourceApi::class)
+
 val TenorSans
     @Composable get() = FontFamily(
         Font(Res.font.TenorSans_Regular, FontWeight.Normal, FontStyle.Normal),
     )
 
-@OptIn(ExperimentalResourceApi::class)
+
 val YesevaOne
     @Composable get() = FontFamily(
         Font(Res.font.YesevaOne_Regular, FontWeight.Normal, FontStyle.Normal),

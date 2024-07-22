@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.screens.WonderDetailsScreen.ArtifactCarousel
 import ui.screens.WonderDetailsScreen.Editorial
@@ -225,7 +224,6 @@ private fun NavigationBar(
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun WonderButton(
     wonder: Wonder,

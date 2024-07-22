@@ -81,7 +81,6 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import models.Wonders
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.composables.AppIconButton
 import ui.composables.GithubButton
 import ui.composables.PreviousNextNavigation
@@ -444,7 +443,7 @@ val Wonder.bgTextureColor
         TajMahal -> Color(0xFFC96454)
     }
 
-@OptIn(ExperimentalResourceApi::class)
+
 val Wonder.bgTexture
     get() = when (this) {
         ChristRedeemer, Colosseum, MachuPicchu, Petra -> Res.drawable.roller_1_white

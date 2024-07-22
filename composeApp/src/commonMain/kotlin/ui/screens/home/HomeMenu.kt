@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.AppIconButton
 import ui.composables.SimpleGrid
@@ -56,7 +55,7 @@ import wonderouscompose.composeapp.generated.resources.icon_collection
 import wonderouscompose.composeapp.generated.resources.icon_info
 import wonderouscompose.composeapp.generated.resources.icon_timeline
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun HomeMenu(
     data: Wonder,
@@ -134,7 +133,7 @@ fun HomeMenu(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun AppHeader(
     onClickClose: () -> Unit,
@@ -159,7 +158,7 @@ val wondersWithCentralNullElement = Wonders.toMutableList<Wonder?>().apply {
     add(4, null)
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun WonderBtnsGrid(
     currentWonder: Wonder,
@@ -207,7 +206,6 @@ fun WonderBtnsGrid(
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun BottomButton(
     onClick: () -> Unit,

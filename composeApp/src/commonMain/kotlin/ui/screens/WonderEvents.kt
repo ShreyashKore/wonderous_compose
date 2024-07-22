@@ -37,7 +37,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.composables.WonderTitleText
@@ -46,15 +45,11 @@ import ui.screens.timeline.components.SmallTimeline
 import ui.screens.timeline.components.TimelineEventCard
 import ui.theme.accent2
 import ui.theme.black
-import ui.theme.greyStrong
-import ui.theme.white
 import ui.utils.filePainterResource
-import utils.StringUtils.getYrSuffix
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.tab_timeline
 
 @OptIn(
-    ExperimentalResourceApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable

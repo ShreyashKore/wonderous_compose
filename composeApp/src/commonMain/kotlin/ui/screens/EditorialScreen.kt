@@ -4,7 +4,6 @@ import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
@@ -103,7 +102,6 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
@@ -544,7 +542,6 @@ fun InfoText(
 /**
  * Top rotating title to indicate current section
  */
-@OptIn(ExperimentalAnimationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun InfoTitle(
     wonderColor: Color,
@@ -671,7 +668,6 @@ private fun Quote(
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun PullQuote1(
     bgImage: String,
@@ -727,7 +723,7 @@ fun PullQuote1(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun ParallaxImages(
     parallaxProgress: Float,

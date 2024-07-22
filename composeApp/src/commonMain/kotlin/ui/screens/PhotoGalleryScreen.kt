@@ -51,7 +51,6 @@ import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
 
 import models.Wonder
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.composables.SimpleGrid
 import ui.theme.black
 import ui.utils.eightWaySwipeDetector
@@ -216,7 +215,6 @@ private fun OverlayWithAnimatedCutOut(
 }
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun UnsplashImage(
     modifier: Modifier = Modifier,

@@ -17,11 +17,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import ui.utils.filePainterResource
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 fun IllustrationPiece(
     isVisible: Boolean,

@@ -8,12 +8,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import localization.LocalLocaleState
 import org.jetbrains.compose.resources.Font
 import wonderouscompose.composeapp.generated.resources.B612Mono_Regular
 import wonderouscompose.composeapp.generated.resources.CinzelDecorative_Black
 import wonderouscompose.composeapp.generated.resources.CinzelDecorative_Bold
 import wonderouscompose.composeapp.generated.resources.CinzelDecorative_Regular
 import wonderouscompose.composeapp.generated.resources.MaShanZheng_Regular
+import wonderouscompose.composeapp.generated.resources.NotoSansSC_Bold
+import wonderouscompose.composeapp.generated.resources.NotoSansSC_Regular
+import wonderouscompose.composeapp.generated.resources.NotoSans_Bold
+import wonderouscompose.composeapp.generated.resources.NotoSans_Regular
 import wonderouscompose.composeapp.generated.resources.Raleway_Bold
 import wonderouscompose.composeapp.generated.resources.Raleway_BoldItalic
 import wonderouscompose.composeapp.generated.resources.Raleway_ExtraBold
@@ -47,6 +52,18 @@ val Raleway
         Font(Res.font.Raleway_BoldItalic, FontWeight.Bold, FontStyle.Italic),
     )
 
+val NotoSans
+    @Composable get() = FontFamily(
+        Font(Res.font.NotoSans_Regular, FontWeight.Normal, FontStyle.Normal),
+        Font(Res.font.NotoSans_Bold, FontWeight.Bold, FontStyle.Normal),
+    )
+
+val NotoSansSc
+    @Composable get() = FontFamily(
+        Font(Res.font.NotoSansSC_Regular, FontWeight.Normal, FontStyle.Normal),
+        Font(Res.font.NotoSansSC_Bold, FontWeight.Bold, FontStyle.Normal),
+    )
+
 
 val MaShanZheng
     @Composable get() = FontFamily(
@@ -71,17 +88,92 @@ val YesevaOne
         Font(Res.font.YesevaOne_Regular, FontWeight.Normal, FontStyle.Normal),
     )
 
+
+val displayLargeFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway, fontSize = 72.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 72.sp)
+        else -> default
+    }
+
+val displayMediumFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway, fontSize = 62.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 62.sp)
+        else -> default
+    }
+
+
+val displaySmallFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway, fontSize = 56.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 56.sp)
+        else -> default
+    }
+
+val titleLargeFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = YesevaOne, fontSize = 52.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 42.sp)
+        else -> default
+    }
+
+val titleMediumFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = YesevaOne, fontSize = 28.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 26.sp)
+        else -> default
+    }
+
+
+val titleSmallFont: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = TenorSans, fontSize = 18.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 18.sp)
+        else -> default
+    }
+
+val bodyLarge: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway, fontSize = 18.sp)
+        "hi" -> TextStyle(fontFamily = NotoSans, fontSize = 18.sp)
+        else -> default
+    }
+
+val bodyMedium: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway)
+        "hi" -> TextStyle(fontFamily = NotoSans)
+        else -> default
+    }
+
+val bodySmall: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "en" -> TextStyle(fontFamily = Raleway)
+        "hi" -> TextStyle(fontFamily = NotoSans)
+        else -> default
+    }
+
+val default: TextStyle
+    @Composable get() = when (LocalLocaleState.current.languageTag) {
+        "zh" -> TextStyle(fontFamily = NotoSansSc)
+        else -> TextStyle(fontFamily = NotoSans)
+    }
+
 val Typography
     @Composable get() = Typography(
-        displayLarge = TextStyle(fontFamily = Raleway, fontSize = 72.sp),
-        displayMedium = TextStyle(fontFamily = Raleway, fontSize = 62.sp),
-        displaySmall = TextStyle(fontFamily = Cinzel, fontSize = 56.sp),
-        titleLarge = TextStyle(fontFamily = YesevaOne, fontSize = 52.sp),
-        titleMedium = TextStyle(fontFamily = YesevaOne, fontSize = 28.sp),
-        titleSmall = TextStyle(fontFamily = TenorSans, fontSize = 18.sp),
-        bodyLarge = TextStyle(fontFamily = Raleway, fontSize = 18.sp),
-        bodyMedium = TextStyle(fontFamily = Raleway),
-        bodySmall = TextStyle(fontFamily = Raleway),
+        displayLarge = displayLargeFont,
+        displayMedium = displayMediumFont,
+        displaySmall = displaySmallFont,
+        titleLarge = titleLargeFont,
+        titleMedium = titleMediumFont,
+        titleSmall = titleSmallFont,
+        bodyLarge = bodyLarge,
+        bodyMedium = bodyMedium,
+        bodySmall = bodySmall,
+        labelLarge = default.copy(fontSize = 13.sp),
+        labelMedium = default.copy(fontSize = 11.sp),
+        labelSmall = default.copy(fontSize = 9.sp),
     )
 
 val Typography.quoteFont: TextStyle

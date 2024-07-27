@@ -119,6 +119,7 @@ fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     sharedTransitionScope: SharedTransitionScope,
     onChangeCurrentWonder: (Wonder) -> Unit,
+    onChangeLanguage: (String) -> Unit
 ) = BoxWithConstraints(modifier) {
     val scope = rememberCoroutineScope()
     val maxWidth = maxWidth
@@ -305,6 +306,7 @@ fun HomeScreen(
             },
             modifier = Modifier.fillMaxSize().background(greyStrong.copy(.4f)),
             openTimeline = { openTimelineScreen(currentWonder) },
+            onChangeLanguage = onChangeLanguage,
             openCollection = {}
         )
     }

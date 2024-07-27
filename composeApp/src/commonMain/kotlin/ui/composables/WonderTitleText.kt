@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.sp
 import models.ChristRedeemer
 import models.Colosseum
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.taj_mahal_title
 
 
 @Composable
@@ -35,7 +38,9 @@ fun WonderTitleText(
         shadow = if (enableShadows) Shadow() else null,
     )
 
-    val pieces = wonder.title.lowercase().split(" ")
+    Res.string.taj_mahal_title
+    val title = stringResource(Res.string.taj_mahal_title)
+    val pieces = title.lowercase().split(" ")
 
     // TextSpan builder, figures out whether to use small text, and adds linebreak or space (or nothing).
     fun AnnotatedString.Builder.buildTextSpan(text: String) {

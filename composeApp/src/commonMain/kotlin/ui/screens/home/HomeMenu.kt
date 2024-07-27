@@ -41,6 +41,7 @@ import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import platform.changeLanguage
 import ui.composables.AppIconButton
 import ui.composables.SimpleGrid
 import ui.homeBtnImage
@@ -81,7 +82,7 @@ fun HomeMenu(
         // AppHeader
         AppHeader(
             onClickClose = onPressBack,
-            onToggleLanguage = { /* TODO - localization */ },
+            onToggleLanguage = { changeLanguage("hi") },
         )
 
         // Content

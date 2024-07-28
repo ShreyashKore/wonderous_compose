@@ -44,6 +44,7 @@ import data.search_data.TajMahalSearchSuggestions
 import models.SearchData
 import models.TajMahal
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.BackButton
 import ui.theme.Raleway
@@ -52,6 +53,8 @@ import ui.theme.accent1
 import ui.theme.black
 import ui.theme.white
 import utils.prependProxy
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.artifactsSearchTitleBrowse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,7 +81,12 @@ fun ArtifactListScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("BROWSE ARTIFACTS", fontSize = 12.sp, color = white, fontFamily = Raleway)
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(wonder.title, color = accent1, fontSize = 18.sp, fontFamily = TenorSans)
+                    Text(
+                        stringResource(wonder.title),
+                        color = accent1,
+                        fontSize = 18.sp,
+                        fontFamily = TenorSans
+                    )
                 }
             },
             navigationIcon = {

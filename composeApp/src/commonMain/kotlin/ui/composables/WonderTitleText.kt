@@ -3,6 +3,7 @@ package ui.composables
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -19,8 +20,6 @@ import models.ChristRedeemer
 import models.Colosseum
 import models.Wonder
 import org.jetbrains.compose.resources.stringResource
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.taj_mahal_title
 
 
 @Composable
@@ -38,8 +37,7 @@ fun WonderTitleText(
         shadow = if (enableShadows) Shadow() else null,
     )
 
-    Res.string.taj_mahal_title
-    val title = stringResource(Res.string.taj_mahal_title)
+    val title = stringResource(wonder.title)
     val pieces = title.lowercase().split(" ")
 
     // TextSpan builder, figures out whether to use small text, and adds linebreak or space (or nothing).
@@ -58,8 +56,10 @@ fun WonderTitleText(
         }
     }
 
-    val annotatedString = buildAnnotatedString {
-        pieces.forEach { buildTextSpan(it) }
+    val annotatedString = remember(title) {
+        buildAnnotatedString {
+            pieces.forEach { buildTextSpan(it) }
+        }
     }
     Text(annotatedString, modifier = modifier, textAlign = TextAlign.Center)
 }

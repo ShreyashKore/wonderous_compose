@@ -223,7 +223,7 @@ fun HomeScreen(
                             filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                             contentDescription = "main",
                             modifier = Modifier.sharedBounds(
-                                rememberSharedContentState("image-${wonder.title}"),
+                                rememberSharedContentState(key = "image-${wonder.name}"),
                                 animatedVisibilityScope
                             ).graphicsLayer {
                                 val scale = 1 - swipeUpProgress * .01f
@@ -257,7 +257,7 @@ fun HomeScreen(
                         WonderTitleText(
                             currentWonder,
                             modifier = Modifier.sharedBounds(
-                                rememberSharedContentState(currentWonder.title),
+                                rememberSharedContentState(key = currentWonder.name),
                                 animatedVisibilityScope,
                                 zIndexInOverlay = 1f
                             ).padding(vertical = 16.dp),

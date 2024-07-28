@@ -19,7 +19,8 @@ import data.search_data.TajMahalSearchSuggestions
 
 
 sealed class Wonder(
-    val title: String,
+    val name: String,
+    val title: StringResource,
     val subTitle: String,
     val regionTitle: String,
     val historyInfo1: String,
@@ -56,7 +57,8 @@ sealed class Wonder(
     val searchSuggestions: List<String> = emptyList(),
 ) {
     val latLng get() = LatLng(lat, lng)
-    val titleWithBreaks: String get() = title.replaceFirst(' ', '\n')
+    
+    val titleWithBreaks: String @Composable get() = stringResource(title).replaceFirst(' ', '\n')
 
     companion object
 }
@@ -66,15 +68,17 @@ val Wonders = listOf(
     TajMahal, ChristRedeemer, PyramidsGiza,
 )
 
+@Composable
 fun Wonder.Companion.parse(name: String?): Wonder {
     if (name == null) return ChichenItza
     return Wonders.firstOrNull {
-        it.title.lowercase() == name.lowercase()
+        it.name.lowercase() == name.lowercase()
     } ?: GreatWall
 }
 
 data object ChichenItza : Wonder(
-    title = "Chichen Itza",
+    name = "ChichenItza",
+    title = Res.string.chichenItzaTitle,
     subTitle = "The Great Mayan City",
     regionTitle = "Yucatan, Mexico",
     startYr = 550,
@@ -112,7 +116,8 @@ data object ChichenItza : Wonder(
 )
 
 data object ChristRedeemer : Wonder(
-    title = "Christ the Redeemer",
+    name = "ChristRedeemer",
+    title = Res.string.christRedeemerTitle,
     subTitle = "A symbol of peace",
     regionTitle = "Rio de Janeiro, Brazil",
     artifactGeolocation = "Brazil",
@@ -152,7 +157,8 @@ data object ChristRedeemer : Wonder(
 )
 
 data object Petra : Wonder(
-    title = "Petra",
+    name = "Petra",
+    title = Res.string.petraTitle,
     subTitle = "The Lost City",
     regionTitle = "Ma’an, Jordan",
     artifactCulture = "Nabataean",
@@ -193,7 +199,8 @@ data object Petra : Wonder(
 )
 
 data object Colosseum : Wonder(
-    title = "Colosseum",
+    name = "Colosseum",
+    title = Res.string.colosseumTitle,
     subTitle = "The icon of Rome",
     regionTitle = "Rome, Italy",
     artifactCulture = "Roman",
@@ -234,7 +241,8 @@ data object Colosseum : Wonder(
 )
 
 data object PyramidsGiza : Wonder(
-    title = "Pyramids of Giza",
+    name = "PyramidsGiza",
+    title = Res.string.pyramidsGizaTitle,
     subTitle = "The ancient wonder",
     regionTitle = "Cairo, Egypt",
     artifactCulture = "Egyptian",
@@ -275,7 +283,8 @@ data object PyramidsGiza : Wonder(
 )
 
 data object MachuPicchu : Wonder(
-    title = "Machu Picchu",
+    name = "MachuPicchu",
+    title = Res.string.machuPicchuTitle,
     subTitle = "Citadel of the Inca",
     regionTitle = "Cusco Region, Peru",
     artifactCulture = "Inca",
@@ -315,7 +324,8 @@ data object MachuPicchu : Wonder(
 )
 
 data object GreatWall : Wonder(
-    title = "The Great Wall",
+    name = "GreatWall",
+    title = Res.string.greatWallTitle,
     subTitle = "Longest structure on Earth",
     regionTitle = "China",
     artifactCulture = "Chinese",
@@ -354,7 +364,8 @@ data object GreatWall : Wonder(
 )
 
 data object TajMahal : Wonder(
-    title = "Taj Mahal",
+    name = "TajMahal",
+    title = Res.string.tajMahalTitle,
     subTitle = "Heaven on Earth",
     regionTitle = "Agra, India",
     artifactCulture = "Mughal",

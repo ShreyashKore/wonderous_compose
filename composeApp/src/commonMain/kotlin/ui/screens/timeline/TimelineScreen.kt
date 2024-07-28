@@ -77,6 +77,7 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.TimelineEvent
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import platform.Platform
 import ui.composables.AppIconButton
@@ -337,7 +338,7 @@ fun WonderTrackWithStickyImage(
                     val vertOffset = lerp(0, offsetEnd.toPx().roundToInt(), curFraction)
                     IntOffset(0, vertOffset)
                 }.clip(CircleShape),
-            contentDescription = wonder.title,
+            contentDescription = stringResource(wonder.title),
             contentScale = ContentScale.Crop,
             colorFilter = if (isSelected) null else ColorFilter.tint(
                 color = wonder.fgColor, blendMode = blendMode

@@ -194,7 +194,7 @@ fun SharedTransitionScope.EditorialScreen(
                 filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                 modifier = Modifier
                     .sharedBounds(
-                        rememberSharedContentState("image-${wonder.title}"),
+                        rememberSharedContentState(key = "image-${wonder.name}"),
                         animatedVisibilityScope
                     )
                     .align(wonder.mainImageAlignment)
@@ -257,7 +257,7 @@ fun SharedTransitionScope.EditorialScreen(
                 WonderTitleText(
                     wonder,
                     Modifier.sharedBounds(
-                        rememberSharedContentState(wonder.title),
+                        rememberSharedContentState(key = wonder.name),
                         animatedVisibilityScope,
                         zIndexInOverlay = 1f
                     )

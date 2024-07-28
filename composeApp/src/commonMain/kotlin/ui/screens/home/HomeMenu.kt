@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -37,15 +39,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import platform.changeLanguage
 import ui.composables.AppIconButton
 import ui.composables.SimpleGrid
 import ui.homeBtnImage
 import ui.theme.fgColor
+import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
 import ui.utils.filePainterResource
@@ -55,6 +60,7 @@ import wonderouscompose.composeapp.generated.resources.icon_close
 import wonderouscompose.composeapp.generated.resources.icon_collection
 import wonderouscompose.composeapp.generated.resources.icon_info
 import wonderouscompose.composeapp.generated.resources.icon_timeline
+import wonderouscompose.composeapp.generated.resources.language
 
 
 @Composable
@@ -82,7 +88,7 @@ fun HomeMenu(
         // AppHeader
         AppHeader(
             onClickClose = onPressBack,
-            onToggleLanguage = { changeLanguage("hi") },
+            onChangeLanguage = { changeLanguage(it) },
         )
 
         // Content
@@ -138,8 +144,10 @@ fun HomeMenu(
 @Composable
 fun AppHeader(
     onClickClose: () -> Unit,
-    onToggleLanguage: () -> Unit,
+    onChangeLanguage: (tag: String) -> Unit,
 ) {
+    var showLanguagePopup by remember { mutableStateOf(false) }
+
     Row(Modifier.fillMaxWidth().safeDrawingPadding().height(72.dp).padding(8.dp)) {
         AppIconButton(
             icon = Res.drawable.icon_close,
@@ -147,11 +155,35 @@ fun AppHeader(
             onClick = onClickClose,
         )
         Spacer(Modifier.weight(1f))
-        AppIconButton(
-            icon = Res.drawable.icon_close,
-            contentDescription = "Change Language",
-            onClick = onToggleLanguage,
-        )
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = greyStrong, contentColor = white
+            ),
+            onClick = {
+                showLanguagePopup = !showLanguagePopup
+            },
+        ) {
+            Text(stringResource(Res.string.language))
+        }
+        if (showLanguagePopup) {
+            Popup(
+                alignment = Alignment.TopEnd,
+                onDismissRequest = { showLanguagePopup = false }
+            ) {
+                Column(
+                    Modifier.clip(RoundedCornerShape(8.dp)).background(white).padding(8.dp)
+                ) {
+                    languageOptions.map {
+                        TextButton(onClick = {
+                            onChangeLanguage(it.value)
+                            showLanguagePopup = false
+                        }) {
+                            Text(it.key)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -188,7 +220,7 @@ fun WonderBtnsGrid(
         else
             Image(
                 filePainterResource(wonder.homeBtnImage),
-                contentDescription = wonder.title,
+                contentDescription = stringResource(wonder.title),
                 modifier = Modifier
                     .size(btnSize)
                     .padding(8.dp)
@@ -235,3 +267,9 @@ private fun BottomButton(
         }
     }
 }
+
+private val languageOptions = mutableMapOf(
+    "English" to "en",
+    "हिंदी" to "hi",
+    "中文" to "zh"
+)

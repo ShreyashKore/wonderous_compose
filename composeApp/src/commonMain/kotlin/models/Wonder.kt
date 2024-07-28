@@ -1,5 +1,7 @@
 package models
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import data.search_data.ChichenSearchData
 import data.search_data.ChichenSearchSuggestions
 import data.search_data.ChristRedeemerSearchData
@@ -16,11 +18,13 @@ import data.search_data.PyramidsGizaSearchData
 import data.search_data.PyramidsGizaSearchSuggestions
 import data.search_data.TajMahalSearchData
 import data.search_data.TajMahalSearchSuggestions
+import localization.LocalStrings
 
 
-sealed class Wonder(
-    val title: String,
-    val subTitle: String,
+sealed class Wonder {
+    @get:Composable
+    abstract val title: String
+    abstract val subTitle: String
     val regionTitle: String,
     val historyInfo1: String,
     val historyInfo2: String,
@@ -50,11 +54,13 @@ sealed class Wonder(
     val lat: Double = 0.0,
     val lng: Double = 0.0,
     val highlightArtifacts: List<String> = emptyList(), // IDs used to assemble HighlightsData: String, should not be used directly
+
     val hiddenArtifacts: List<String> = emptyList(), // IDs used to assemble CollectibleData: String, should not be used directly
-    val events: Map<Int, String>,
+
+    @get:Composable
+    abstract val events: Map<Int, String>
     val searchData: List<SearchData> = emptyList(),
     val searchSuggestions: List<String> = emptyList(),
-) {
     val latLng get() = LatLng(lat, lng)
     val titleWithBreaks: String get() = title.replaceFirst(' ', '\n')
 
@@ -66,6 +72,7 @@ val Wonders = listOf(
     TajMahal, ChristRedeemer, PyramidsGiza,
 )
 
+@Composable
 fun Wonder.Companion.parse(name: String?): Wonder {
     if (name == null) return ChichenItza
     return Wonders.firstOrNull {
@@ -73,12 +80,13 @@ fun Wonder.Companion.parse(name: String?): Wonder {
     } ?: GreatWall
 }
 
-data object ChichenItza : Wonder(
-    title = "Chichen Itza",
-    subTitle = "The Great Mayan City",
-    regionTitle = "Yucatan, Mexico",
-    startYr = 550,
-    endYr = 1550,
+data object ChichenItza : Wonder() {
+
+    override val title @Composable get() = LocalStrings.chichenItzaTitle
+    override val subTitle get() = "The Great Mayan City"
+    override val regionTitle get() = "Yucatan, Mexico"
+    override val startYr get() = 550
+    override val endYr get() = 1550
     artifactStartYr = 500,
     artifactEndYr = 1600,
     historyInfo1 = "Chichen Itza was a powerful regional capital controlling north and central Yucatán. The earliest hieroglyphic date discovered at Chichen Itza is equivalent to 832 CE, while the last known date was recorded in the Osario temple in 998 CE.\nDominating the North Platform of Chichen Itza is the famous Temple of Kukulcán. The temple was identified by the first Spaniards to see it, as El Castillo (\"the castle\"), and it regularly is referred to as such. The temple was identified by the first Spaniards to see it, as El Castillo (\"the castle\"), and it regularly is referred to as such.",
@@ -98,18 +106,20 @@ data object ChichenItza : Wonder(
     videoCaption = "“Ancient Maya 101 | National Geographic.” Youtube, uploaded by National Geographic.",
     lat = 20.68346184201756,
     lng = -88.56769676930931,
-    events = mapOf(
-        600 to "Chichen Itza rises to regional prominence toward the end of the Early Classic period",
+
+    override val events: Map<Int, String> @Composable get() = mapOf(
+        600 to LocalStrings.chichenItzaTitle,
         832 to "The earliest hieroglyphic date discovered at Chichen Itza",
         998 to "Last known date recorded in the Osario temple",
         1100 to "Chichen Itza declines as a regional center",
         1527 to "Invaded by Spanish Conquistador Francisco de Montejo",
         1535 to "All Spanish are driven from the Yucatán Peninsula",
-    ),
+    )
     searchData = ChichenSearchData,
     searchSuggestions = ChichenSearchSuggestions,
     unsplashCollectionId = "SUK0tuMnLLw"
-)
+
+}
 
 data object ChristRedeemer : Wonder(
     title = "Christ the Redeemer",

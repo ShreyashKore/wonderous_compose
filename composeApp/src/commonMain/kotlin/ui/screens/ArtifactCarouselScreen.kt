@@ -60,6 +60,7 @@ import data.HighlightData
 import kotlinx.coroutines.launch
 import models.ChichenItza
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.AppIconButton
 import ui.composables.LongButton
@@ -70,6 +71,8 @@ import ui.theme.greyStrong
 import ui.theme.offWhite
 import ui.theme.white
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.artifactsButtonBrowse
+import wonderouscompose.composeapp.generated.resources.artifactsTitleArtifacts
 import wonderouscompose.composeapp.generated.resources.icon_search
 import kotlin.math.absoluteValue
 
@@ -137,7 +140,7 @@ fun ArtifactCarouselScreen(
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    "ARTIFACTS",
+                    stringResource(Res.string.artifactsTitleArtifacts),
                     style = MaterialTheme.typography.bodyLarge,
                     color = white
                 )
@@ -145,7 +148,7 @@ fun ArtifactCarouselScreen(
             actions = {
                 AppIconButton(
                     icon = Res.drawable.icon_search,
-                    contentDescription = "Search",
+                    contentDescription = stringResource(Res.string.artifactsButtonBrowse),
                     onClick = openAllArtifactsScreen,
                 )
             },
@@ -234,7 +237,7 @@ fun ArtifactCarouselScreen(
                 Spacer(Modifier.height(24.dp))
 
                 LongButton(
-                    label = "BROWSE ALL ARTIFACTS",
+                    label = stringResource(Res.string.artifactsButtonBrowse),
                     onClick = openAllArtifactsScreen,
                     modifier = Modifier.widthIn(max = 400.dp)
                 )

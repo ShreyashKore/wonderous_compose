@@ -102,6 +102,7 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import ui.composables.AppIconButton
@@ -129,10 +130,15 @@ import ui.theme.white
 import ui.utils.filePainterResource
 import utils.StringUtils
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.appBarTitleConstruction
+import wonderouscompose.composeapp.generated.resources.appBarTitleFactsHistory
+import wonderouscompose.composeapp.generated.resources.appBarTitleLocation
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDate
 import wonderouscompose.composeapp.generated.resources.construction
 import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
 import wonderouscompose.composeapp.generated.resources.icon_next
+import wonderouscompose.composeapp.generated.resources.semanticsNext
 
 
 @OptIn(
@@ -274,8 +280,10 @@ fun SharedTransitionScope.EditorialScreen(
                     isExpanded = scrollState.firstVisibleItemScrollOffset < 100
                 )
                 Text(
-                    StringUtils.formatYr(wonder.startYr) + " to " + StringUtils.formatYr(
-                        wonder.endYr
+                    stringResource(
+                        Res.string.artifactDetailsLabelDate,
+                        StringUtils.formatYr(wonder.startYr),
+                        StringUtils.formatYr(wonder.endYr)
                     ),
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
@@ -483,7 +491,7 @@ fun SharedTransitionScope.EditorialScreen(
                         .widthIn(max = 450.dp)
                         .clip(RoundedCornerShape(4.dp)),
                     latLng = wonder.latLng,
-                    title = "Map",
+                    title = wonder.mapCaption?.let { stringResource(it) } ?: "",
                     zoomLevel = .05f,
                     mapType = MapType.Normal,
                 )
@@ -497,7 +505,7 @@ fun SharedTransitionScope.EditorialScreen(
     ) {
         AppIconButton(
             Res.drawable.icon_next,
-            contentDescription = "Next",
+            contentDescription = stringResource(Res.string.semanticsNext),
             onClick = openHomeScreen,
             modifier = Modifier
                 .rotate(-90f)
@@ -592,7 +600,8 @@ fun InfoTitle(
                 transitionSpec = { fadeIn(tween) togetherWith fadeOut(tween) },
             ) { infoSection ->
                 CircularText(
-                    text = infoSection.title.toCharArray()
+                    // TODO: use grapheme splitting
+                    text = stringResource(infoSection.title).toCharArray()
                         .map { it.toString() }, // Circular Text needs individual letters (graphemes)
                     radius = 90.dp,
                     textStyle = TextStyle(fontSize = 16.sp, fontFamily = B612Mono, color = accent1),
@@ -770,10 +779,10 @@ fun ParallaxImages(
     }
 }
 
-enum class InfoSection(val title: String, val imageDrawable: DrawableResource) {
-    FactsAndHistory("FACTS & HISTORY", Res.drawable.history),
-    Construction("CONSTRUCTION", Res.drawable.construction),
-    Location("LOCATION", Res.drawable.geography)
+enum class InfoSection(val title: StringResource, val imageDrawable: DrawableResource) {
+    FactsAndHistory(Res.string.appBarTitleFactsHistory, Res.drawable.history),
+    Construction(Res.string.appBarTitleConstruction, Res.drawable.construction),
+    Location(Res.string.appBarTitleLocation, Res.drawable.geography)
 }
 
 private val Wonder.cutoutShape

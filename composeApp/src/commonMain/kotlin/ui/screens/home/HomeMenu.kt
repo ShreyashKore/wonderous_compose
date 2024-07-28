@@ -55,7 +55,11 @@ import ui.theme.offWhite
 import ui.theme.white
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.circleButtonsSemanticClose
 import wonderouscompose.composeapp.generated.resources.compass_full
+import wonderouscompose.composeapp.generated.resources.homeMenuButtonAbout
+import wonderouscompose.composeapp.generated.resources.homeMenuButtonExplore
+import wonderouscompose.composeapp.generated.resources.homeMenuButtonView
 import wonderouscompose.composeapp.generated.resources.icon_close
 import wonderouscompose.composeapp.generated.resources.icon_collection
 import wonderouscompose.composeapp.generated.resources.icon_info
@@ -119,19 +123,19 @@ fun HomeMenu(
                 BottomButton(
                     onClick = openTimeline,
                     icon = Res.drawable.icon_timeline,
-                    text = "Explore the timeline"
+                    text = stringResource(Res.string.homeMenuButtonExplore)
                 )
                 HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = openCollection,
                     icon = Res.drawable.icon_collection,
-                    text = "View your collections"
+                    text = stringResource(Res.string.homeMenuButtonView)
                 )
                 HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
                 BottomButton(
                     onClick = { isAboutDialogOpen = true },
                     icon = Res.drawable.icon_info,
-                    text = "About this app"
+                    text = stringResource(Res.string.homeMenuButtonAbout)
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -151,7 +155,7 @@ fun AppHeader(
     Row(Modifier.fillMaxWidth().safeDrawingPadding().height(72.dp).padding(8.dp)) {
         AppIconButton(
             icon = Res.drawable.icon_close,
-            contentDescription = "Close",
+            contentDescription = stringResource(Res.string.circleButtonsSemanticClose),
             onClick = onClickClose,
         )
         Spacer(Modifier.weight(1f))
@@ -243,7 +247,7 @@ fun WonderBtnsGrid(
 private fun BottomButton(
     onClick: () -> Unit,
     icon: DrawableResource,
-    text: String
+    text: String,
 ) {
     TextButton(
         onClick = onClick,

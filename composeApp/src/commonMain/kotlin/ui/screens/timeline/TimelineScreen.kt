@@ -96,7 +96,9 @@ import ui.utils.lerp
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.circleButtonsSemanticClose
 import wonderouscompose.composeapp.generated.resources.icon_prev
+import wonderouscompose.composeapp.generated.resources.timelineTitleGlobalTimeline
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -213,12 +215,16 @@ fun TimelineScreen(
             titleContentColor = white,
         ),
         title = {
-            Text("GLOBAL TIMELINE", fontSize = 14.sp, fontFamily = Raleway)
+            Text(
+                stringResource(Res.string.timelineTitleGlobalTimeline),
+                fontSize = 14.sp,
+                fontFamily = Raleway
+            )
         },
         navigationIcon = {
             AppIconButton(
                 icon = Res.drawable.icon_prev,
-                contentDescription = "Back",
+                contentDescription = stringResource(Res.string.circleButtonsSemanticClose),
                 onClick = onClickBack,
             )
         },

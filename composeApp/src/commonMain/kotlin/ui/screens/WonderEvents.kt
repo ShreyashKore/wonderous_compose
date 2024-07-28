@@ -34,6 +34,8 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
@@ -48,7 +50,9 @@ import ui.theme.accent2
 import ui.theme.black
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.eventsListButtonOpenGlobal
 import wonderouscompose.composeapp.generated.resources.tab_timeline
+import wonderouscompose.composeapp.generated.resources.timelineTitleGlobalTimeline
 
 @OptIn(
     ExperimentalMaterial3Api::class
@@ -86,7 +90,8 @@ fun WonderEvents(
     @Composable
     fun NavigateToTimelineBtn() {
         LongButton(
-            label = "OPEN GLOBAL TIMELINE",
+            label = stringResource(Res.string.timelineTitleGlobalTimeline)
+                .capitalize(Locale.current),
             onClick = navigateToTimeline,
             modifier = Modifier
                 .fillMaxWidth()
@@ -206,7 +211,7 @@ fun WonderEvents(
         actions = {
             AppIconButton(
                 icon = Res.drawable.tab_timeline,
-                contentDescription = "Open Timeline",
+                contentDescription = stringResource(Res.string.eventsListButtonOpenGlobal),
                 onClick = navigateToTimeline
             )
         },

@@ -27,7 +27,7 @@ fun WonderTitleText(
     wonder: Wonder,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.titleLarge,
-    enableShadows: Boolean = false
+    enableShadows: Boolean = false,
 ) {
     val smallText = wonder in setOf(ChristRedeemer, Colosseum)
     val spanStyle = style.toSpanStyle().copy(
@@ -42,7 +42,7 @@ fun WonderTitleText(
 
     // TextSpan builder, figures out whether to use small text, and adds linebreak or space (or nothing).
     fun AnnotatedString.Builder.buildTextSpan(text: String) {
-        val smallWords = setOf("of", "the")
+        val smallWords = setOf("of", "the", "के", "द")
         val useSmallText = (text.trim() in smallWords)
         val i = pieces.indexOf(text)
         val addLinebreak = i == 0 && pieces.size > 1

@@ -59,6 +59,7 @@ import coil3.compose.AsyncImage
 import data.MetRepository
 import kotlinx.coroutines.delay
 import models.ArtifactData
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.AppIconButton
 import ui.theme.TenorSans
@@ -70,6 +71,15 @@ import ui.theme.offWhite
 import ui.theme.white
 import utils.prependProxy
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelClassification
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDate
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDimension
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelGeography
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelMedium
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelPeriod
+import wonderouscompose.composeapp.generated.resources.artifactsSearchLabelNotFound
+import wonderouscompose.composeapp.generated.resources.circleButtonsSemanticBack
+import wonderouscompose.composeapp.generated.resources.homeMenuAboutMet
 import wonderouscompose.composeapp.generated.resources.icon_prev
 
 val imageMaxHeight = 400.dp
@@ -188,7 +198,7 @@ fun ArtifactDetailsScreen(
             navigationIcon = {
                 AppIconButton(
                     icon = Res.drawable.icon_prev,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(Res.string.circleButtonsSemanticBack),
                     onClick = onClickBack
                 )
             },
@@ -216,7 +226,7 @@ private fun ArtifactNotFoundError() {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Artifact not found.",
+            text = stringResource(Res.string.artifactsSearchLabelNotFound),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
@@ -230,7 +240,7 @@ private fun ArtifactNotFoundError() {
 private fun ArtifactImage(
     imageUrl: String,
     onImagePressed: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.shadow(20.dp, spotColor = black)
@@ -309,19 +319,43 @@ fun InfoColumn(
         Column(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            DataInfoRow(label = "Date", value = data.date, animIndex = 1)
-            DataInfoRow(label = "Period", value = data.period, animIndex = 2)
-            DataInfoRow(label = "Geography", value = data.country, animIndex = 3)
-            DataInfoRow(label = "Medium", value = data.medium, animIndex = 4)
-            DataInfoRow(label = "Dimension", value = data.dimension, animIndex = 5)
-            DataInfoRow(label = "Classification", value = data.classification, animIndex = 6)
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelDate),
+                value = data.date,
+                animIndex = 1
+            )
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelPeriod),
+                value = data.period,
+                animIndex = 2
+            )
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelGeography),
+                value = data.country,
+                animIndex = 3
+            )
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelMedium),
+                value = data.medium,
+                animIndex = 4
+            )
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelDimension),
+                value = data.dimension,
+                animIndex = 5
+            )
+            DataInfoRow(
+                label = stringResource(Res.string.artifactDetailsLabelClassification),
+                value = data.classification,
+                animIndex = 6
+            )
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         AnimatedVisibility(isVisible, enter = fadeIn(tween(1000))) {
             Text(
-                text = "The Metropolitan Museum of Art, New York",
+                text = stringResource(Res.string.homeMenuAboutMet),
                 style = MaterialTheme.typography.labelLarge.copy(color = accent2),
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,

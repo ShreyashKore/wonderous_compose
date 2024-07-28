@@ -192,9 +192,15 @@ fun TimelineScreen(
         if (event == null) {
             Spacer(Modifier)
         } else {
+            val description =
+                if (event.startYearEventWonderTitle == null) stringResource(event.description)
+                else stringResource(
+                    event.description,
+                    stringResource(event.startYearEventWonderTitle)
+                )
             TimelineEventCard(
                 year = event.year,
-                text = event.description,
+                text = description,
                 darkMode = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -349,7 +355,7 @@ fun WonderTrackWithStickyImage(
 
 @Composable
 private fun TimeMarkers(
-    yearRange: IntRange, step: Int, modifier: Modifier = Modifier
+    yearRange: IntRange, step: Int, modifier: Modifier = Modifier,
 ) {
     val years = remember(yearRange) { yearRange.step(step) }
     LazyColumn(
@@ -368,7 +374,7 @@ private fun EventMarkers(
     yearRange: IntRange,
     currentYearHighlightRange: IntRange,
     allEvents: List<TimelineEvent>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         allEvents.map {

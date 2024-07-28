@@ -103,6 +103,7 @@ import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
@@ -247,7 +248,7 @@ fun SharedTransitionScope.EditorialScreen(
                 ) {
                     HorizontalDivider(Modifier.weight(1f))
                     Text(
-                        wonder.subTitle,
+                        stringResource(wonder.subTitle),
                         modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.titleSmall,
                         color = onPrimaryColor
@@ -263,7 +264,7 @@ fun SharedTransitionScope.EditorialScreen(
                     )
                 )
                 Text(
-                    wonder.regionTitle,
+                    stringResource(wonder.regionTitle),
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
                     color = onPrimaryColor
@@ -345,7 +346,7 @@ fun SharedTransitionScope.EditorialScreen(
         // 3
         surfaceItem {
             InfoText(
-                wonder.historyInfo1,
+                stringResource(wonder.historyInfo1),
                 Modifier.padding(top = 16.dp, bottom = 24.dp)
             )
         }
@@ -359,8 +360,8 @@ fun SharedTransitionScope.EditorialScreen(
 
             PullQuote1(
                 bgImage = wonder.photo2,
-                pullQuote1Top = wonder.pullQuote1Top,
-                pullQuote1Bottom = wonder.pullQuote1Bottom,
+                pullQuote1Top = stringResource(wonder.pullQuote1Top),
+                pullQuote1Bottom = stringResource(wonder.pullQuote1Bottom),
                 pullQuote1Progress = pullQuote1Progress,
             )
         }
@@ -368,10 +369,10 @@ fun SharedTransitionScope.EditorialScreen(
         surfaceItem {
             Column {
                 CallOut(
-                    wonder.callout1
+                    stringResource(wonder.callout1)
                 )
                 InfoText(
-                    wonder.historyInfo2,
+                    stringResource(wonder.historyInfo2),
                     Modifier.padding(top = 16.dp)
                 )
             }
@@ -386,7 +387,7 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 7
         surfaceItem {
-            InfoText(wonder.constructionInfo1)
+            InfoText(stringResource(wonder.constructionInfo1))
         }
         // 8
         surfaceItem {
@@ -405,7 +406,7 @@ fun SharedTransitionScope.EditorialScreen(
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = wonder.videoCaption,
+                    text = stringResource(wonder.videoCaption),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -413,11 +414,11 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 9
         surfaceItem {
-            CallOut(wonder.callout2)
+            CallOut(stringResource(wonder.callout2))
         }
         // 10
         surfaceItem {
-            InfoText(wonder.constructionInfo2)
+            InfoText(stringResource(wonder.constructionInfo2))
         }
         // 11
         surfaceItem {
@@ -441,19 +442,19 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 13
         surfaceItem {
-            InfoText(wonder.locationInfo1)
+            InfoText(stringResource(wonder.locationInfo1))
         }
         // 14
         surfaceItem {
             Quote(
-                text = wonder.pullQuote2,
-                author = wonder.pullQuote2Author,
+                text = stringResource(wonder.pullQuote2),
+                author = stringResource(wonder.pullQuote2Author),
                 modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
             )
         }
         // 15
         surfaceItem {
-            InfoText(wonder.locationInfo2)
+            InfoText(stringResource(wonder.locationInfo2))
         }
         // 16
         surfaceItem {
@@ -530,7 +531,7 @@ fun LazyListScope.surfaceItem(
 @Composable
 fun InfoText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text,
@@ -545,7 +546,7 @@ fun InfoText(
 @Composable
 fun InfoTitle(
     wonderColor: Color,
-    infoSection: InfoSection
+    infoSection: InfoSection,
 ) {
     val tween = tween<Float>(durationMillis = 1000)
     val circularTextAngle by animateFloatAsState(
@@ -617,7 +618,7 @@ fun InfoTitle(
 
 @Composable
 fun CallOut(
-    text: String
+    text: String,
 ) {
     Row(
         Modifier
@@ -795,7 +796,7 @@ private val Wonder.cutoutShape
 private class BasicOverScrollConnection(
     val animatable: Animatable<Float, AnimationVector1D> = Animatable(0f),
     val onExceedOverScrollLimit: () -> Unit,
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
 ) : NestedScrollConnection {
     var accumulated = 0f
         private set(value) {
@@ -818,7 +819,7 @@ private class BasicOverScrollConnection(
     override fun onPostScroll(
         consumed: Offset,
         available: Offset,
-        source: NestedScrollSource
+        source: NestedScrollSource,
     ): Offset {
         if (available.y <= 0) return Offset.Zero
         accumulated = (accumulated + available.y).coerceAtMost(200f)

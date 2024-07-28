@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import ui.composables.AppIconButton
 import ui.composables.LongButton
 import ui.composables.WonderTitleText
@@ -68,7 +69,7 @@ fun WonderEvents(
             items(wonderEvents.toList()) { item ->
                 TimelineEventCard(
                     year = item.first,
-                    text = item.second,
+                    text = stringResource(item.second),
                     darkMode = true,
                     modifier = Modifier
                         .fillMaxWidth()

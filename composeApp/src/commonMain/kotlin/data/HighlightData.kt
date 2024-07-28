@@ -1,6 +1,7 @@
 package data
 
 
+import androidx.compose.runtime.Composable
 import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
@@ -10,6 +11,7 @@ import models.Petra
 import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Model for artifacts shown in [ui.screens.ArtifactCarouselScreen]
@@ -21,13 +23,13 @@ data class HighlightData(
     val culture: String,
     val artifactId: String,
     val wonder: Wonder,
-    val date: String
+    val date: String,
 ) {
     val id: String
         get() = artifactId
 
     val subtitle: String
-        get() = wonder.artifactCulture
+        @Composable get() = wonder.artifactCulture?.let { stringResource(it) } ?: ""
 
     val imageUrl: String
         get() = "https://firebasestorage.googleapis.com/v0/b/wonderous-compose.appspot.com/o/$imageName?alt=media"

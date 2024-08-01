@@ -138,6 +138,7 @@ fun HomeScreen(
     // Temporary fix as stale wonder is being remembered in AnchoredDraggableState.confirmValueChange
     val currWonderState = rememberUpdatedState(currentWonder)
     val density = LocalDensity.current
+    var goingBack by remember { mutableStateOf(false) }
     val swipeableState = remember {
         AnchoredDraggableState(
             initialValue = SwipeState.Start,
@@ -158,7 +159,10 @@ fun HomeScreen(
             snapAnimationSpec = tween(),
             decayAnimationSpec = exponentialDecay(),
             confirmValueChange = {
-                if (it == SwipeState.End) openDetailScreen(currWonderState.value)
+                if (it == SwipeState.End && !goingBack) {
+                    goingBack = true
+                    openDetailScreen(currWonderState.value)
+                }
                 true
             }
         )
@@ -250,40 +254,47 @@ fun HomeScreen(
                 modifier = Modifier.zIndex(10f).fillMaxSize()
             )
 
-            Box(Modifier.zIndex(11f).align(Alignment.BottomCenter)) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                ) {
-                    with(sharedTransitionScope) {
-                        WonderTitleText(
-                            currentWonder,
-                            modifier = Modifier.sharedBounds(
-                                rememberSharedContentState(key = currentWonder.name),
-                                animatedVisibilityScope,
-                                zIndexInOverlay = 1f
-                            ).padding(vertical = 16.dp),
-                            enableShadows = true
+            AnimatedVisibility(
+                !isMenuOpen,
+                Modifier.zIndex(11f).align(Alignment.BottomCenter),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    ) {
+                        with(sharedTransitionScope) {
+                            WonderTitleText(
+                                currentWonder,
+                                modifier = Modifier.sharedBounds(
+                                    rememberSharedContentState(key = currentWonder.name),
+                                    animatedVisibilityScope,
+                                    zIndexInOverlay = 1f
+                                ).padding(vertical = 16.dp),
+                                enableShadows = true
+                            )
+                        }
+                        PageIndicator(
+                            currentPage = pagerState.currentPage % Wonders.size,
+                            totalPages = Wonders.size,
+                            modifier = Modifier.padding(vertical = 24.dp).fillMaxWidth()
                         )
+                        Spacer(Modifier.height(50.dp))
                     }
-                    PageIndicator(
-                        currentPage = pagerState.currentPage % Wonders.size,
-                        totalPages = Wonders.size,
-                        modifier = Modifier.padding(vertical = 24.dp).fillMaxWidth()
+
+
+                    SwipeUpIndicator(
+                        modifier = Modifier
+                            .height(200.dp)
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 16.dp),
+                        getSwipeProgress = { swipeableState.offset.roundToInt() },
+                        onClick = { openDetailScreen(currentWonder) },
                     )
-                    Spacer(Modifier.height(50.dp))
                 }
-
-
-                SwipeUpIndicator(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp),
-                    getSwipeProgress = { swipeableState.offset.roundToInt() },
-                    onClick = { openDetailScreen(currentWonder) },
-                )
             }
 
         }
@@ -295,7 +306,7 @@ fun HomeScreen(
     ) {
         HomeMenu(
             currentWonder,
-            onPressBack = { isMenuOpen = false },
+            onDismiss = { isMenuOpen = false },
             onChangeWonder = {
                 val nearestWonderPage =
                     pagerState.currentPage +

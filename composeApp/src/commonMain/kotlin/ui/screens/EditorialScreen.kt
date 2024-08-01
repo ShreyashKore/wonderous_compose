@@ -4,10 +4,9 @@ import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -32,7 +31,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -54,10 +52,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -85,13 +84,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
@@ -139,6 +135,8 @@ import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
 import wonderouscompose.composeapp.generated.resources.icon_next
 import wonderouscompose.composeapp.generated.resources.semanticsNext
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 
 @OptIn(
@@ -155,20 +153,32 @@ fun SharedTransitionScope.EditorialScreen(
 ) = BoxWithConstraints {
     val maxWidth = maxWidth
     val density = LocalDensity.current
-    val overScroll = remember { Animatable(0f) }
-    val scope = rememberCoroutineScope()
     val hapticFeedback = LocalHapticFeedback.current
-    val nestedScrollConnection = remember(scope) {
-        BasicOverScrollConnection(
-            animatable = overScroll,
-            onExceedOverScrollLimit = {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                openHomeScreen()
-            },
-            scope = scope
-        )
+    // Shows home screen when the user has over-scrolled enough to top
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            private var notified = false
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                if (available.y > 100 && !notified) {
+                    notified = true
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    openHomeScreen()
+                }
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
     }
+
     val scrollState = rememberLazyListState()
+
+    val entered = remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        entered.value = true
+    }
 
     // background and hero image
     Box(
@@ -218,7 +228,6 @@ fun SharedTransitionScope.EditorialScreen(
     // Main content
     LazyColumn(
         modifier = Modifier
-            .offset { IntOffset(0, overScroll.value.toInt()) }
             .safeDrawingPadding()
             .nestedScroll(nestedScrollConnection),
         state = scrollState,
@@ -277,7 +286,7 @@ fun SharedTransitionScope.EditorialScreen(
                 )
                 CompassDivider(
                     Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
-                    isExpanded = scrollState.firstVisibleItemScrollOffset < 100
+                    isExpanded = entered.value && scrollState.firstVisibleItemScrollOffset < 100
                 )
                 Text(
                     stringResource(
@@ -321,17 +330,22 @@ fun SharedTransitionScope.EditorialScreen(
                 Modifier.height(maxImageHeight).fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    filePainterResource(wonder.photo1),
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .height(imageHeight)
-                        .width(imageWidth)
-                        .alpha(imageAlpha)
-                        .clip(wonder.cutoutShape),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                )
+                AnimatedVisibility(
+                    entered.value,
+                    enter = fadeIn(tween(durationMillis = 1500, delayMillis = 400))
+                ) {
+                    Image(
+                        filePainterResource(wonder.photo1),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .height(imageHeight)
+                            .width(imageWidth)
+                            .alpha(imageAlpha)
+                            .clip(wonder.cutoutShape),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                    )
+                }
             }
         }
         // 2
@@ -673,7 +687,7 @@ private fun Quote(
             modifier = Modifier.padding(vertical = 32.dp)
         )
         Text(
-            author,
+            "- $author",
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.primary
         )
@@ -700,7 +714,7 @@ fun PullQuote1(
             modifier = Modifier.fillMaxSize()
                 .border(1.dp, MaterialTheme.colorScheme.secondary, shape)
                 .padding(8.dp)
-                .alpha(pullQuote1Progress * 2 + 0.6f)
+                .alpha(pullQuote1Progress * 2 + 0.4f)
                 .clip(shape),
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -782,6 +796,28 @@ fun ParallaxImages(
     }
 }
 
+@Composable
+fun AnimatedEntry(
+    delay: Duration = 0.milliseconds,
+    entry: EnterTransition = fadeIn(),
+    modifier: Modifier = Modifier,
+    content: @Composable AnimatedVisibilityScope.() -> Unit,
+) {
+    val entered = remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(delay)
+        entered.value = true
+    }
+    AnimatedVisibility(
+        visible = entered.value,
+        modifier = modifier,
+        enter = entry
+    ) {
+        content()
+    }
+}
+
+
 enum class InfoSection(val title: StringResource, val imageDrawable: DrawableResource) {
     FactsAndHistory(Res.string.appBarTitleFactsHistory, Res.drawable.history),
     Construction(Res.string.appBarTitleConstruction, Res.drawable.construction),
@@ -801,60 +837,6 @@ private val Wonder.cutoutShape
         else -> RoundedCornerShape(topStartPercent = 80, topEndPercent = 80)
     }
 
-/**
- * Naive implementation to detect overscroll.
- * Here we are only detecting in down direction.
- */
-private class BasicOverScrollConnection(
-    val animatable: Animatable<Float, AnimationVector1D> = Animatable(0f),
-    val onExceedOverScrollLimit: () -> Unit,
-    val scope: CoroutineScope,
-) : NestedScrollConnection {
-    var accumulated = 0f
-        private set(value) {
-            field = value
-            scope.launch {
-                animatable.snapTo(value)
-            }
-        }
-
-    private var exceededNotified = false
-
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        if (accumulated > 0 && available.y < 0) {
-            accumulated = (accumulated + available.y).coerceAtLeast(0f)
-            return available
-        }
-        return Offset.Zero
-    }
-
-    override fun onPostScroll(
-        consumed: Offset,
-        available: Offset,
-        source: NestedScrollSource,
-    ): Offset {
-        if (available.y <= 0) return Offset.Zero
-        accumulated = (accumulated + available.y).coerceAtMost(200f)
-
-        if ((available.y > 40 || accumulated > 100f) && source == NestedScrollSource.UserInput) {
-            if (!exceededNotified) {
-                onExceedOverScrollLimit()
-                exceededNotified = true
-            }
-        } else {
-            exceededNotified = false
-        }
-        return available
-    }
-
-    override suspend fun onPreFling(available: Velocity): Velocity {
-        if (animatable.value > 0f && animatable.targetValue != 0f) {
-            animatable.animateTo(0f)
-            accumulated = 0f
-        }
-        return super.onPreFling(available)
-    }
-}
 
 private val Wonder.mainImageFractionalHeight
     get() = when (this) {

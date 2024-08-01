@@ -70,7 +70,7 @@ import wonderouscompose.composeapp.generated.resources.language
 @Composable
 fun HomeMenu(
     data: Wonder,
-    onPressBack: () -> Unit,
+    onDismiss: () -> Unit,
     onChangeWonder: (Wonder) -> Unit,
     openTimeline: () -> Unit,
     openCollection: () -> Unit,
@@ -91,8 +91,11 @@ fun HomeMenu(
     ) {
         // AppHeader
         AppHeader(
-            onClickClose = onPressBack,
-            onChangeLanguage = { changeLanguage(it) },
+            onClickClose = onDismiss,
+            onChangeLanguage = {
+                changeLanguage(it)
+                onDismiss()
+            },
         )
 
         // Content
@@ -125,13 +128,19 @@ fun HomeMenu(
                     icon = Res.drawable.icon_timeline,
                     text = stringResource(Res.string.homeMenuButtonExplore)
                 )
-                HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                HorizontalDivider(
+                    color = white.copy(.2f),
+                    thickness = 2.dp
+                )
                 BottomButton(
                     onClick = openCollection,
                     icon = Res.drawable.icon_collection,
                     text = stringResource(Res.string.homeMenuButtonView)
                 )
-                HorizontalDivider(modifier = Modifier.height(2.dp), color = white.copy(.2f))
+                HorizontalDivider(
+                    color = white.copy(.2f),
+                    thickness = 2.dp
+                )
                 BottomButton(
                     onClick = { isAboutDialogOpen = true },
                     icon = Res.drawable.icon_info,
@@ -218,7 +227,7 @@ fun WonderBtnsGrid(
                 Image(
                     painterResource(Res.drawable.compass_full),
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(36.dp)
                 )
             }
         else

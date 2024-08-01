@@ -9,6 +9,7 @@ android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.0"
+appcompat = "1.7.0"
 coilCompose = "3.0.0-alpha06"
 compose-plugin = "1.7.0-alpha01"
 kotlin = "2.1.0-dev-875"
@@ -40,6 +41,7 @@ androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navi
 
 # Android
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 ## Maps
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }

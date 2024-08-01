@@ -47,7 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.screens.WonderDetailsScreen.ArtifactCarousel
 import ui.screens.WonderDetailsScreen.Editorial
 import ui.screens.WonderDetailsScreen.PhotoGallery
@@ -66,6 +68,11 @@ import wonderouscompose.composeapp.generated.resources.tab_photos
 import wonderouscompose.composeapp.generated.resources.tab_photos_active
 import wonderouscompose.composeapp.generated.resources.tab_timeline
 import wonderouscompose.composeapp.generated.resources.tab_timeline_active
+import wonderouscompose.composeapp.generated.resources.wonderDetailsTabLabelArtifacts
+import wonderouscompose.composeapp.generated.resources.wonderDetailsTabLabelEvents
+import wonderouscompose.composeapp.generated.resources.wonderDetailsTabLabelImages
+import wonderouscompose.composeapp.generated.resources.wonderDetailsTabLabelInformation
+import wonderouscompose.composeapp.generated.resources.wonderDetailsTabSemanticBack
 
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -186,7 +193,7 @@ private fun NavigationBar(
             NavDestinationButton(
                 icon = destination.icon,
                 activeIcon = destination.activeIcon,
-                contentDescription = destination.title,
+                contentDescription = stringResource(destination.title),
                 isSelected = currentScreen == destination,
                 unSelectedColor = contentColor,
                 onClick = { onClickDestination(destination) },
@@ -233,7 +240,7 @@ private fun WonderButton(
 ) {
     Image(
         filePainterResource(wonder.wonderButtonPath),
-        contentDescription = "home",
+        contentDescription = stringResource(Res.string.wonderDetailsTabSemanticBack),
         modifier = modifier
             .background(white, CircleShape) // padding as border
             .padding(borderWidth) // Using padding as border to influence size change when border changes
@@ -251,7 +258,7 @@ private fun NavDestinationButton(
     onClick: () -> Unit,
     unSelectedColor: Color,
     modifier: Modifier = Modifier,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
 ) {
     val curIcon = if (isSelected) activeIcon else icon
     val iconTint = if (isSelected) MaterialTheme.colorScheme.primary else unSelectedColor
@@ -277,27 +284,27 @@ private enum class NavBarMode {
 }
 
 private enum class WonderDetailsScreen(
-    val title: String,
+    val title: StringResource,
     val icon: DrawableResource,
     val activeIcon: DrawableResource,
 ) {
     Editorial(
-        "Editorial",
+        Res.string.wonderDetailsTabLabelInformation,
         Res.drawable.tab_editorial,
         Res.drawable.tab_editorial_active,
     ),
     PhotoGallery(
-        "Photo Gallery",
+        Res.string.wonderDetailsTabLabelImages,
         Res.drawable.tab_photos,
         Res.drawable.tab_photos_active,
     ),
     ArtifactCarousel(
-        "Artifact Carousel",
+        Res.string.wonderDetailsTabLabelArtifacts,
         Res.drawable.tab_artifacts,
         Res.drawable.tab_artifacts_active,
     ),
     WonderEvents(
-        "Wonder Events",
+        Res.string.wonderDetailsTabLabelEvents,
         Res.drawable.tab_timeline,
         Res.drawable.tab_timeline_active,
     ),

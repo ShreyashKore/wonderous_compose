@@ -77,6 +77,7 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.TimelineEvent
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import platform.Platform
 import ui.composables.AppIconButton
@@ -95,7 +96,9 @@ import ui.utils.lerp
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.circleButtonsSemanticClose
 import wonderouscompose.composeapp.generated.resources.icon_prev
+import wonderouscompose.composeapp.generated.resources.timelineTitleGlobalTimeline
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -191,9 +194,15 @@ fun TimelineScreen(
         if (event == null) {
             Spacer(Modifier)
         } else {
+            val description =
+                if (event.startYearEventWonderTitle == null) stringResource(event.description)
+                else stringResource(
+                    event.description,
+                    stringResource(event.startYearEventWonderTitle)
+                )
             TimelineEventCard(
                 year = event.year,
-                text = event.description,
+                text = description,
                 darkMode = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -206,12 +215,16 @@ fun TimelineScreen(
             titleContentColor = white,
         ),
         title = {
-            Text("GLOBAL TIMELINE", fontSize = 14.sp, fontFamily = Raleway)
+            Text(
+                stringResource(Res.string.timelineTitleGlobalTimeline),
+                fontSize = 14.sp,
+                fontFamily = Raleway
+            )
         },
         navigationIcon = {
             AppIconButton(
                 icon = Res.drawable.icon_prev,
-                contentDescription = "Back",
+                contentDescription = stringResource(Res.string.circleButtonsSemanticClose),
                 onClick = onClickBack,
             )
         },
@@ -337,7 +350,7 @@ fun WonderTrackWithStickyImage(
                     val vertOffset = lerp(0, offsetEnd.toPx().roundToInt(), curFraction)
                     IntOffset(0, vertOffset)
                 }.clip(CircleShape),
-            contentDescription = wonder.title,
+            contentDescription = stringResource(wonder.title),
             contentScale = ContentScale.Crop,
             colorFilter = if (isSelected) null else ColorFilter.tint(
                 color = wonder.fgColor, blendMode = blendMode
@@ -348,7 +361,7 @@ fun WonderTrackWithStickyImage(
 
 @Composable
 private fun TimeMarkers(
-    yearRange: IntRange, step: Int, modifier: Modifier = Modifier
+    yearRange: IntRange, step: Int, modifier: Modifier = Modifier,
 ) {
     val years = remember(yearRange) { yearRange.step(step) }
     LazyColumn(
@@ -367,7 +380,7 @@ private fun EventMarkers(
     yearRange: IntRange,
     currentYearHighlightRange: IntRange,
     allEvents: List<TimelineEvent>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         allEvents.map {

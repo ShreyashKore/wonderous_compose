@@ -102,7 +102,9 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
@@ -120,18 +122,23 @@ import ui.photo3
 import ui.photo4
 import ui.screens.home.bgTexture
 import ui.theme.B612Mono
-import ui.theme.Cinzel
 import ui.theme.accent1
 import ui.theme.bgColor
 import ui.theme.fgColor
+import ui.theme.quoteFont
 import ui.theme.white
 import ui.utils.filePainterResource
 import utils.StringUtils
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.appBarTitleConstruction
+import wonderouscompose.composeapp.generated.resources.appBarTitleFactsHistory
+import wonderouscompose.composeapp.generated.resources.appBarTitleLocation
+import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDate
 import wonderouscompose.composeapp.generated.resources.construction
 import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
 import wonderouscompose.composeapp.generated.resources.icon_next
+import wonderouscompose.composeapp.generated.resources.semanticsNext
 
 
 @OptIn(
@@ -194,7 +201,7 @@ fun SharedTransitionScope.EditorialScreen(
                 filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                 modifier = Modifier
                     .sharedBounds(
-                        rememberSharedContentState("image-${wonder.title}"),
+                        rememberSharedContentState(key = "image-${wonder.name}"),
                         animatedVisibilityScope
                     )
                     .align(wonder.mainImageAlignment)
@@ -247,7 +254,7 @@ fun SharedTransitionScope.EditorialScreen(
                 ) {
                     HorizontalDivider(Modifier.weight(1f))
                     Text(
-                        wonder.subTitle,
+                        stringResource(wonder.subTitle),
                         modifier = Modifier.padding(horizontal = 8.dp),
                         style = MaterialTheme.typography.titleSmall,
                         color = onPrimaryColor
@@ -257,13 +264,13 @@ fun SharedTransitionScope.EditorialScreen(
                 WonderTitleText(
                     wonder,
                     Modifier.sharedBounds(
-                        rememberSharedContentState(wonder.title),
+                        rememberSharedContentState(key = wonder.name),
                         animatedVisibilityScope,
                         zIndexInOverlay = 1f
                     )
                 )
                 Text(
-                    wonder.regionTitle,
+                    stringResource(wonder.regionTitle),
                     style = MaterialTheme.typography.titleSmall,
                     textAlign = TextAlign.Center,
                     color = onPrimaryColor
@@ -273,8 +280,10 @@ fun SharedTransitionScope.EditorialScreen(
                     isExpanded = scrollState.firstVisibleItemScrollOffset < 100
                 )
                 Text(
-                    StringUtils.formatYr(wonder.startYr) + " to " + StringUtils.formatYr(
-                        wonder.endYr
+                    stringResource(
+                        Res.string.artifactDetailsLabelDate,
+                        StringUtils.formatYr(wonder.startYr),
+                        StringUtils.formatYr(wonder.endYr)
                     ),
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
@@ -345,7 +354,7 @@ fun SharedTransitionScope.EditorialScreen(
         // 3
         surfaceItem {
             InfoText(
-                wonder.historyInfo1,
+                stringResource(wonder.historyInfo1),
                 Modifier.padding(top = 16.dp, bottom = 24.dp)
             )
         }
@@ -359,8 +368,8 @@ fun SharedTransitionScope.EditorialScreen(
 
             PullQuote1(
                 bgImage = wonder.photo2,
-                pullQuote1Top = wonder.pullQuote1Top,
-                pullQuote1Bottom = wonder.pullQuote1Bottom,
+                pullQuote1Top = stringResource(wonder.pullQuote1Top),
+                pullQuote1Bottom = stringResource(wonder.pullQuote1Bottom),
                 pullQuote1Progress = pullQuote1Progress,
             )
         }
@@ -368,10 +377,10 @@ fun SharedTransitionScope.EditorialScreen(
         surfaceItem {
             Column {
                 CallOut(
-                    wonder.callout1
+                    stringResource(wonder.callout1)
                 )
                 InfoText(
-                    wonder.historyInfo2,
+                    stringResource(wonder.historyInfo2),
                     Modifier.padding(top = 16.dp)
                 )
             }
@@ -386,7 +395,7 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 7
         surfaceItem {
-            InfoText(wonder.constructionInfo1)
+            InfoText(stringResource(wonder.constructionInfo1))
         }
         // 8
         surfaceItem {
@@ -405,7 +414,7 @@ fun SharedTransitionScope.EditorialScreen(
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = wonder.videoCaption,
+                    text = stringResource(wonder.videoCaption),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -413,11 +422,11 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 9
         surfaceItem {
-            CallOut(wonder.callout2)
+            CallOut(stringResource(wonder.callout2))
         }
         // 10
         surfaceItem {
-            InfoText(wonder.constructionInfo2)
+            InfoText(stringResource(wonder.constructionInfo2))
         }
         // 11
         surfaceItem {
@@ -441,19 +450,19 @@ fun SharedTransitionScope.EditorialScreen(
         }
         // 13
         surfaceItem {
-            InfoText(wonder.locationInfo1)
+            InfoText(stringResource(wonder.locationInfo1))
         }
         // 14
         surfaceItem {
             Quote(
-                text = wonder.pullQuote2,
-                author = wonder.pullQuote2Author,
+                text = stringResource(wonder.pullQuote2),
+                author = stringResource(wonder.pullQuote2Author),
                 modifier = Modifier.padding(vertical = 32.dp, horizontal = 24.dp)
             )
         }
         // 15
         surfaceItem {
-            InfoText(wonder.locationInfo2)
+            InfoText(stringResource(wonder.locationInfo2))
         }
         // 16
         surfaceItem {
@@ -482,7 +491,7 @@ fun SharedTransitionScope.EditorialScreen(
                         .widthIn(max = 450.dp)
                         .clip(RoundedCornerShape(4.dp)),
                     latLng = wonder.latLng,
-                    title = "Map",
+                    title = wonder.mapCaption?.let { stringResource(it) } ?: "",
                     zoomLevel = .05f,
                     mapType = MapType.Normal,
                 )
@@ -496,7 +505,7 @@ fun SharedTransitionScope.EditorialScreen(
     ) {
         AppIconButton(
             Res.drawable.icon_next,
-            contentDescription = "Next",
+            contentDescription = stringResource(Res.string.semanticsNext),
             onClick = openHomeScreen,
             modifier = Modifier
                 .rotate(-90f)
@@ -530,12 +539,12 @@ fun LazyListScope.surfaceItem(
 @Composable
 fun InfoText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Text(
         text,
         modifier = modifier.padding(horizontal = 16.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 20.sp)
+        style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp)
     )
 }
 
@@ -545,7 +554,7 @@ fun InfoText(
 @Composable
 fun InfoTitle(
     wonderColor: Color,
-    infoSection: InfoSection
+    infoSection: InfoSection,
 ) {
     val tween = tween<Float>(durationMillis = 1000)
     val circularTextAngle by animateFloatAsState(
@@ -591,7 +600,8 @@ fun InfoTitle(
                 transitionSpec = { fadeIn(tween) togetherWith fadeOut(tween) },
             ) { infoSection ->
                 CircularText(
-                    text = infoSection.title.toCharArray()
+                    // TODO: use grapheme splitting
+                    text = stringResource(infoSection.title).toCharArray()
                         .map { it.toString() }, // Circular Text needs individual letters (graphemes)
                     radius = 90.dp,
                     textStyle = TextStyle(fontSize = 16.sp, fontFamily = B612Mono, color = accent1),
@@ -617,7 +627,7 @@ fun InfoTitle(
 
 @Composable
 fun CallOut(
-    text: String
+    text: String,
 ) {
     Row(
         Modifier
@@ -652,11 +662,14 @@ private fun Quote(
             "“",
             fontSize = 120.sp,
             modifier = Modifier.height(64.dp),
-            fontFamily = Cinzel,
+            style = MaterialTheme.typography.quoteFont,
             color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text, fontSize = 24.sp,
+            text,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.quoteFont.copy(fontWeight = FontWeight.W400),
             modifier = Modifier.padding(vertical = 32.dp)
         )
         Text(
@@ -701,7 +714,7 @@ fun PullQuote1(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            val textStyle = MaterialTheme.typography.displaySmall.copy(
+            val textStyle = MaterialTheme.typography.quoteFont.copy(
                 fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -769,10 +782,10 @@ fun ParallaxImages(
     }
 }
 
-enum class InfoSection(val title: String, val imageDrawable: DrawableResource) {
-    FactsAndHistory("FACTS & HISTORY", Res.drawable.history),
-    Construction("CONSTRUCTION", Res.drawable.construction),
-    Location("LOCATION", Res.drawable.geography)
+enum class InfoSection(val title: StringResource, val imageDrawable: DrawableResource) {
+    FactsAndHistory(Res.string.appBarTitleFactsHistory, Res.drawable.history),
+    Construction(Res.string.appBarTitleConstruction, Res.drawable.construction),
+    Location(Res.string.appBarTitleLocation, Res.drawable.geography)
 }
 
 private val Wonder.cutoutShape
@@ -795,7 +808,7 @@ private val Wonder.cutoutShape
 private class BasicOverScrollConnection(
     val animatable: Animatable<Float, AnimationVector1D> = Animatable(0f),
     val onExceedOverScrollLimit: () -> Unit,
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
 ) : NestedScrollConnection {
     var accumulated = 0f
         private set(value) {
@@ -818,7 +831,7 @@ private class BasicOverScrollConnection(
     override fun onPostScroll(
         consumed: Offset,
         available: Offset,
-        source: NestedScrollSource
+        source: NestedScrollSource,
     ): Offset {
         if (available.y <= 0) return Offset.Zero
         accumulated = (accumulated + available.y).coerceAtMost(200f)

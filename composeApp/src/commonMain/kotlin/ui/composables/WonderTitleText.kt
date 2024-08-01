@@ -3,6 +3,7 @@ package ui.composables
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import models.ChristRedeemer
 import models.Colosseum
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -25,7 +27,7 @@ fun WonderTitleText(
     wonder: Wonder,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.titleLarge,
-    enableShadows: Boolean = false
+    enableShadows: Boolean = false,
 ) {
     val smallText = wonder in setOf(ChristRedeemer, Colosseum)
     val spanStyle = style.toSpanStyle().copy(
@@ -35,11 +37,12 @@ fun WonderTitleText(
         shadow = if (enableShadows) Shadow() else null,
     )
 
-    val pieces = wonder.title.lowercase().split(" ")
+    val title = stringResource(wonder.title)
+    val pieces = title.lowercase().split(" ")
 
     // TextSpan builder, figures out whether to use small text, and adds linebreak or space (or nothing).
     fun AnnotatedString.Builder.buildTextSpan(text: String) {
-        val smallWords = setOf("of", "the")
+        val smallWords = setOf("of", "the", "के", "द")
         val useSmallText = (text.trim() in smallWords)
         val i = pieces.indexOf(text)
         val addLinebreak = i == 0 && pieces.size > 1
@@ -53,8 +56,10 @@ fun WonderTitleText(
         }
     }
 
-    val annotatedString = buildAnnotatedString {
-        pieces.forEach { buildTextSpan(it) }
+    val annotatedString = remember(title) {
+        buildAnnotatedString {
+            pieces.forEach { buildTextSpan(it) }
+        }
     }
     Text(annotatedString, modifier = modifier, textAlign = TextAlign.Center)
 }

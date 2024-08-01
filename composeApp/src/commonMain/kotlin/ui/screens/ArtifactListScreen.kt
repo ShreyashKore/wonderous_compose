@@ -44,6 +44,7 @@ import data.search_data.TajMahalSearchSuggestions
 import models.SearchData
 import models.TajMahal
 import models.Wonder
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.BackButton
 import ui.theme.Raleway
@@ -52,6 +53,11 @@ import ui.theme.accent1
 import ui.theme.black
 import ui.theme.white
 import utils.prependProxy
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.artifactsSearchLabelFound
+import wonderouscompose.composeapp.generated.resources.artifactsSearchTitleBrowse
+import wonderouscompose.composeapp.generated.resources.searchInputHintSearch
+import wonderouscompose.composeapp.generated.resources.searchInputTitleSuggestions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,9 +82,19 @@ fun ArtifactListScreen(
         CenterAlignedTopAppBar(
             title = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("BROWSE ARTIFACTS", fontSize = 12.sp, color = white, fontFamily = Raleway)
+                    Text(
+                        stringResource(Res.string.artifactsSearchTitleBrowse),
+                        fontSize = 12.sp,
+                        color = white,
+                        fontFamily = Raleway
+                    )
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(wonder.title, color = accent1, fontSize = 18.sp, fontFamily = TenorSans)
+                    Text(
+                        stringResource(wonder.title),
+                        color = accent1,
+                        fontSize = 18.sp,
+                        fontFamily = TenorSans
+                    )
                 }
             },
             navigationIcon = {
@@ -94,10 +110,10 @@ fun ArtifactListScreen(
                 onQueryChange(query)
             },
             leadingIcon = {
-                Icon(Icons.Rounded.Search, contentDescription = "search")
+                Icon(Icons.Rounded.Search, contentDescription = null)
             },
             placeholder = {
-                Text("Search (ex. type or material)")
+                Text(stringResource(Res.string.searchInputHintSearch))
             },
             shape = RoundedCornerShape(8.dp),
             active = isSearchActive,
@@ -108,7 +124,7 @@ fun ArtifactListScreen(
             },
             content = {
                 Text(
-                    "SUGGESTIONS",
+                    stringResource(Res.string.searchInputTitleSuggestions),
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
                 )
                 HorizontalDivider()
@@ -130,7 +146,11 @@ fun ArtifactListScreen(
             },
         )
         Text(
-            "${wonder.searchData.count()} artifacts found",
+            stringResource(
+                Res.string.artifactsSearchLabelFound,
+                wonder.searchData.count(),
+                "0"  // TODO implement timeframe feature and update count
+            ),
             color = accent1,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )

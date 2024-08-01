@@ -15,9 +15,12 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.icon_next
 import wonderouscompose.composeapp.generated.resources.icon_prev
+import wonderouscompose.composeapp.generated.resources.semanticsNext
+import wonderouscompose.composeapp.generated.resources.semanticsPrevious
 
 @Composable
 fun PreviousNextNavigation(
@@ -65,14 +68,14 @@ fun PreviousNextNavigation(
         ) {
             AppIconButton(
                 Res.drawable.icon_prev,
-                contentDescription = "Previous",
+                contentDescription = stringResource(Res.string.semanticsPrevious),
                 onClick = { onPreviousPressed?.invoke() },
                 enabled = onPreviousPressed != null,
             )
             Spacer(Modifier.weight(1f))
             AppIconButton(
                 Res.drawable.icon_next,
-                contentDescription = "Next",
+                contentDescription = stringResource(Res.string.semanticsNext),
                 onClick = { onNextPressed?.invoke() },
                 enabled = onNextPressed != null,
             )

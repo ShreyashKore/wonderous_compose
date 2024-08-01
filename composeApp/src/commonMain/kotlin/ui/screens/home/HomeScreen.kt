@@ -81,6 +81,7 @@ import models.PyramidsGiza
 import models.TajMahal
 import models.Wonder
 import models.Wonders
+import org.jetbrains.compose.resources.stringResource
 import ui.composables.AppIconButton
 import ui.composables.GithubButton
 import ui.composables.PreviousNextNavigation
@@ -92,6 +93,8 @@ import ui.theme.greyStrong
 import ui.theme.white
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.animatedArrowSemanticSwipe
+import wonderouscompose.composeapp.generated.resources.homeSemanticOpenMain
 import wonderouscompose.composeapp.generated.resources.icon_menu
 import wonderouscompose.composeapp.generated.resources.roller_1_white
 import wonderouscompose.composeapp.generated.resources.roller_2_white
@@ -223,7 +226,7 @@ fun HomeScreen(
                             filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                             contentDescription = "main",
                             modifier = Modifier.sharedBounds(
-                                rememberSharedContentState("image-${wonder.title}"),
+                                rememberSharedContentState(key = "image-${wonder.name}"),
                                 animatedVisibilityScope
                             ).graphicsLayer {
                                 val scale = 1 - swipeUpProgress * .01f
@@ -257,7 +260,7 @@ fun HomeScreen(
                         WonderTitleText(
                             currentWonder,
                             modifier = Modifier.sharedBounds(
-                                rememberSharedContentState(currentWonder.title),
+                                rememberSharedContentState(key = currentWonder.name),
                                 animatedVisibilityScope,
                                 zIndexInOverlay = 1f
                             ).padding(vertical = 16.dp),
@@ -322,7 +325,7 @@ fun HomeScreen(
         ) {
             AppIconButton(
                 icon = Res.drawable.icon_menu,
-                contentDescription = "Options",
+                contentDescription = stringResource(Res.string.homeSemanticOpenMain),
                 onClick = { isMenuOpen = true }
             )
             Spacer(Modifier.weight(1f))
@@ -336,7 +339,7 @@ fun HomeScreen(
 fun PageIndicator(
     currentPage: Int,
     totalPages: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier,
@@ -367,7 +370,7 @@ fun PageIndicator(
 fun SwipeUpIndicator(
     modifier: Modifier,
     getSwipeProgress: () -> Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     BoxWithConstraints(modifier, contentAlignment = Alignment.BottomCenter) {
         val maxHeightPx = LocalDensity.current.run { maxHeight.toPx() }
@@ -398,7 +401,7 @@ fun SwipeUpIndicator(
         ) {
             Icon(
                 Icons.Sharp.KeyboardArrowDown,
-                contentDescription = "Open Details",
+                contentDescription = stringResource(Res.string.animatedArrowSemanticSwipe),
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(52.dp)
             )

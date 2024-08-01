@@ -55,15 +55,15 @@ fun App() {
                     HomeScreen(
                         initialWonder = currentWonder,
                         openDetailScreen = {
-                            navigator.navigate("/home/wonder/${it.title}")
+                            navigator.navigate("/home/wonder/${it.name}")
                         },
                         openTimelineScreen = {
-                            navigator.navigate("/timeline?type=${it.title}")
+                            navigator.navigate("/timeline?type=${it.name}")
                         },
                         animatedVisibilityScope = this,
                         sharedTransitionScope = this@SharedTransitionLayout,
                         onChangeCurrentWonder = {
-                            savedStateHandle["currentWonder"] = it.title
+                            savedStateHandle["currentWonder"] = it.name
                         }
                     )
 
@@ -77,10 +77,10 @@ fun App() {
                     WonderDetailsScreen(
                         wonder = wonder,
                         onPressHome = { navigator.popBackStack() },
-                        openTimelineScreen = { navigator.navigate("/timeline?type=${it?.title}") },
+                        openTimelineScreen = { navigator.navigate("/timeline?type=${it?.name}") },
                         openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
-                        openArtifactListScreen = { navigator.navigate("/search/${it.title}") },
-                        openMapScreen = { navigator.navigate("/maps/${it.title}") },
+                        openArtifactListScreen = { navigator.navigate("/search/${it.name}") },
+                        openMapScreen = { navigator.navigate("/maps/${it.name}") },
                         openVideoScreen = { navigator.navigate("/video/$it") },
                         animatedVisibilityScope = this,
                         sharedTransitionScope = this@SharedTransitionLayout,

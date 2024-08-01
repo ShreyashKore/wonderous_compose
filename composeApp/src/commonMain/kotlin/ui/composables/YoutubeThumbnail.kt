@@ -46,7 +46,7 @@ fun YouTubeThumbnail(
             IconButton(onClick = onClick) {
                 Icon(
                     Icons.Default.PlayArrow,
-                    contentDescription = "Play",
+                    contentDescription = "stringResource(Res.string.semanticsPlay)",
                     tint = white,
                     modifier = Modifier
                         .size(100.dp)

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import org.jetbrains.compose.resources.Font
 import wonderouscompose.composeapp.generated.resources.B612Mono_Regular
 import wonderouscompose.composeapp.generated.resources.CinzelDecorative_Black
@@ -88,3 +89,9 @@ internal val NotoSansSc
         Font(Res.font.NotoSansSC_Regular, FontWeight.Normal, FontStyle.Normal),
         Font(Res.font.NotoSansSC_Bold, FontWeight.Bold, FontStyle.Normal),
     )
+
+val defaultFontFamily: FontFamily
+    @Composable get() = when (Locale.current.language) {
+        "zh" -> NotoSansSc
+        else -> NotoSans
+    }

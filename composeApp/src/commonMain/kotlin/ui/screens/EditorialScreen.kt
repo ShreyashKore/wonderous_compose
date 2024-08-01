@@ -122,10 +122,10 @@ import ui.photo3
 import ui.photo4
 import ui.screens.home.bgTexture
 import ui.theme.B612Mono
-import ui.theme.Cinzel
 import ui.theme.accent1
 import ui.theme.bgColor
 import ui.theme.fgColor
+import ui.theme.quoteFont
 import ui.theme.white
 import ui.utils.filePainterResource
 import utils.StringUtils
@@ -544,7 +544,7 @@ fun InfoText(
     Text(
         text,
         modifier = modifier.padding(horizontal = 16.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(lineHeight = 20.sp)
+        style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp)
     )
 }
 
@@ -662,11 +662,14 @@ private fun Quote(
             "“",
             fontSize = 120.sp,
             modifier = Modifier.height(64.dp),
-            fontFamily = Cinzel,
+            style = MaterialTheme.typography.quoteFont,
             color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text, fontSize = 24.sp,
+            text,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.quoteFont.copy(fontWeight = FontWeight.W400),
             modifier = Modifier.padding(vertical = 32.dp)
         )
         Text(
@@ -711,7 +714,7 @@ fun PullQuote1(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            val textStyle = MaterialTheme.typography.displaySmall.copy(
+            val textStyle = MaterialTheme.typography.quoteFont.copy(
                 fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,

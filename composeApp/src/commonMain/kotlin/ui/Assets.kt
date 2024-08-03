@@ -65,3 +65,10 @@ val Wonder.photo4: String
 
 val Wonder.flattenedImage: String
     get() = getAssetPath("flattened.jpg")
+
+
+val Wonder.celestialBodyImageName
+    get() = when (this) {
+        ChichenItza, TajMahal, ChristRedeemer, Colosseum, GreatWall, MachuPicchu -> "sun.png"
+        Petra, PyramidsGiza -> "moon.png"
+    }

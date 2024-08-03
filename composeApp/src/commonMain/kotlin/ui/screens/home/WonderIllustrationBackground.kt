@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,9 +44,11 @@ import models.TajMahal
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.painterResource
+import ui.celestialBodyImageName
 import ui.composables.BackgroundTexture
 import ui.composables.IllustrationPiece
 import ui.getAssetPath
+import ui.screens.home.components.CelestialBodyConfig
 import ui.theme.fgColor
 import wonderouscompose.composeapp.generated.resources.Res
 import wonderouscompose.composeapp.generated.resources.cloud_white
@@ -59,7 +60,7 @@ import kotlin.random.Random
 @Composable
 fun WonderIllustrationBackground(
     currentWonder: Wonder,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) = BoxWithConstraints(modifier.background(currentWonder.fgColor)) {
     val maxWidthPx = LocalDensity.current.run { maxWidth.roundToPx() }
 
@@ -95,14 +96,15 @@ fun WonderIllustrationBackground(
 }
 
 @Composable
-private fun BoxWithConstraintsScope.CelestialBody(
+fun BoxWithConstraintsScope.CelestialBody(
     imagePath: String,
     celestialBodyConfig: CelestialBodyConfig,
     isVisible: Boolean,
+    modifier: Modifier = Modifier,
 ) = IllustrationPiece(
     isVisible = isVisible,
     imagePath = imagePath,
-    modifier = Modifier
+    modifier = modifier
         .height(celestialBodyConfig.height * maxHeight)
         .align(celestialBodyConfig.alignment),
     hiddenStateOffset = { Offset(0f, celestialBodyConfig.hiddenStateYOffset) },
@@ -115,7 +117,7 @@ private fun BoxWithConstraintsScope.AnimatedCloud(
     isVisible: Boolean,
     maxWidthPx: Int,
     maxCloudHeight: Dp,
-    cloudConfig: CloudConfig
+    cloudConfig: CloudConfig,
 ) {
     val anim = rememberInfiniteTransition()
     val animationDuration = remember {
@@ -211,18 +213,6 @@ private val Wonder.celestialBodyConfig: CelestialBodyConfig
         )
     }
 
-private val Wonder.celestialBodyImageName
-    get() = when (this) {
-        ChichenItza, TajMahal, ChristRedeemer, Colosseum, GreatWall, MachuPicchu -> "sun.png"
-        Petra, PyramidsGiza -> "moon.png"
-    }
-
-private data class CelestialBodyConfig(
-    val name: String,
-    val alignment: Alignment,
-    val height: Float,
-    val hiddenStateYOffset: Float,
-)
 
 /**
  * Configuration object for the clouds shown on home screen
@@ -234,7 +224,7 @@ private data class CloudConfig(
     val flipHorizontally: Boolean,
     val animationStart: Float,
     val animationEnd: Float,
-    val duration: Float
+    val duration: Float,
 )
 
 private const val CLOUD_COUNT = 3

@@ -4,7 +4,6 @@ import CompassDivider
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
@@ -58,6 +57,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -87,7 +87,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import kotlinx.coroutines.delay
 import models.ChichenItza
 import models.ChristRedeemer
 import models.Colosseum
@@ -101,6 +100,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import ui.celestialBodyImageName
 import ui.composables.AppIconButton
 import ui.composables.BackgroundTexture
 import ui.composables.CircularText
@@ -116,7 +116,9 @@ import ui.photo1
 import ui.photo2
 import ui.photo3
 import ui.photo4
+import ui.screens.home.CelestialBody
 import ui.screens.home.bgTexture
+import ui.screens.home.components.CelestialBodyConfig
 import ui.theme.B612Mono
 import ui.theme.accent1
 import ui.theme.bgColor
@@ -135,8 +137,6 @@ import wonderouscompose.composeapp.generated.resources.geography
 import wonderouscompose.composeapp.generated.resources.history
 import wonderouscompose.composeapp.generated.resources.icon_next
 import wonderouscompose.composeapp.generated.resources.semanticsNext
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 
 @OptIn(
@@ -206,7 +206,15 @@ fun SharedTransitionScope.EditorialScreen(
             )
         }
         val mainImageContainerHeight = 250.dp
-        Box(Modifier.padding(top = 20.dp).height(mainImageContainerHeight).fillMaxWidth()) {
+        BoxWithConstraints(
+            Modifier.padding(top = 20.dp).height(mainImageContainerHeight).fillMaxWidth()
+        ) {
+            CelestialBody(
+                isVisible = entered.value,
+                imagePath = wonder.getAssetPath(wonder.celestialBodyImageName),
+                celestialBodyConfig = wonder.celestialBodyConfig,
+                modifier = Modifier.zIndex(-0.15f)
+            )
             Image(
                 filePainterResource(wonder.getAssetPath(wonder.mainImageName)),
                 modifier = Modifier
@@ -796,27 +804,6 @@ fun ParallaxImages(
     }
 }
 
-@Composable
-fun AnimatedEntry(
-    delay: Duration = 0.milliseconds,
-    entry: EnterTransition = fadeIn(),
-    modifier: Modifier = Modifier,
-    content: @Composable AnimatedVisibilityScope.() -> Unit,
-) {
-    val entered = remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        delay(delay)
-        entered.value = true
-    }
-    AnimatedVisibility(
-        visible = entered.value,
-        modifier = modifier,
-        enter = entry
-    ) {
-        content()
-    }
-}
-
 
 enum class InfoSection(val title: StringResource, val imageDrawable: DrawableResource) {
     FactsAndHistory(Res.string.appBarTitleFactsHistory, Res.drawable.history),
@@ -860,4 +847,63 @@ private val Wonder.mainImageAlignment
     get() = when (this) {
         ChristRedeemer -> Alignment.TopCenter
         else -> Alignment.BottomCenter
+    }
+
+private val Wonder.celestialBodyConfig: CelestialBodyConfig
+    get() = when (this) {
+        ChichenItza -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(.4f, -.1f),
+            height = .6f,
+            hiddenStateYOffset = 0f,
+        )
+
+        ChristRedeemer -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(.7f, -1.1f),
+            height = .6f,
+            hiddenStateYOffset = .5f,
+        )
+
+        Colosseum -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(.3f, -.95f),
+            height = .4f,
+            hiddenStateYOffset = .5f,
+        )
+
+        GreatWall -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(-.3f, -1f),
+            height = .6f,
+            hiddenStateYOffset = .5f,
+        )
+
+        MachuPicchu -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(1.1f, -1.1f),
+            height = .5f,
+            hiddenStateYOffset = .5f,
+        )
+
+        Petra -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(-.2f, -1.2f),
+            height = .3f,
+            hiddenStateYOffset = -.5f,
+        )
+
+        PyramidsGiza -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(.85f, -.85f),
+            height = .5f,
+            hiddenStateYOffset = -.5f,
+        )
+
+        TajMahal -> CelestialBodyConfig(
+            name = celestialBodyImageName,
+            alignment = BiasAlignment(-.5f, -1.2f),
+            height = .7f,
+            hiddenStateYOffset = .5f,
+        )
     }

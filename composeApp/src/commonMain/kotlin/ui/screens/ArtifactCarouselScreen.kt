@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import data.HighlightData
 import kotlinx.coroutines.launch
 import models.ChichenItza
@@ -64,6 +63,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.AppIconButton
 import ui.composables.LongButton
+import ui.composables.NetworkImage
 import ui.composables.PreviousNextNavigation
 import ui.theme.TenorSans
 import ui.theme.greyMedium
@@ -111,7 +111,7 @@ fun ArtifactCarouselScreen(
                         fadeOut(tween(durationMillis = 800))
             },
         ) { imageUrl ->
-            AsyncImage(
+            NetworkImage(
                 imageUrl,
                 contentDescription = "background",
                 modifier = Modifier.blur(8.dp)
@@ -262,7 +262,7 @@ private fun ArtifactImageInBox(
         modifier,
         contentAlignment = Alignment.BottomCenter
     ) {
-        AsyncImage(
+        NetworkImage(
             url,
             contentDescription = name,
             modifier = Modifier

@@ -46,11 +46,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import data.UnsplashPhotoData
 import data.UnsplashPhotoSize
-
 import models.Wonder
+import ui.composables.NetworkImage
 import ui.composables.SimpleGrid
 import ui.theme.black
 import ui.utils.eightWaySwipeDetector
@@ -194,7 +193,7 @@ private fun OverlayWithAnimatedCutOut(
     key: Any,
     modifier: Modifier = Modifier,
     cutoutSize: DpSize,
-    cutoutCornerRadius: Dp = 12.dp
+    cutoutCornerRadius: Dp = 12.dp,
 ) {
     val animatable = remember(key) { Animatable(0.8f) }
     LaunchedEffect(key) {
@@ -232,7 +231,7 @@ private fun UnsplashImage(
             .clickable(onClick = onTap),
         contentAlignment = Alignment.Center,
     ) {
-        AsyncImage(
+        NetworkImage(
             photoUrl,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
@@ -258,7 +257,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
         Modifier.fillMaxSize().background(black.copy(alpha = .6f)).clickable { onDismiss() },
         contentAlignment = Alignment.Center,
     ) {
-        AsyncImage(
+        NetworkImage(
             url,
             contentDescription = null,
             modifier = Modifier.simpleTransformable().fillMaxSize().padding(24.dp),
@@ -275,7 +274,7 @@ fun FullscreenUrlImgViewer(url: String, onDismiss: () -> Unit) {
  */
 private fun Modifier.roundedRectangularCutout(
     cutoutSize: DpSize,
-    cornerRadius: Dp
+    cornerRadius: Dp,
 ) = drawWithContent {
     val padX = (size.width - cutoutSize.width.toPx()) / 2
     val padY = (size.height - cutoutSize.height.toPx()) / 2

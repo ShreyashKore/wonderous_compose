@@ -55,13 +55,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import coil3.compose.AsyncImage
 import data.MetRepository
 import kotlinx.coroutines.delay
 import models.ArtifactData
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.AppIconButton
+import ui.composables.NetworkImage
 import ui.theme.TenorSans
 import ui.theme.accent1
 import ui.theme.accent2
@@ -247,7 +247,7 @@ private fun ArtifactImage(
             .background(black)
             .padding(bottom = 12.dp),
     ) {
-        AsyncImage(
+        NetworkImage(
             imageUrl.prependProxy(),
             onLoading = {
                 // CircularProgressIndicator()

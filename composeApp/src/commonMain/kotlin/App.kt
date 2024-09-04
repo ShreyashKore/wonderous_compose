@@ -150,15 +150,13 @@ fun App() {
     }
 }
 
-private val DefaultEnterTransition
-    get() = fadeIn(tween(500))
+private val DefaultEnterTransition = fadeIn(tween(500))
 
 val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultExitTransition
     get() = fadeOut(tween(600, delayMillis = 100)) +
             ExitTransition.KeepUntilTransitionsFinished
 
-private val DefaultPopEnterTransition
-    get() = fadeIn(tween(200))
+private val DefaultPopEnterTransition = fadeIn(tween(200))
 
 val AnimatedContentTransitionScope<NavBackStackEntry>.DefaultPopExitTransition
     get() = fadeOut(tween(500)) + ExitTransition.KeepUntilTransitionsFinished

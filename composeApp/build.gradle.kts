@@ -92,6 +92,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+            implementation(libs.image.loader)
         }
 
         val nonWebMain by getting {

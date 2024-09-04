@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import data.search_data.TajMahalSearchData
 import data.search_data.TajMahalSearchSuggestions
 import models.SearchData
@@ -47,6 +46,7 @@ import models.Wonder
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.composables.BackButton
+import ui.composables.NetworkImage
 import ui.theme.Raleway
 import ui.theme.TenorSans
 import ui.theme.accent1
@@ -162,7 +162,7 @@ fun ArtifactListScreen(
         ) {
             items(filteredArtifacts) { artifact ->
 
-                AsyncImage(
+                NetworkImage(
                     artifact.imageUrl.prependProxy(),
                     contentDescription = artifact.title,
                     modifier = Modifier.padding(8.dp)

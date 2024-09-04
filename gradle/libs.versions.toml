@@ -8,20 +8,21 @@ agp = "8.2.2"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.0"
+androidx-activityCompose = "1.9.1"
 appcompat = "1.7.0"
-coilCompose = "3.0.0-alpha06"
-compose-plugin = "1.7.0-alpha01"
-kotlin = "2.1.0-dev-875"
+compose-plugin = "1.7.0-alpha03"
+kotlin = "2.0.20"
 composeWebviewMultiplatform = "1.8.8"
-kamelImage = "0.9.2-wasm"
+coilCompose = "3.0.0-alpha10"
+kamelImage = "1.0.0-beta.6"
+imageLoader = "1.8.2"
 lifecycle = "2.8.0"
 androidx-navigation = "2.8.0-alpha02"
 mapsCompose = "2.11.2"
 playServicesLocation = "21.3.0"
-playServicesMaps = "18.2.0"
-ktor = "3.0.0-wasm2"
-kotlinx-serialization = "1.6.3"
+playServicesMaps = "19.0.0"
+ktor = "3.0.0-beta-2"
+kotlinx-serialization = "1.7.1"
 kotlinx-datetime = "0.6.0"
 
 
@@ -52,13 +53,15 @@ ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 
 # Image Loading
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilCompose" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
+image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
 
 # UI
 compose-webview-multiplatform = { module = "io.github.kevinnzou:compose-webview-multiplatform", version.ref = "composeWebviewMultiplatform" }

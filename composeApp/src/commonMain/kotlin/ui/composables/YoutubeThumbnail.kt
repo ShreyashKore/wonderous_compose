@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import ui.theme.black
 import ui.theme.white
 import utils.prependProxy
@@ -34,7 +33,7 @@ fun YouTubeThumbnail(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        AsyncImage(
+        NetworkImage(
             imageUrl,
             contentDescription = null,
             modifier = Modifier

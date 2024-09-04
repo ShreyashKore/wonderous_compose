@@ -145,9 +145,11 @@ kotlin {
 }
 
 android {
-    val keyProp = Properties().apply {
+    val keyProp = run {
         val keyPropFile = rootProject.file("key.properties")
-        load(keyPropFile.inputStream())
+        if (keyPropFile.exists())
+            Properties().apply { load(keyPropFile.inputStream()) }
+        else null
     }
 
     namespace = "com.shreyashkore.wonderouscompose"
@@ -170,17 +172,21 @@ android {
         }
     }
     signingConfigs {
-        create("release") {
-            storePassword = keyProp.getProperty("storePassword")
-            keyPassword = keyProp.getProperty("keyPassword")
-            keyAlias = keyProp.getProperty("alias")
-            storeFile = File(keyProp.getProperty("path"))
+        if (keyProp != null) {
+            create("release") {
+                storePassword = keyProp.getProperty("storePassword")
+                keyPassword = keyProp.getProperty("keyPassword")
+                keyAlias = keyProp.getProperty("alias")
+                storeFile = File(keyProp.getProperty("path"))
+            }
         }
     }
     buildTypes {
-        getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+        if (keyProp != null) {
+            getByName("release") {
+                signingConfig = signingConfigs.getByName("release")
+                isMinifyEnabled = false
+            }
         }
     }
     compileOptions {

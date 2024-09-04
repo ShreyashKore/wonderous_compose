@@ -38,9 +38,6 @@ jobs:
       - name: Create Android keystore File
         run: |
           echo -n "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > $RUNNER_TEMP/key.jks
-      - name: Build with Gradle
-        run:
-          ./gradlew build
       - name: Build APK
         run: ./gradlew composeApp:assembleRelease
       - name: Build Deb
@@ -64,6 +61,23 @@ jobs:
           gh release upload $GITHUB_REF_NAME ./composeApp/build/outputs/apk/release/composeApp-release.apk
           gh release upload $GITHUB_REF_NAME ./composeApp/build/compose/binaries/main/deb/com.shreyashkore.wonderouscompose_$VERSION-1_amd64.deb
 
+      - name: Deploy Wasm
+        if: ${{ github.event_name == 'release' }}
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: composeApp/build/dist/wasmJs/productionExecutable
+          repository-name: ShreyashKore/wonderous-compose-wasm
+      - name: Deploy JS
+        if: ${{ github.event_name == 'release' }}
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: composeApp/build/dist/js/productionExecutable
+          repository-name: ShreyashKore/wonderous-compose-js
+
   build_windows:
     permissions:
       contents: write
@@ -79,50 +93,36 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Create Key.properties File
         run: |
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > ./key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./key.properties
-          echo "alias=${{ secrets.KEY_ALIAS }}" >> ./key.properties
-          echo "path=${{ runner.temp }}/key.jks" >> ./key.properties
-      - name: Create Android keystore File
-        shell: bash
-        run: |
-          echo -n "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > $RUNNER_TEMP/key.jks
-      - name: Create Local.properties File
-        run: |
-          echo "MAPS_API_KEY=${{ secrets.MAP_API_KEY }}" >> ./local.properties
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Build Msi
+          chmod +x gradlew
+      - name: Create dummy local.properties
+        run: echo "sdk.dir=some_location" > ./local.properties
+      - name: Build MSI
         run: |
           ./gradlew composeApp:packageMsi
-          cd ./composeApp/build/compose/binaries/
-          ls -R
       - name: Upload Release Asset
         env:
           VERSION: ${{ github.ref_name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ github.event_name == 'release' }}
         run: |
-          gh release upload $GITHUB_REF_NAME ./composeApp/build/compose/binaries/main/msi/com.shreyashkore.wonderouscompose_$VERSION_amd64.msi
+          gh release upload $GITHUB_REF_NAME ./composeApp/build/compose/binaries/main/msi/com.shreyashkore.wonderouscompose-$VERSION.msi
 
-#  build_ios:
-#    runs-on: macos-latest
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: set up JDK 17
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#          cache: gradle
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#      - name: "Setup Gradle"
-#        uses: gradle/gradle-build-action@v2
-#      - name: "Build xcworkspace"
-#        run: ./gradlew podInstall
+  #  build_ios:
+  #    runs-on: macos-latest
+  #
+  #    steps:
+  #      - uses: actions/checkout@v4
+  #      - name: set up JDK 17
+  #        uses: actions/setup-java@v3
+  #        with:
+  #          java-version: '17'
+  #          distribution: 'temurin'
+  #          cache: gradle
+  #
+  #      - name: Grant execute permission for gradlew
+  #        run: chmod +x gradlew
+  #      - name: "Setup Gradle"
+  #        uses: gradle/gradle-build-action@v2
+  #      - name: "Build xcworkspace"
+  #        run: ./gradlew podInstall

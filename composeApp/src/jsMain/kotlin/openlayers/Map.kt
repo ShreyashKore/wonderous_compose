@@ -14,6 +14,10 @@ external class Map {
     fun setView(view: View)
 }
 
+@JsNonModule
+@JsModule("ol/ol.css")
+external val olCss: dynamic
+
 external interface MapOptions {
     var target: String
 
@@ -24,7 +28,7 @@ external interface MapOptions {
 
 @OptIn(ExperimentalJsCollectionsApi::class)
 fun MapOptions(
-    target: String? = null, layers: JsArray<Layer>? = null, view: View? = null
+    target: String? = null, layers: JsArray<Layer>? = null, view: View? = null,
 ): MapOptions = js(
     """({
         target: target,

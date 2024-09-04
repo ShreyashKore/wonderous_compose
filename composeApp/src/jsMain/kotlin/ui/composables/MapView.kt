@@ -23,6 +23,7 @@ import openlayers.ViewOptions
 import openlayers.XYZ
 import openlayers.XYZOptions
 import openlayers.fromLonLat
+import openlayers.olCss
 
 @OptIn(ExperimentalJsCollectionsApi::class)
 @Composable
@@ -32,7 +33,7 @@ actual fun MapView(
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
-    mapType: MapType
+    mapType: MapType,
 ) {
     val map = remember { openlayers.Map() }
     val adjustedZoomLevel = zoomLevel * 5f
@@ -92,3 +93,6 @@ private val DEFAULT_MARKER_STYLE: VectorStyle = VectorStyle(
  * Satellite map view doesn't provide imagery beyond this zoom level
  */
 private const val MAX_ZOOM = 18f
+
+// Referring style so that it is not removed by the compiler ??
+val styles = olCss

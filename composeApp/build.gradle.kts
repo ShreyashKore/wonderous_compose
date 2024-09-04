@@ -37,15 +37,21 @@ kotlin {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
+                cssSupport { enabled.set(true) }
             }
         }
         binaries.executable()
     }
 
     js(IR) {
-        browser()
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                cssSupport { enabled.set(true) }
+            }
+        }
         binaries.executable()
-//        useEsModules()
+        useEsModules()
     }
 
     androidTarget {
@@ -125,6 +131,8 @@ kotlin {
             // TODO: replace with implementation("com.github.Hamamas:Kotlin-Wasm-Html-Interop:0.0.3-alpha")
             implementation(project(":composeWebInterop"))
             implementation(npm("ol", "9.2.4"))
+            api(libs.ktor.client.js)
+            api(libs.coil.network.ktor)
         }
 
         val wasmJsMain by getting

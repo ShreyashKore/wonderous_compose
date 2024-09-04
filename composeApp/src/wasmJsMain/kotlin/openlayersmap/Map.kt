@@ -9,6 +9,9 @@ external class Map(options: MapOptions? = definedExternally) : JsAny {
     fun setView(view: View)
 }
 
+@JsModule("ol/ol.css")
+external val olCss: JsAny
+
 external interface MapOptions : JsAny {
     var target: String
     var layers: JsArray<Layer>?
@@ -16,7 +19,7 @@ external interface MapOptions : JsAny {
 }
 
 fun MapOptions(
-    target: String? = null, layers: JsArray<Layer>? = null, view: View? = null
+    target: String? = null, layers: JsArray<Layer>? = null, view: View? = null,
 ): MapOptions = js(
     """({
         target: target,

@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="jsBrowserRun" />
+          <option value="jsBrowserDevelopmentRun" />
         </list>
       </option>
       <option name="vmOptions" />
@@ -18,7 +18,7 @@
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <ForceTestExec>false</ForceTestExec>
+    <RunAsTest>false</RunAsTest>
     <method v="2" />
   </configuration>
 </component>

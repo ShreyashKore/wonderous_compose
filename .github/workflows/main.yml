@@ -85,15 +85,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: print variables
-        env:
-          VERSION: ${{ toJson(github) }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: |
-          echo "VERRR $VERSION $GITHUB_REF_NAME"
-          echo "ref=${{ github.ref }}"
-          echo "value=${{ github.event.inputs.release_ref }}"
-
       - uses: actions/checkout@v4
       - name: set up JDK 17
         uses: actions/setup-java@v3

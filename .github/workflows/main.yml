@@ -50,32 +50,32 @@ jobs:
         if: ${{ github.event_name == 'release' }}
         env:
           VERSION: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           JS_ZIP="com.shreyashkore.wonderouscompose_$VERSION-JS.zip"
           WASM_ZIP="com.shreyashkore.wonderouscompose_$VERSION-WASM.zip"
           DEB_FILE=$(find ./composeApp/build/compose/binaries/main/deb/ -name "*.deb" | head -n 1)
           (cd ./composeApp/build/dist && zip -r $JS_ZIP js)
           (cd ./composeApp/build/dist && zip -r $WASM_ZIP wasmJs)
-          gh release upload $VERSION ./composeApp/build/dist/$JS_ZIP
-          gh release upload $VERSION ./composeApp/build/dist/$WASM_ZIP
-          gh release upload $VERSION ./composeApp/build/outputs/apk/release/composeApp-release.apk
-          gh release upload "$VERSION" "$DEB_FILE"
+          gh release upload "$VERSION" "./composeApp/build/dist/$JS_ZIP" --clobber
+          gh release upload "$VERSION" "./composeApp/build/dist/$WASM_ZIP" --clobber
+          gh release upload "$VERSION" "./composeApp/build/outputs/apk/release/composeApp-release.apk" --clobber
+          gh release upload "$VERSION" "$DEB_FILE" --clobber
 
       - name: Deploy Wasm
         if: ${{ github.event_name == 'release' }}
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
+          token: ${{ secrets.TOKEN }}
+          branch: main
           folder: composeApp/build/dist/wasmJs/productionExecutable
           repository-name: ShreyashKore/wonderous-compose-wasm
       - name: Deploy JS
         if: ${{ github.event_name == 'release' }}
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
+          token: ${{ secrets.TOKEN }}
+          branch: main
           folder: composeApp/build/dist/js/productionExecutable
           repository-name: ShreyashKore/wonderous-compose-js
 
@@ -105,10 +105,10 @@ jobs:
         if: ${{ github.event_name == 'release' }}
         env:
           VERSION: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
-          MSI_FILE=$(find ./composeApp/build/compose/binaries/main/msi/ -name "*.msi" | head -n 1)
-          gh release upload "$VERSION" "$MSI_FILE"
+          $MSI_FILE = (Get-ChildItem -Path .\composeApp\build\compose\binaries\main\msi\ -Filter *.msi | Select-Object -First 1).FullName
+          gh release upload "$VERSION" "$MSI_FILE" --clobber
 
   #  build_ios:
   #    runs-on: macos-latest

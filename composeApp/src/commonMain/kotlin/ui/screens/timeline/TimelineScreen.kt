@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -50,8 +51,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
@@ -60,6 +63,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.coerceAtLeast
@@ -93,6 +97,7 @@ import ui.theme.greyStrong
 import ui.theme.white
 import ui.utils.filePainterResource
 import ui.utils.lerp
+import utils.StringUtils.getEra
 import utils.StringUtils.getYrSuffix
 import utils.dashedBorder
 import wonderouscompose.composeapp.generated.resources.Res
@@ -132,8 +137,23 @@ fun TimelineScreen(
             detectTransformGestures { _, _, zoom, _ ->
                 timelineState.setScale(zoom)
             }
+        }.drawWithContent {
+            drawContent()
+            drawRect(
+                brush = Brush.verticalGradient(
+                    startY = 0f,
+                    endY = maxHeight.toPx(),
+                    colorStops = arrayOf(
+                        0.08f to black,
+                        0.18f to Color.Transparent,
+                        0.75f to Color.Transparent,
+                        0.90f to black,
+                    ),
+                )
+            )
         }.verticalScroll(timelineState.scrollState).padding(vertical = verticalPadding)
-            .height(timelineState.timelineHeight), contentAlignment = Alignment.Center
+            .height(timelineState.timelineHeight),
+        contentAlignment = Alignment.Center,
     ) {
 
         Row(Modifier.widthIn(max = 600.dp)) {
@@ -171,9 +191,26 @@ fun TimelineScreen(
     )
 
     // Small bottom timeline
-    Box(
+    val eraStrResource by remember { derivedStateOf { getEra(timelineState.currentYear) } }
+    Column(
         Modifier.widthIn(max = 800.dp).align(Alignment.BottomCenter).padding(20.dp)
     ) {
+        AnimatedContent(
+            targetState = eraStrResource,
+            transitionSpec = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up) togetherWith
+                        slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down)
+            },
+            modifier = Modifier.fillMaxWidth().padding(6.dp)
+        ) { era ->
+            Text(
+                stringResource(era),
+                fontSize = 14.sp,
+                fontFamily = Raleway,
+                color = white,
+                textAlign = TextAlign.Center
+            )
+        }
         SmallTimeline(
             getScrollFraction = { timelineState.scrollFraction },
             modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(greyStrong).fillMaxWidth()
@@ -211,7 +248,7 @@ fun TimelineScreen(
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = black,
+            containerColor = Color.Transparent,
             titleContentColor = white,
         ),
         title = {

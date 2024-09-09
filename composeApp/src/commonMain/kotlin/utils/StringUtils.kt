@@ -1,17 +1,30 @@
 package utils
 
+import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import wonderouscompose.composeapp.generated.resources.Res
+import wonderouscompose.composeapp.generated.resources.eraClassical
+import wonderouscompose.composeapp.generated.resources.eraEarlyModern
+import wonderouscompose.composeapp.generated.resources.eraModern
+import wonderouscompose.composeapp.generated.resources.eraPrehistory
+import wonderouscompose.composeapp.generated.resources.yearBCE
+import wonderouscompose.composeapp.generated.resources.yearCE
+
 object StringUtils {
 
+    @Composable
     fun formatYr(yr: Int): String {
         val formattedYr = if (yr == 0) 1 else yr
-        return "${formattedYr}${getYrSuffix(yr)}"
+        return "$formattedYr ${getYrSuffix(yr)}"
     }
 
+    @Composable
     fun getYrSuffix(yr: Int): String {
-        return if (yr < 0) yearBCE else yearCE
+        return stringResource(if (yr < 0) yearBCE else yearCE)
     }
 
-    fun getEra(yr: Int): String {
+    fun getEra(yr: Int): StringResource {
         return when {
             yr <= -600 -> eraPrehistory
             yr <= 476 -> eraClassical
@@ -21,10 +34,10 @@ object StringUtils {
     }
 }
 
-const val eraPrehistory = "Prehistory"
-const val eraClassical = "Classical Era"
-const val eraEarlyModern = "Early Modern Era"
-const val eraModern = "Modern Era"
+val eraPrehistory = Res.string.eraPrehistory
+val eraClassical = Res.string.eraClassical
+val eraEarlyModern = Res.string.eraEarlyModern
+val eraModern = Res.string.eraModern
 
-const val yearBCE = "BCE"
-const val yearCE = "CE"
+val yearBCE = Res.string.yearBCE
+val yearCE = Res.string.yearCE

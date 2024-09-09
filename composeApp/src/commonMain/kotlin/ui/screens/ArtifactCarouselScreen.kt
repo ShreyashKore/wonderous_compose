@@ -202,7 +202,7 @@ fun ArtifactCarouselScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 300.dp)
+                            .heightIn(max = 500.dp)
                             .fillMaxHeight(.6f)
                             .graphicsLayer {
                                 val pageOffset =
@@ -255,7 +255,7 @@ private fun ArtifactImageInBox(
     modifier: Modifier = Modifier,
 ) {
 
-    val height by animateFloatAsState(if (isSelected) 1f else .4f, animationSpec = tween(800))
+    val height by animateFloatAsState(if (isSelected) 1f else .5f, animationSpec = tween(800))
     val width by animateFloatAsState(if (isSelected) 1f else .8f, animationSpec = tween(800))
 
     Box(

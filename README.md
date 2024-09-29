@@ -80,7 +80,7 @@ Photography from [Unsplash.](https://unsplash.com/@gskinner/collections)
 - [Ktor](https://ktor.io/): HTTP networking
 - [AndroidX Navigation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-navigation-routing.html):
   Navigation
-- [Coil](https://github.com/coil-kt/coil): Image Loading
+- [Compose Image Loader](https://github.com/qdsfdhvh/compose-imageloader): Image Loading
 - [compose-webview-multiplatform](https://github.com/KevinnZou/compose-webview-multiplatform):
   WebView for Android, IOS
   and Desktop
@@ -118,7 +118,7 @@ Here 2 additional intermediate source sets are created to share code among web p
 
 - [ ] Collectibles and My Collection Screen
 
-- [ ] Localization
+- [x] Localization
 
 - [ ] Gesture support on Web and Desktop platforms
 

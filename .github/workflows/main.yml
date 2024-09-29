@@ -47,6 +47,7 @@ jobs:
       - name: Build JS
         run: ./gradlew composeApp:jsBrowserDistribution
       - name: Generate release assets
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         env:
           VERSION: ${{ github.ref_name }}
         run: |

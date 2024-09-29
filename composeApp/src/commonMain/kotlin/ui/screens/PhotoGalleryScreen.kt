@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -30,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -40,6 +43,11 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -111,6 +119,10 @@ fun PhotoGallery(
     }
 
     var showFullScreenImage by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     val hapticFeedback = LocalHapticFeedback.current
     LaunchedEffect(currentIndex) {
@@ -147,6 +159,34 @@ fun PhotoGallery(
     SimpleGrid(
         modifier = Modifier
             .requiredSize(itemSize * gridSize)
+            .focusRequester(focusRequester)
+            .focusable()
+            .onKeyEvent { key ->
+                if (key.type != KeyEventType.KeyDown) return@onKeyEvent false
+                when (key.key) {
+                    Key.DirectionUp -> {
+                        onSwipe(Offset(0f, 1f))
+                        true
+                    }
+
+                    Key.DirectionDown -> {
+                        onSwipe(Offset(0f, -1f))
+                        true
+                    }
+
+                    Key.DirectionLeft -> {
+                        onSwipe(Offset(1f, 0f))
+                        true
+                    }
+
+                    Key.DirectionRight -> {
+                        onSwipe(Offset(-1f, 0f))
+                        true
+                    }
+
+                    else -> false
+                }
+            }
             .eightWaySwipeDetector(onSwipe = ::onSwipe)
             .offset { gridOffset.roundToIntOffset() },
         columnCount = gridSize,

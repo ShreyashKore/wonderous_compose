@@ -1,10 +1,10 @@
 name: Main
 
 on:
-  release:
-    types: [ published, prereleased ]
   workflow_dispatch:
   push:
+    tags:
+      - "v*.*.*"
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
@@ -46,21 +46,24 @@ jobs:
         run: ./gradlew composeApp:wasmJsBrowserDistribution
       - name: Build JS
         run: ./gradlew composeApp:jsBrowserDistribution
-      - name: Upload Release Asset
-        if: ${{ github.event_name == 'release' }}
+      - name: Generate release assets
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         env:
           VERSION: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           JS_ZIP="com.shreyashkore.wonderouscompose_$VERSION-JS.zip"
           WASM_ZIP="com.shreyashkore.wonderouscompose_$VERSION-WASM.zip"
-          DEB_FILE=$(find ./composeApp/build/compose/binaries/main/deb/ -name "*.deb" | head -n 1)
           (cd ./composeApp/build/dist && zip -r $JS_ZIP js)
           (cd ./composeApp/build/dist && zip -r $WASM_ZIP wasmJs)
-          gh release upload "$VERSION" "./composeApp/build/dist/$JS_ZIP" --clobber
-          gh release upload "$VERSION" "./composeApp/build/dist/$WASM_ZIP" --clobber
-          gh release upload "$VERSION" "./composeApp/build/outputs/apk/release/composeApp-release.apk" --clobber
-          gh release upload "$VERSION" "$DEB_FILE" --clobber
+      - name: Release
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          token: ${{ secrets.TOKEN }}
+          files: |
+            ./composeApp/build/outputs/apk/release/composeApp-release.apk
+            ./composeApp/build/compose/binaries/main/deb/*.deb
+            ./composeApp/build/dist/*.zip
 
       - name: Deploy Wasm
         if: ${{ github.event_name == 'release' }}
@@ -102,13 +105,12 @@ jobs:
         run: |
           ./gradlew composeApp:packageMsi
       - name: Upload Release Asset
-        if: ${{ github.event_name == 'release' }}
-        env:
-          VERSION: ${{ github.ref_name }}
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: |
-          $MSI_FILE = (Get-ChildItem -Path .\composeApp\build\compose\binaries\main\msi\ -Filter *.msi | Select-Object -First 1).FullName
-          gh release upload "$VERSION" "$MSI_FILE" --clobber
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: softprops/action-gh-release@v2.0.8
+        with:
+          token: ${{ secrets.TOKEN }}
+          files: |
+            ./composeApp/build/compose/binaries/main/msi/*.msi
 
   #  build_ios:
   #    runs-on: macos-latest

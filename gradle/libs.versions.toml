@@ -1,29 +1,29 @@
 [versions]
 ## Project Version
-versionCode = "104"
-versionName = "1.0.4"
+versionCode = "105"
+versionName = "1.0.5"
 
 ## Frameworks and Libraries
 agp = "8.2.2"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.1"
+androidx-activityCompose = "1.9.2"
 appcompat = "1.7.0"
-compose-plugin = "1.7.0-alpha03"
+compose-plugin = "1.7.0-beta02"
 kotlin = "2.0.20"
 composeWebviewMultiplatform = "1.8.8"
 coilCompose = "3.0.0-alpha10"
 kamelImage = "1.0.0-beta.6"
 imageLoader = "1.8.2"
-lifecycle = "2.8.0"
-androidx-navigation = "2.8.0-alpha02"
+lifecycle = "2.8.2"
+androidx-navigation = "2.8.0-alpha10"
 mapsCompose = "2.11.2"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
-ktor = "3.0.0-beta-2"
-kotlinx-serialization = "1.7.1"
-kotlinx-datetime = "0.6.0"
+ktor = "3.0.0-rc-1"
+kotlinx-serialization = "1.7.3"
+kotlinx-datetime = "0.6.1"
 
 
 [libraries]

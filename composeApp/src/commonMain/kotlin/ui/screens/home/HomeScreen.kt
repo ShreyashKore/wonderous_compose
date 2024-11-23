@@ -89,7 +89,6 @@ import ui.composables.WonderTitleText
 import ui.getAssetPath
 import ui.mainImageName
 import ui.theme.black
-import ui.theme.greyStrong
 import ui.theme.white
 import ui.utils.filePainterResource
 import wonderouscompose.composeapp.generated.resources.Res
@@ -317,7 +316,7 @@ fun HomeScreen(
                 }
                 isMenuOpen = false
             },
-            modifier = Modifier.fillMaxSize().background(greyStrong.copy(.4f)),
+            modifier = Modifier.fillMaxSize(),
             openTimeline = { openTimelineScreen(currentWonder) },
             openCollection = {}
         )

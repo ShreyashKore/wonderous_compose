@@ -64,8 +64,8 @@ fun WonderEvents(
 ) = BoxWithConstraints(Modifier.background(black).safeDrawingPadding()) {
     val wonderEvents = wonder.events
 
-    val bgHeight = maxHeight * 0.55f
-    val sheetHeight = maxHeight * 0.45f
+    val bgHeight = maxHeight * 0.5f
+    val sheetHeight = maxHeight * 0.5f
 
     @Composable
     fun ListComposable(modifier: Modifier = Modifier) {
@@ -168,6 +168,7 @@ fun WonderEvents(
             Modifier
                 .zIndex(10f)
                 .background(black)
+                .padding(bottom = 52.dp)
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
         ) {

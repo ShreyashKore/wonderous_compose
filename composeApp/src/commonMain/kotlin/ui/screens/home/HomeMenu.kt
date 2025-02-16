@@ -25,12 +25,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import kotlinx.coroutines.launch
 import models.Wonder
 import models.Wonders
 import org.jetbrains.compose.resources.DrawableResource
@@ -85,71 +90,90 @@ fun HomeMenu(
     if (isAboutDialogOpen) {
         AboutApp(onDismissRequest = { isAboutDialogOpen = false })
     }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = greyStrong.copy(.4f)
     ) {
-        // AppHeader
-        AppHeader(
-            onClickClose = onDismiss,
-            onChangeLanguage = {
-                changeLanguage(it)
-                onDismiss()
-            },
-        )
-
-        // Content
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 48.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(50.dp))
-            // Wonder Buttons Grid
-            WonderBtnsGrid(
-                currentWonder = data,
-                onSelectWonder = onChangeWonder,
-                btnSize = btnSize,
-                modifier = Modifier
-                    .width(btnSize * 3)
-                    .height(btnSize * 3)
+            // AppHeader
+            AppHeader(
+                onClickClose = onDismiss,
+                onChangeLanguage = {
+                    try {
+                        changeLanguage(it)
+                        onDismiss()
+                    } catch (e: NotImplementedError) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Changing language is currently only supported in Android!"
+                            )
+                        }
+                    }
+                },
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            // Bottom buttons
-            Column(
-                modifier = Modifier.widthIn(max = 450.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                BottomButton(
-                    onClick = openTimeline,
-                    icon = Res.drawable.icon_timeline,
-                    text = stringResource(Res.string.homeMenuButtonExplore)
-                )
-                HorizontalDivider(
-                    color = white.copy(.2f),
-                    thickness = 2.dp
-                )
-                BottomButton(
-                    onClick = openCollection,
-                    icon = Res.drawable.icon_collection,
-                    text = stringResource(Res.string.homeMenuButtonView)
-                )
-                HorizontalDivider(
-                    color = white.copy(.2f),
-                    thickness = 2.dp
-                )
-                BottomButton(
-                    onClick = { isAboutDialogOpen = true },
-                    icon = Res.drawable.icon_info,
-                    text = stringResource(Res.string.homeMenuButtonAbout)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-        }
 
+            // Content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 48.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(50.dp))
+                // Wonder Buttons Grid
+                WonderBtnsGrid(
+                    currentWonder = data,
+                    onSelectWonder = onChangeWonder,
+                    btnSize = btnSize,
+                    modifier = Modifier
+                        .width(btnSize * 3)
+                        .height(btnSize * 3)
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                // Bottom buttons
+                Column(
+                    modifier = Modifier.widthIn(max = 450.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    BottomButton(
+                        onClick = openTimeline,
+                        icon = Res.drawable.icon_timeline,
+                        text = stringResource(Res.string.homeMenuButtonExplore)
+                    )
+                    HorizontalDivider(
+                        color = white.copy(.2f),
+                        thickness = 2.dp
+                    )
+                    BottomButton(
+                        onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("This screen is not implemented yet!")
+                            }
+                        },
+                        icon = Res.drawable.icon_collection,
+                        text = stringResource(Res.string.homeMenuButtonView)
+                    )
+                    HorizontalDivider(
+                        color = white.copy(.2f),
+                        thickness = 2.dp
+                    )
+                    BottomButton(
+                        onClick = { isAboutDialogOpen = true },
+                        icon = Res.drawable.icon_info,
+                        text = stringResource(Res.string.homeMenuButtonAbout)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+//    }
     }
 }
 

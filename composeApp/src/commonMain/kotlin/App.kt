@@ -13,6 +13,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.savedstate.read
 import models.Wonder
 import models.parse
 import ui.screens.ArtifactDetailsScreen
@@ -72,7 +73,7 @@ fun App() {
                 composable(
                     "/home/wonder/{type}",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
+                    val id = backStackEntry.arguments?.read { getString("type") }
                     val wonder = Wonder.parse(id)
                     WonderDetailsScreen(
                         wonder = wonder,
@@ -89,7 +90,7 @@ fun App() {
                 composable(
                     "/timeline",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
+                    val id = backStackEntry.arguments?.read { getString("type") }
                     val wonder = Wonder.parse(id)
                     TimelineScreen(
                         selectedWonder = wonder,
@@ -100,7 +101,7 @@ fun App() {
                 composable(
                     "/artifact/{id}",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("id")!!
+                    val id = backStackEntry.arguments?.read { getString("id") }!!
                     ArtifactDetailsScreen(
                         artifactId = id,
                         onClickBack = { navigator.popBackStack() },
@@ -110,7 +111,7 @@ fun App() {
                 composable(
                     "/search/{type}",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
+                    val id = backStackEntry.arguments?.read { getString("type") }
                     val wonder = Wonder.parse(id)
                     val viewModel = viewModel { ArtifactListViewModel(wonder) }
                     ArtifactListScreen(
@@ -128,7 +129,7 @@ fun App() {
                 composable(
                     "/maps/{type}",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
+                    val id = backStackEntry.arguments?.read { getString("type") }
                     val wonder = Wonder.parse(id)
                     MapScreen(
                         latLng = wonder.latLng,
@@ -139,7 +140,7 @@ fun App() {
                 composable(
                     "/video/{id}",
                 ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("id")!!
+                    val id = backStackEntry.arguments?.read { getString("id") }!!
                     YoutubeVideoScreen(
                         id = id,
                         onBackClick = { navigator.popBackStack() }

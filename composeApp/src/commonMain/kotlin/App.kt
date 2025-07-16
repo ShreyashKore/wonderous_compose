@@ -13,6 +13,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import models.Wonder
 import models.parse
 import ui.screens.ArtifactDetailsScreen
@@ -39,15 +40,13 @@ fun App() {
 
             NavHost(
                 navController = navigator,
-                startDestination = "/home",
+                startDestination = AppRoute.Home,
                 enterTransition = { DefaultEnterTransition },
                 exitTransition = { DefaultExitTransition },
                 popEnterTransition = { DefaultPopEnterTransition },
                 popExitTransition = { DefaultPopExitTransition },
             ) {
-                composable(
-                    "/home",
-                ) { backStackEntry ->
+                composable<AppRoute.Home> { backStackEntry ->
                     // Temporary fix as current Wonder is not being remembered when in backstack
                     val savedStateHandle = backStackEntry.savedStateHandle
                     val currentWonderName = savedStateHandle.get<String>("currentWonder")
@@ -55,10 +54,10 @@ fun App() {
                     HomeScreen(
                         initialWonder = currentWonder,
                         openDetailScreen = {
-                            navigator.navigate("/home/wonder/${it.name}")
+                            navigator.navigate(AppRoute.Wonder(it.name))
                         },
                         openTimelineScreen = {
-                            navigator.navigate("/timeline?type=${it.name}")
+                            navigator.navigate(AppRoute.Timeline(it.name))
                         },
                         animatedVisibilityScope = this,
                         sharedTransitionScope = this@SharedTransitionLayout,
@@ -69,49 +68,42 @@ fun App() {
 
                 }
 
-                composable(
-                    "/home/wonder/{type}",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
-                    val wonder = Wonder.parse(id)
+                composable<AppRoute.Wonder> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.Wonder>()
+                    val wonder = Wonder.parse(route.wonderId)
                     WonderDetailsScreen(
                         wonder = wonder,
                         onPressHome = { navigator.popBackStack() },
-                        openTimelineScreen = { navigator.navigate("/timeline?type=${it?.name}") },
-                        openArtifactDetailsScreen = { navigator.navigate("/artifact/${it}") },
-                        openArtifactListScreen = { navigator.navigate("/search/${it.name}") },
-                        openMapScreen = { navigator.navigate("/maps/${it.name}") },
-                        openVideoScreen = { navigator.navigate("/video/$it") },
+                        openTimelineScreen = { navigator.navigate(AppRoute.Timeline(it?.name)) },
+                        openArtifactDetailsScreen = { navigator.navigate(AppRoute.ArtifactDetails(it)) },
+                        openArtifactListScreen = { navigator.navigate(AppRoute.Search(it.name)) },
+                        openMapScreen = { navigator.navigate(AppRoute.Maps(it.name)) },
+                        openVideoScreen = { navigator.navigate(AppRoute.Video(it)) },
                         animatedVisibilityScope = this,
                         sharedTransitionScope = this@SharedTransitionLayout,
                     )
                 }
-                composable(
-                    "/timeline",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
-                    val wonder = Wonder.parse(id)
+
+                composable<AppRoute.Timeline> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.Timeline>()
+                    val wonder = Wonder.parse(route.wonderId)
                     TimelineScreen(
                         selectedWonder = wonder,
                         onClickBack = { navigator.popBackStack() },
                     )
                 }
 
-                composable(
-                    "/artifact/{id}",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("id")!!
+                composable<AppRoute.ArtifactDetails> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.ArtifactDetails>()
                     ArtifactDetailsScreen(
-                        artifactId = id,
+                        artifactId = route.artifactId,
                         onClickBack = { navigator.popBackStack() },
                     )
                 }
 
-                composable(
-                    "/search/{type}",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
-                    val wonder = Wonder.parse(id)
+                composable<AppRoute.Search> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.Search>()
+                    val wonder = Wonder.parse(route.wonderId)
                     val viewModel = viewModel { ArtifactListViewModel(wonder) }
                     ArtifactListScreen(
                         wonder = wonder,
@@ -120,28 +112,24 @@ fun App() {
                         onQueryChange = viewModel::onQueryChange,
                         suggestions = viewModel.suggestions.collectAsStateWithLifecycle().value,
                         filteredArtifacts = viewModel.filteredArtifacts.collectAsStateWithLifecycle().value,
-                        onClickArtifact = { navigator.navigate("/artifact/${it}") },
+                        onClickArtifact = { navigator.navigate(AppRoute.ArtifactDetails("$it")) },
                         onBackClick = { navigator.navigateUp() },
                     )
                 }
 
-                composable(
-                    "/maps/{type}",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("type")
-                    val wonder = Wonder.parse(id)
+                composable<AppRoute.Maps> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.Maps>()
+                    val wonder = Wonder.parse(route.wonderId)
                     MapScreen(
                         latLng = wonder.latLng,
                         onBackClick = { navigator.popBackStack() }
                     )
                 }
 
-                composable(
-                    "/video/{id}",
-                ) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getString("id")!!
+                composable<AppRoute.Video> { backStackEntry ->
+                    val route = backStackEntry.toRoute<AppRoute.Video>()
                     YoutubeVideoScreen(
-                        id = id,
+                        id = route.videoId,
                         onBackClick = { navigator.popBackStack() }
                     )
                 }

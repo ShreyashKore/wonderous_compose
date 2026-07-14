@@ -1,4 +1,4 @@
-package models
+package dev.shreyash.wonderouscompose.models
 
 data class SearchData(
     val year: Int,

@@ -1,4 +1,4 @@
-package data.search_data
+package dev.shreyash.wonderouscompose.data.search_data
 
 import models.SearchData
 

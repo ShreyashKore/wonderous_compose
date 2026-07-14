@@ -1,4 +1,4 @@
-package ui.screens
+package dev.shreyash.wonderouscompose.ui.screens
 
 import CompassDivider
 import androidx.compose.animation.AnimatedContent

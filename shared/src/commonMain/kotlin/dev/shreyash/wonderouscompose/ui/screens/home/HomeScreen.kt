@@ -1,4 +1,4 @@
-package ui.screens.home
+package dev.shreyash.wonderouscompose.ui.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope

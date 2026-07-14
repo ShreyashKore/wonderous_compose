@@ -1,4 +1,4 @@
-package ui.screens
+package dev.shreyash.wonderouscompose.ui.screens
 
 //import io.kamel.image.KamelImage
 //import io.kamel.image.asyncPainterResource

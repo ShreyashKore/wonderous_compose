@@ -1,4 +1,4 @@
-package ui.utils
+package dev.shreyash.wonderouscompose.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter

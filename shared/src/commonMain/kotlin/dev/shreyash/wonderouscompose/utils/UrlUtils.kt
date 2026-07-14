@@ -1,4 +1,4 @@
-package utils
+package dev.shreyash.wonderouscompose.utils
 
 
 fun String.prependProxy() =

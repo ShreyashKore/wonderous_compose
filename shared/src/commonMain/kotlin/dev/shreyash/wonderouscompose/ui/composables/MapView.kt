@@ -1,4 +1,4 @@
-package ui.composables
+package dev.shreyash.wonderouscompose.ui.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

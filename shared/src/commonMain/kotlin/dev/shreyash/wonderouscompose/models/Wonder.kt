@@ -1,4 +1,4 @@
-package models
+package dev.shreyash.wonderouscompose.models
 
 import androidx.compose.runtime.Composable
 import data.search_data.ChichenSearchData

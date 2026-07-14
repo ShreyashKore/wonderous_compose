@@ -1,4 +1,4 @@
-package data
+package dev.shreyash.wonderouscompose.data
 
 
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package ui.theme
+package dev.shreyash.wonderouscompose.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily

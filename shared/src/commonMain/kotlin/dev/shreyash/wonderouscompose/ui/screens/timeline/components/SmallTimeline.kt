@@ -1,4 +1,4 @@
-package ui.screens.timeline.components
+package dev.shreyash.wonderouscompose.ui.screens.timeline.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

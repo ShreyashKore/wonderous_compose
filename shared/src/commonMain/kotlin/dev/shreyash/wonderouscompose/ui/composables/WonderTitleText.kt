@@ -1,4 +1,4 @@
-package ui.composables
+package dev.shreyash.wonderouscompose.ui.composables
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

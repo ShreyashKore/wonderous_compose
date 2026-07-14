@@ -1,4 +1,4 @@
-package ui.screens.home
+package dev.shreyash.wonderouscompose.ui.screens.home
 
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.requiredHeight

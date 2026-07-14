@@ -1,4 +1,4 @@
-package dev.shreyash.wonderouscompose
+package dev.shreyash.wonderouscompose.dev.shreyash.wonderouscompose
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExitTransition

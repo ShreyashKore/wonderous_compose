@@ -1,4 +1,4 @@
-package models
+package dev.shreyash.wonderouscompose.models
 
 import org.jetbrains.compose.resources.StringResource
 import wonderouscompose.composeapp.generated.resources.Res

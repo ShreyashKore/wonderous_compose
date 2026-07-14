@@ -1,4 +1,4 @@
-package ui
+package dev.shreyash.wonderouscompose.ui
 
 import models.ChichenItza
 import models.ChristRedeemer

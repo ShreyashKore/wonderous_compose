@@ -1,4 +1,4 @@
-package ui.screens
+package dev.shreyash.wonderouscompose.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,4 +1,4 @@
-package ui.theme
+package dev.shreyash.wonderouscompose.ui.theme
 
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color

@@ -1,4 +1,4 @@
-package platform
+package dev.shreyash.wonderouscompose.platform
 
 sealed interface Platform {
     data class Android(val version: Int) : Platform

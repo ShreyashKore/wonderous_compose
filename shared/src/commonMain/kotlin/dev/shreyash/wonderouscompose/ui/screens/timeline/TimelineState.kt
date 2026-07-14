@@ -1,4 +1,4 @@
-package ui.screens.timeline
+package dev.shreyash.wonderouscompose.ui.screens.timeline
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring

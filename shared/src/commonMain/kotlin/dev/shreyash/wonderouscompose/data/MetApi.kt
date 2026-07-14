@@ -1,4 +1,4 @@
-package data
+package dev.shreyash.wonderouscompose.data
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

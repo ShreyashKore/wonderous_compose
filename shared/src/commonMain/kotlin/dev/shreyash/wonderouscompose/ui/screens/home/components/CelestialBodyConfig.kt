@@ -1,4 +1,4 @@
-package ui.screens.home.components
+package dev.shreyash.wonderouscompose.ui.screens.home.components
 
 import androidx.compose.ui.Alignment
 

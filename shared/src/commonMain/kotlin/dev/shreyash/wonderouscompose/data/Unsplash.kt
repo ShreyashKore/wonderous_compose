@@ -1,4 +1,4 @@
-package data
+package dev.shreyash.wonderouscompose.data
 
 enum class UnsplashPhotoSize { MED, LARGE, XL }
 

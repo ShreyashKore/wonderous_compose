@@ -19,11 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ui.theme.TenorSans
-import ui.theme.black
-import ui.theme.greyStrong
-import ui.theme.white
-import utils.StringUtils
+import dev.shreyash.wonderouscompose.ui.theme.TenorSans
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.theme.greyStrong
+import dev.shreyash.wonderouscompose.ui.theme.white
+import dev.shreyash.wonderouscompose.utils.StringUtils
 import kotlin.math.absoluteValue
 
 

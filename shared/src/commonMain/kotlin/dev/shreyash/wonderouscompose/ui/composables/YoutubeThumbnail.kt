@@ -15,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ui.theme.black
-import ui.theme.white
-import utils.prependProxy
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.theme.white
+import dev.shreyash.wonderouscompose.utils.prependProxy
 
 @Composable
 fun YouTubeThumbnail(

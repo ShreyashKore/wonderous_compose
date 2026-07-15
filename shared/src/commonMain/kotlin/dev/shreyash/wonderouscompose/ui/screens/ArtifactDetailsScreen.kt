@@ -2,7 +2,7 @@ package dev.shreyash.wonderouscompose.ui.screens
 
 //import io.kamel.image.KamelImage
 //import io.kamel.image.asyncPainterResource
-import CompassDivider
+import dev.shreyash.wonderouscompose.ui.composables.CompassDivider
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -55,32 +55,32 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import data.MetRepository
+import dev.shreyash.wonderouscompose.data.MetRepository
 import kotlinx.coroutines.delay
-import models.ArtifactData
+import dev.shreyash.wonderouscompose.models.ArtifactData
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.composables.AppIconButton
-import ui.composables.NetworkImage
-import ui.theme.TenorSans
-import ui.theme.accent1
-import ui.theme.accent2
-import ui.theme.black
-import ui.theme.greyStrong
-import ui.theme.offWhite
-import ui.theme.white
-import utils.prependProxy
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelClassification
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDate
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelDimension
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelGeography
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelMedium
-import wonderouscompose.composeapp.generated.resources.artifactDetailsLabelPeriod
-import wonderouscompose.composeapp.generated.resources.artifactsSearchLabelNotFound
-import wonderouscompose.composeapp.generated.resources.circleButtonsSemanticBack
-import wonderouscompose.composeapp.generated.resources.homeMenuAboutMet
-import wonderouscompose.composeapp.generated.resources.icon_prev
+import androidx.compose.ui.tooling.preview.Preview
+import dev.shreyash.wonderouscompose.ui.composables.AppIconButton
+import dev.shreyash.wonderouscompose.ui.composables.NetworkImage
+import dev.shreyash.wonderouscompose.ui.theme.TenorSans
+import dev.shreyash.wonderouscompose.ui.theme.accent1
+import dev.shreyash.wonderouscompose.ui.theme.accent2
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.theme.greyStrong
+import dev.shreyash.wonderouscompose.ui.theme.offWhite
+import dev.shreyash.wonderouscompose.ui.theme.white
+import dev.shreyash.wonderouscompose.utils.prependProxy
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelClassification
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelDate
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelDimension
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelGeography
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelMedium
+import wonderous_compose.shared.generated.resources.artifactDetailsLabelPeriod
+import wonderous_compose.shared.generated.resources.artifactsSearchLabelNotFound
+import wonderous_compose.shared.generated.resources.circleButtonsSemanticBack
+import wonderous_compose.shared.generated.resources.homeMenuAboutMet
+import wonderous_compose.shared.generated.resources.icon_prev
 
 val imageMaxHeight = 400.dp
 val imageMinHeight = 250.dp

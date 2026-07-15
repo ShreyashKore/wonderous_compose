@@ -1,6 +1,6 @@
 package dev.shreyash.wonderouscompose.data
 
-import models.ArtifactData
+import dev.shreyash.wonderouscompose.models.ArtifactData
 
 class MetRepository {
     private val artifactsCache: MutableMap<String, ArtifactData> = mutableMapOf()

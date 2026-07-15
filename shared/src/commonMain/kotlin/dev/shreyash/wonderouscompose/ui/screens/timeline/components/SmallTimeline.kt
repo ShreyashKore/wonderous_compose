@@ -16,11 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import models.Wonder
-import ui.composables.RotatedLayout
-import ui.screens.timeline.TimelineTracksLayout
-import ui.theme.accent2
-import ui.theme.offWhite
+import dev.shreyash.wonderouscompose.models.Wonder
+import dev.shreyash.wonderouscompose.ui.composables.RotatedLayout
+import dev.shreyash.wonderouscompose.ui.screens.timeline.TimelineTracksLayout
+import dev.shreyash.wonderouscompose.ui.theme.accent2
+import dev.shreyash.wonderouscompose.ui.theme.offWhite
 
 
 @Composable

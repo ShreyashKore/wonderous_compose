@@ -9,20 +9,20 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import models.ChichenItza
-import models.ChristRedeemer
-import models.Colosseum
-import models.GreatWall
-import models.MachuPicchu
-import models.Petra
-import models.PyramidsGiza
-import models.TajMahal
-import models.Wonder
-import models.Wonders
-import ui.composables.IllustrationPiece
-import ui.composables.fractionalOffset
-import ui.getAssetPath
-import ui.theme.bgColor
+import dev.shreyash.wonderouscompose.models.ChichenItza
+import dev.shreyash.wonderouscompose.models.ChristRedeemer
+import dev.shreyash.wonderouscompose.models.Colosseum
+import dev.shreyash.wonderouscompose.models.GreatWall
+import dev.shreyash.wonderouscompose.models.MachuPicchu
+import dev.shreyash.wonderouscompose.models.Petra
+import dev.shreyash.wonderouscompose.models.PyramidsGiza
+import dev.shreyash.wonderouscompose.models.TajMahal
+import dev.shreyash.wonderouscompose.models.Wonder
+import dev.shreyash.wonderouscompose.models.Wonders
+import dev.shreyash.wonderouscompose.ui.composables.IllustrationPiece
+import dev.shreyash.wonderouscompose.ui.composables.fractionalOffset
+import dev.shreyash.wonderouscompose.ui.getAssetPath
+import dev.shreyash.wonderouscompose.ui.theme.bgColor
 
 @Composable
 fun WonderIllustrationForeground(

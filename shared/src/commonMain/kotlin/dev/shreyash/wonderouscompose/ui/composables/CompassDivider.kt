@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.compass_full
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.compass_full
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 

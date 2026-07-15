@@ -16,9 +16,9 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import models.ChristRedeemer
-import models.Colosseum
-import models.Wonder
+import dev.shreyash.wonderouscompose.models.ChristRedeemer
+import dev.shreyash.wonderouscompose.models.Colosseum
+import dev.shreyash.wonderouscompose.models.Wonder
 import org.jetbrains.compose.resources.stringResource
 
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import models.Wonder
+import dev.shreyash.wonderouscompose.models.Wonder
 
 
 class ArtifactListViewModel(wonder: Wonder) : ViewModel() {

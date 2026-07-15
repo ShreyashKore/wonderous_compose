@@ -1,6 +1,6 @@
 package dev.shreyash.wonderouscompose.data.search_data
 
-import models.SearchData
+import dev.shreyash.wonderouscompose.models.SearchData
 
 // Search suggestions (78)
 val PyramidsGizaSearchSuggestions = listOf(

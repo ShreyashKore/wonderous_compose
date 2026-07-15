@@ -23,11 +23,11 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.icon_next
-import wonderouscompose.composeapp.generated.resources.icon_prev
-import wonderouscompose.composeapp.generated.resources.semanticsNext
-import wonderouscompose.composeapp.generated.resources.semanticsPrevious
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.icon_next
+import wonderous_compose.shared.generated.resources.icon_prev
+import wonderous_compose.shared.generated.resources.semanticsNext
+import wonderous_compose.shared.generated.resources.semanticsPrevious
 
 @Composable
 fun PreviousNextNavigation(

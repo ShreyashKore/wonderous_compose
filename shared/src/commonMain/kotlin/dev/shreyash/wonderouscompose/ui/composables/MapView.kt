@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import models.LatLng
+import dev.shreyash.wonderouscompose.models.LatLng
 
 @Composable
 expect fun MapView(

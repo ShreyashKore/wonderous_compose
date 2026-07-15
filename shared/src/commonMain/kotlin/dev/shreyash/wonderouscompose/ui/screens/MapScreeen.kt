@@ -7,11 +7,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import models.LatLng
-import ui.composables.BackButton
-import ui.composables.MapType
-import ui.composables.MapView
-import ui.theme.black
+import dev.shreyash.wonderouscompose.models.LatLng
+import dev.shreyash.wonderouscompose.ui.composables.BackButton
+import dev.shreyash.wonderouscompose.ui.composables.MapType
+import dev.shreyash.wonderouscompose.ui.composables.MapView
+import dev.shreyash.wonderouscompose.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

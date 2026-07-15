@@ -38,26 +38,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.search_data.TajMahalSearchData
-import data.search_data.TajMahalSearchSuggestions
-import models.SearchData
-import models.TajMahal
-import models.Wonder
+import dev.shreyash.wonderouscompose.data.search_data.TajMahalSearchData
+import dev.shreyash.wonderouscompose.data.search_data.TajMahalSearchSuggestions
+import dev.shreyash.wonderouscompose.models.SearchData
+import dev.shreyash.wonderouscompose.models.TajMahal
+import dev.shreyash.wonderouscompose.models.Wonder
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.composables.BackButton
-import ui.composables.NetworkImage
-import ui.theme.Raleway
-import ui.theme.TenorSans
-import ui.theme.accent1
-import ui.theme.black
-import ui.theme.white
-import utils.prependProxy
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.artifactsSearchLabelFound
-import wonderouscompose.composeapp.generated.resources.artifactsSearchTitleBrowse
-import wonderouscompose.composeapp.generated.resources.searchInputHintSearch
-import wonderouscompose.composeapp.generated.resources.searchInputTitleSuggestions
+import androidx.compose.ui.tooling.preview.Preview
+import dev.shreyash.wonderouscompose.ui.composables.BackButton
+import dev.shreyash.wonderouscompose.ui.composables.NetworkImage
+import dev.shreyash.wonderouscompose.ui.theme.Raleway
+import dev.shreyash.wonderouscompose.ui.theme.TenorSans
+import dev.shreyash.wonderouscompose.ui.theme.accent1
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.theme.white
+import dev.shreyash.wonderouscompose.utils.prependProxy
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.artifactsSearchLabelFound
+import wonderous_compose.shared.generated.resources.artifactsSearchTitleBrowse
+import wonderous_compose.shared.generated.resources.searchInputHintSearch
+import wonderous_compose.shared.generated.resources.searchInputTitleSuggestions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

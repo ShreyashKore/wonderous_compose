@@ -1,14 +1,14 @@
 package dev.shreyash.wonderouscompose.ui
 
-import models.ChichenItza
-import models.ChristRedeemer
-import models.Colosseum
-import models.GreatWall
-import models.MachuPicchu
-import models.Petra
-import models.PyramidsGiza
-import models.TajMahal
-import models.Wonder
+import dev.shreyash.wonderouscompose.models.ChichenItza
+import dev.shreyash.wonderouscompose.models.ChristRedeemer
+import dev.shreyash.wonderouscompose.models.Colosseum
+import dev.shreyash.wonderouscompose.models.GreatWall
+import dev.shreyash.wonderouscompose.models.MachuPicchu
+import dev.shreyash.wonderouscompose.models.Petra
+import dev.shreyash.wonderouscompose.models.PyramidsGiza
+import dev.shreyash.wonderouscompose.models.TajMahal
+import dev.shreyash.wonderouscompose.models.Wonder
 
 
 object ImagePaths {

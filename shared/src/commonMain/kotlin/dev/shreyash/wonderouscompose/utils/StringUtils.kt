@@ -3,13 +3,13 @@ package dev.shreyash.wonderouscompose.utils
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.eraClassical
-import wonderouscompose.composeapp.generated.resources.eraEarlyModern
-import wonderouscompose.composeapp.generated.resources.eraModern
-import wonderouscompose.composeapp.generated.resources.eraPrehistory
-import wonderouscompose.composeapp.generated.resources.yearBCE
-import wonderouscompose.composeapp.generated.resources.yearCE
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.eraClassical
+import wonderous_compose.shared.generated.resources.eraEarlyModern
+import wonderous_compose.shared.generated.resources.eraModern
+import wonderous_compose.shared.generated.resources.eraPrehistory
+import wonderous_compose.shared.generated.resources.yearBCE
+import wonderous_compose.shared.generated.resources.yearCE
 
 object StringUtils {
 

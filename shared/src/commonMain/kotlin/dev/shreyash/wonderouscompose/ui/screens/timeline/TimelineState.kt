@@ -14,7 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import models.AllTimelineEvents
+import dev.shreyash.wonderouscompose.models.AllTimelineEvents
 import kotlin.math.roundToInt
 
 const val StartYear = -3000

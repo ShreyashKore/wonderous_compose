@@ -1,4 +1,4 @@
-package dev.shreyash.wonderouscompose.dev.shreyash.wonderouscompose
+package dev.shreyash.wonderouscompose
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExitTransition
@@ -16,18 +16,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import models.Wonder
-import models.parse
-import ui.screens.ArtifactDetailsScreen
-import ui.screens.ArtifactListScreen
-import ui.screens.ArtifactListViewModel
-import ui.screens.MapScreen
-import ui.screens.WonderDetailsScreen
-import ui.screens.YoutubeVideoScreen
-import ui.screens.home.HomeScreen
-import ui.screens.timeline.TimelineScreen
-import ui.theme.ColorScheme
-import ui.theme.Typography
+import dev.shreyash.wonderouscompose.models.Wonder
+import dev.shreyash.wonderouscompose.models.parse
+import dev.shreyash.wonderouscompose.ui.screens.ArtifactDetailsScreen
+import dev.shreyash.wonderouscompose.ui.screens.ArtifactListScreen
+import dev.shreyash.wonderouscompose.ui.screens.ArtifactListViewModel
+import dev.shreyash.wonderouscompose.ui.screens.MapScreen
+import dev.shreyash.wonderouscompose.ui.screens.WonderDetailsScreen
+import dev.shreyash.wonderouscompose.ui.screens.YoutubeVideoScreen
+import dev.shreyash.wonderouscompose.ui.screens.home.HomeScreen
+import dev.shreyash.wonderouscompose.ui.screens.timeline.TimelineScreen
+import dev.shreyash.wonderouscompose.ui.theme.ColorScheme
+import dev.shreyash.wonderouscompose.ui.theme.Typography
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

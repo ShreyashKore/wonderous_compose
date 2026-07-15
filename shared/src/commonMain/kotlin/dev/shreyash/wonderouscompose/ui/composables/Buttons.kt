@@ -31,12 +31,12 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.theme.greyStrong
-import ui.theme.white
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.github_logo
-import wonderouscompose.composeapp.generated.resources.icon_prev
+import androidx.compose.ui.tooling.preview.Preview
+import dev.shreyash.wonderouscompose.ui.theme.greyStrong
+import dev.shreyash.wonderouscompose.ui.theme.white
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.github_logo
+import wonderous_compose.shared.generated.resources.icon_prev
 
 
 @Composable

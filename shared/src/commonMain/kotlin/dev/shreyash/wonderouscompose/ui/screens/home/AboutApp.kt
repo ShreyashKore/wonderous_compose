@@ -26,12 +26,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
-import ui.theme.Raleway
-import ui.theme.accent1
-import ui.theme.black
-import ui.theme.offWhite
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.app_logo_plain
+import dev.shreyash.wonderouscompose.ui.theme.Raleway
+import dev.shreyash.wonderouscompose.ui.theme.accent1
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.theme.offWhite
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.app_logo_plain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

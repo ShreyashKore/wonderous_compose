@@ -6,7 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import models.ArtifactData
+import dev.shreyash.wonderouscompose.models.ArtifactData
 
 class MetApiService {
     private val ktor = HttpClient {

@@ -38,21 +38,21 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import models.Wonder
+import dev.shreyash.wonderouscompose.models.Wonder
 import org.jetbrains.compose.resources.stringResource
-import ui.composables.AppIconButton
-import ui.composables.LongButton
-import ui.composables.WonderTitleText
-import ui.flattenedImage
-import ui.screens.timeline.components.SmallTimeline
-import ui.screens.timeline.components.TimelineEventCard
-import ui.theme.accent2
-import ui.theme.black
-import ui.utils.filePainterResource
-import wonderouscompose.composeapp.generated.resources.Res
-import wonderouscompose.composeapp.generated.resources.eventsListButtonOpenGlobal
-import wonderouscompose.composeapp.generated.resources.tab_timeline
-import wonderouscompose.composeapp.generated.resources.timelineTitleGlobalTimeline
+import dev.shreyash.wonderouscompose.ui.composables.AppIconButton
+import dev.shreyash.wonderouscompose.ui.composables.LongButton
+import dev.shreyash.wonderouscompose.ui.composables.WonderTitleText
+import dev.shreyash.wonderouscompose.ui.flattenedImage
+import dev.shreyash.wonderouscompose.ui.screens.timeline.components.SmallTimeline
+import dev.shreyash.wonderouscompose.ui.screens.timeline.components.TimelineEventCard
+import dev.shreyash.wonderouscompose.ui.theme.accent2
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
+import wonderous_compose.shared.generated.resources.Res
+import wonderous_compose.shared.generated.resources.eventsListButtonOpenGlobal
+import wonderous_compose.shared.generated.resources.tab_timeline
+import wonderous_compose.shared.generated.resources.timelineTitleGlobalTimeline
 
 @OptIn(
     ExperimentalMaterial3Api::class

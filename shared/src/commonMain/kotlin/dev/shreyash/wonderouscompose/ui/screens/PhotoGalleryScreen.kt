@@ -54,15 +54,15 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import data.UnsplashPhotoData
-import data.UnsplashPhotoSize
-import models.Wonder
-import ui.composables.NetworkImage
-import ui.composables.SimpleGrid
-import ui.theme.black
-import ui.utils.eightWaySwipeDetector
-import ui.utils.roundToIntOffset
-import ui.utils.simpleTransformable
+import dev.shreyash.wonderouscompose.data.UnsplashPhotoData
+import dev.shreyash.wonderouscompose.data.UnsplashPhotoSize
+import dev.shreyash.wonderouscompose.models.Wonder
+import dev.shreyash.wonderouscompose.ui.composables.NetworkImage
+import dev.shreyash.wonderouscompose.ui.composables.SimpleGrid
+import dev.shreyash.wonderouscompose.ui.theme.black
+import dev.shreyash.wonderouscompose.ui.utils.eightWaySwipeDetector
+import dev.shreyash.wonderouscompose.ui.utils.roundToIntOffset
+import dev.shreyash.wonderouscompose.ui.utils.simpleTransformable
 
 
 // TODO: move into separate file

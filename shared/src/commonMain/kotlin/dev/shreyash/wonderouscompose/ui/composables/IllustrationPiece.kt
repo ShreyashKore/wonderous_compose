@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import ui.utils.filePainterResource
+import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
 import kotlin.math.roundToInt
 
 

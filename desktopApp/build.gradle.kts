@@ -21,8 +21,23 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "dev.shreyash.wonderouscompose"
-            packageVersion = "1.0.0"
+            packageName = "com.shreyashkore.wonderouscompose"
+            packageVersion = libs.versions.versionName.get()
+            description = "Port of Wonderous in Compose Multiplatform"
+            copyright = "© 2024 Shreyash Kore. All rights reserved."
+            vendor = "Gyanoba"
+            licenseFile.set(project.file("../LICENSE.txt"))
+            modules("java.net.http")
+
+            macOS {
+                iconFile.set(project.file("./launcher_icons/app_icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("./launcher_icons/app_icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("./launcher_icons/app_icon.png"))
+            }
         }
     }
 }

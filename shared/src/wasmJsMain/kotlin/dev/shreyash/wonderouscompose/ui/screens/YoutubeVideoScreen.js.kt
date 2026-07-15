@@ -17,7 +17,7 @@ import dev.shreyash.wonderouscompose.ui.theme.black
 @Composable
 actual fun YoutubeVideoScreen(id: String, onBackClick: () -> Unit) {
     Box(
-        modifier = Modifier.background(black)
+        Modifier.background(black)
     ) {
         Text("WebView not implemented")
 

@@ -1,9 +1,8 @@
-package dev.shreyash.wonderouscompose.openlayers
+package dev.shreyash.wonderouscompose.openlayersmap
 
-external interface Layer
+external interface Layer : JsAny
 
 @JsModule("ol/layer/Tile.js")
-@JsNonModule
 external class TileLayer(options: TileLayerOptions) : Layer
 
 external interface TileLayerOptions {
@@ -14,7 +13,6 @@ fun TileLayerOptions(source: XYZ): TileLayerOptions = js("({ 'source': source })
 
 
 @JsModule("ol/layer/Vector.js")
-@JsNonModule
 external class Vector(options: VectorOptions) : Layer
 
 fun VectorOptions(
@@ -28,7 +26,7 @@ fun VectorOptions(
     """
 )
 
-external interface VectorOptions {
+external interface VectorOptions : JsAny {
     var source: VectorSource
     var style: VectorStyle
 }
@@ -45,7 +43,7 @@ fun VectorStyle(
     })"""
 )
 
-external interface VectorStyle {
+external interface VectorStyle : JsAny {
     var circleFillColor: String
     var circleRadius: Float
     var circleStrokeColor: String

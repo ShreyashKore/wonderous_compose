@@ -6,31 +6,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.HtmlElementView
-import androidx.compose.ui.viewinterop.WebElementView
 import dev.shreyash.wonderouscompose.js.jsArrayOf
+import dev.shreyash.wonderouscompose.openlayersmap.Map
 import dev.shreyash.wonderouscompose.models.LatLng
-import dev.shreyash.wonderouscompose.openlayers.Map
-import dev.shreyash.wonderouscompose.openlayers.Feature
-import dev.shreyash.wonderouscompose.openlayers.LonLat
-import dev.shreyash.wonderouscompose.openlayers.OSM
-import dev.shreyash.wonderouscompose.openlayers.Point
-import dev.shreyash.wonderouscompose.openlayers.TileLayer
-import dev.shreyash.wonderouscompose.openlayers.TileLayerOptions
-import dev.shreyash.wonderouscompose.openlayers.Vector
-import dev.shreyash.wonderouscompose.openlayers.VectorOptions
-import dev.shreyash.wonderouscompose.openlayers.VectorSource
-import dev.shreyash.wonderouscompose.openlayers.VectorSourceOptions
-import dev.shreyash.wonderouscompose.openlayers.VectorStyle
-import dev.shreyash.wonderouscompose.openlayers.View
-import dev.shreyash.wonderouscompose.openlayers.ViewOptions
-import dev.shreyash.wonderouscompose.openlayers.XYZ
-import dev.shreyash.wonderouscompose.openlayers.XYZOptions
-import dev.shreyash.wonderouscompose.openlayers.fromLonLat
-import dev.shreyash.wonderouscompose.openlayers.olCss
+import dev.shreyash.wonderouscompose.openlayersmap.Feature
+import dev.shreyash.wonderouscompose.openlayersmap.LonLat
+import dev.shreyash.wonderouscompose.openlayersmap.OSM
+import dev.shreyash.wonderouscompose.openlayersmap.Point
+import dev.shreyash.wonderouscompose.openlayersmap.TileLayer
+import dev.shreyash.wonderouscompose.openlayersmap.TileLayerOptions
+import dev.shreyash.wonderouscompose.openlayersmap.Vector
+import dev.shreyash.wonderouscompose.openlayersmap.VectorOptions
+import dev.shreyash.wonderouscompose.openlayersmap.VectorSource
+import dev.shreyash.wonderouscompose.openlayersmap.VectorSourceOptions
+import dev.shreyash.wonderouscompose.openlayersmap.VectorStyle
+import dev.shreyash.wonderouscompose.openlayersmap.View
+import dev.shreyash.wonderouscompose.openlayersmap.ViewOptions
+import dev.shreyash.wonderouscompose.openlayersmap.XYZ
+import dev.shreyash.wonderouscompose.openlayersmap.XYZOptions
+import dev.shreyash.wonderouscompose.openlayersmap.fromLonLat
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 
-@OptIn(ExperimentalJsCollectionsApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun MapView(
     modifier: Modifier,
@@ -38,7 +36,7 @@ actual fun MapView(
     title: String,
     parentScrollEnableState: MutableState<Boolean>,
     zoomLevel: Float,
-    mapType: MapType,
+    mapType: MapType
 ) {
     val map = remember { Map() }
     val adjustedZoomLevel = zoomLevel * 5f
@@ -48,7 +46,7 @@ actual fun MapView(
         factory = {
             document.createElement("div").apply {
                 id = "map"
-            } as HTMLDivElement
+            }  as HTMLDivElement
         },
         update = {
             val center = fromLonLat(LonLat(latLng.longitude, latLng.latitude))
@@ -98,6 +96,3 @@ private val DEFAULT_MARKER_STYLE: VectorStyle = VectorStyle(
  * Satellite map view doesn't provide imagery beyond this zoom level
  */
 private const val MAX_ZOOM = 18f
-
-// Referring style so that it is not removed by the compiler ??
-val styles = olCss

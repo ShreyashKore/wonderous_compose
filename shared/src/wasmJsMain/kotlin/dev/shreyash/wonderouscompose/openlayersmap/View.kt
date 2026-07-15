@@ -1,8 +1,7 @@
-package dev.shreyash.wonderouscompose.openlayers
+package dev.shreyash.wonderouscompose.openlayersmap
 
 @JsModule("ol/View.js")
-@JsNonModule
-external class View(options: ViewOptions)
+external class View(options: ViewOptions) : JsAny
 
 external interface ViewOptions {
     var lat: Double

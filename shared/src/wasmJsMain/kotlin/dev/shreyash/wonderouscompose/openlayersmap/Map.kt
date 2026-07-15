@@ -1,32 +1,23 @@
-package dev.shreyash.wonderouscompose.openlayers
+package dev.shreyash.wonderouscompose.openlayersmap
 
-import kotlin.js.collections.JsArray
-
-@JsNonModule
 @JsModule("ol/Map.js")
-external class Map {
+external class Map(options: MapOptions? = definedExternally) : JsAny {
     fun setTarget(target: String)
     fun addLayer(layer: Layer)
     fun updateSize()
-
-    @OptIn(ExperimentalJsCollectionsApi::class)
     fun setLayers(layers: JsArray<Layer>)
     fun setView(view: View)
 }
 
-@JsNonModule
 @JsModule("ol/ol.css")
-external val olCss: dynamic
+external val olCss: JsAny
 
-external interface MapOptions {
+external interface MapOptions : JsAny {
     var target: String
-
-    @OptIn(ExperimentalJsCollectionsApi::class)
     var layers: JsArray<Layer>?
     var view: View?
 }
 
-@OptIn(ExperimentalJsCollectionsApi::class)
 fun MapOptions(
     target: String? = null, layers: JsArray<Layer>? = null, view: View? = null,
 ): MapOptions = js(

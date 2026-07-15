@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalJsCollectionsApi::class)
 
-package js
+package dev.shreyash.wonderouscompose.js
 
 import kotlin.js.collections.JsArray
 

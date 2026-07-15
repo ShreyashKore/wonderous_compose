@@ -1,4 +1,4 @@
-package openlayers
+package dev.shreyash.wonderouscompose.openlayers
 
 
 @JsModule("ol/Feature.js")

@@ -1,7 +1,7 @@
 @file:JsModule("ol/proj.js")
 @file:JsNonModule
 
-package openlayers
+package dev.shreyash.wonderouscompose.openlayers
 
 external interface Coordinate
 

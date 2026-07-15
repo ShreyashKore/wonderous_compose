@@ -1,20 +1,12 @@
 package dev.shreyash.wonderouscompose
 
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.CanvasBasedWindow
-import com.hamama.kwhi.LocalLayerContainer
-import kotlinx.browser.document
-import org.jetbrains.skiko.wasm.onWasmReady
+import androidx.compose.ui.window.ComposeViewport
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    onWasmReady {
-        CanvasBasedWindow("Wonderous Compose") {
-            CompositionLocalProvider(LocalLayerContainer provides document.getElementById("components")!!) {
-                App()
-            }
-        }
+    ComposeViewport {
+        App()
     }
 }

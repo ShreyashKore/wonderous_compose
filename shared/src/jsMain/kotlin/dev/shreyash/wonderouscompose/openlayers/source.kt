@@ -1,4 +1,4 @@
-package openlayers
+package dev.shreyash.wonderouscompose.openlayers
 
 import kotlin.js.collections.JsArray
 

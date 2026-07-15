@@ -55,9 +55,14 @@ kotlin {
                 implementation(libs.compose.webview.multiplatform)
             }
         }
+        val webMain by creating {
+            dependsOn(commonMain.get())
+        }
         jvmMain.get().dependsOn(nonWebMain)
         androidMain.get().dependsOn(nonWebMain)
         iosMain.get().dependsOn(nonWebMain)
+        jsMain.get().dependsOn(webMain)
+        wasmJsMain.get().dependsOn(webMain)
 
         commonMain.dependencies {
             implementation(libs.compose.runtime)

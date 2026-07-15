@@ -1,4 +1,4 @@
-package dev.shreyash.wonderouscompose.dev.shreyash.wonderouscompose
+package dev.shreyash.wonderouscompose
 
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,9 @@
 [versions]
+## Project Version
+versionCode = "105"
+versionName = "1.0.5"
+
+## Frameworks and Libraries
 agp = "9.0.1"
 android-compileSdk = "36"
 android-minSdk = "26"

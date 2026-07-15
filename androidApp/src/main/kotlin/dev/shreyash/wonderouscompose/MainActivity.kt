@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat.enableEdgeToEdge
 import dev.shreyash.wonderouscompose.App
-import dev.shreyash.wonderouscompose.dev.shreyash.wonderouscompose.App
 
 @SuppressLint("StaticFieldLeak")
 private var _context: Context? = null

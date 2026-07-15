@@ -23,6 +23,7 @@ kotlin {
             implementation(projects.shared)
 
             implementation(libs.compose.ui)
+            implementation(npm("ol", "9.2.4"))
         }
     }
 }

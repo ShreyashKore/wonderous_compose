@@ -6,9 +6,11 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -18,35 +20,45 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     js {
         browser()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
     }
-    
+
     androidLibrary {
-       namespace = "dev.shreyash.wonderouscompose.shared"
-       compileSdk = libs.versions.android.compileSdk.get().toInt()
-       minSdk = libs.versions.android.minSdk.get().toInt()
-    
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
-       androidResources {
-           enable = true
-       }
-       withHostTest {
-           isIncludeAndroidResources = true
-       }
+        namespace = "dev.shreyash.wonderouscompose.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+        androidResources {
+            enable = true
+        }
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
-    
+
     sourceSets {
+        val nonWebMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(libs.compose.webview.multiplatform)
+            }
+        }
+        jvmMain.get().dependsOn(nonWebMain)
+        androidMain.get().dependsOn(nonWebMain)
+        iosMain.get().dependsOn(nonWebMain)
+
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -67,7 +79,6 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.image.loader)
             implementation("org.jetbrains.compose.material:material-icons-core:1.6.11")
-
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

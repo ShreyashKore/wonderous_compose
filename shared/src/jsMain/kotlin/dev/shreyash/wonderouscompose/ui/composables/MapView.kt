@@ -6,7 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
 import js.jsArrayOf
-import models.LatLng
+import dev.shreyash.wonderouscompose.models.LatLng
 import openlayers.Feature
 import openlayers.LonLat
 import openlayers.OSM

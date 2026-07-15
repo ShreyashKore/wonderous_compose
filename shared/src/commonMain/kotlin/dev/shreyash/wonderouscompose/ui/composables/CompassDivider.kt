@@ -1,4 +1,4 @@
-package dev.shreyash.wonderouscompose.dev.shreyash.wonderouscompose.ui.composables
+package dev.shreyash.wonderouscompose.ui.composables
 
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState

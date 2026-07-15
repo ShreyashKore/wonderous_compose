@@ -8,12 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
 import kotlinx.cinterop.ExperimentalForeignApi
 import dev.shreyash.wonderouscompose.models.LatLng
-import platform.CoreLocation.CLLocationCoordinate2DMake
-import platform.MapKit.MKCoordinateRegionMakeWithDistance
-import platform.MapKit.MKMapTypeSatellite
-import platform.MapKit.MKMapTypeStandard
-import platform.MapKit.MKMapView
-import platform.MapKit.MKPointAnnotation
+import dev.shreyash.wonderouscompose.platform.CoreLocation.CLLocationCoordinate2DMake
+import dev.shreyash.wonderouscompose.platform.MapKit.MKCoordinateRegionMakeWithDistance
+import dev.shreyash.wonderouscompose.platform.MapKit.MKMapTypeSatellite
+import dev.shreyash.wonderouscompose.platform.MapKit.MKMapTypeStandard
+import dev.shreyash.wonderouscompose.platform.MapKit.MKMapView
+import dev.shreyash.wonderouscompose.platform.MapKit.MKPointAnnotation
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable

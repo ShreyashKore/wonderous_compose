@@ -457,7 +457,7 @@ private fun EventMarker(
  */
 val blendMode: BlendMode
     get() {
-        val platform = platform.platform
+        val platform = dev.shreyash.wonderouscompose.platform.platform
         return if (platform is Platform.Android && platform.version < 29) BlendMode.Overlay else BlendMode.Color
     }
 

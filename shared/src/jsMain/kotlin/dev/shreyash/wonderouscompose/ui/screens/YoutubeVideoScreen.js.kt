@@ -1,4 +1,4 @@
-package ui.screens
+package dev.shreyash.wonderouscompose.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ui.composables.BackButton
-import ui.theme.black
+import dev.shreyash.wonderouscompose.ui.composables.BackButton
+import dev.shreyash.wonderouscompose.ui.theme.black
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

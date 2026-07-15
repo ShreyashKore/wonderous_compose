@@ -8,13 +8,21 @@ plugins {
 
 kotlin {
     js {
-        browser()
+        browser {
+            commonWebpackConfig {
+                cssSupport { enabled.set(true) }
+            }
+        }
         binaries.executable()
     }
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        browser()
+        browser {
+            commonWebpackConfig {
+                cssSupport { enabled.set(true) }
+            }
+        }
         binaries.executable()
     }
 

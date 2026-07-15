@@ -1,7 +1,9 @@
+import org.gradle.kotlin.dsl.kotlin
+
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization")
 }
 

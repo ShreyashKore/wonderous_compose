@@ -1,4 +1,4 @@
-rootProject.name = "Wonderous_compose"
+rootProject.name = "WonderousCompose"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

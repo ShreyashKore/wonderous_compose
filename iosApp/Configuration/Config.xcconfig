@@ -1,7 +1,6 @@
 TEAM_ID=
 
-PRODUCT_NAME=Wonderous_compose
-PRODUCT_BUNDLE_IDENTIFIER=dev.shreyash.wonderouscompose.Wonderous_compose$(TEAM_ID)
+#include "Version.xcconfig"
 
-CURRENT_PROJECT_VERSION=1
-MARKETING_VERSION=1.0
+PRODUCT_NAME=Wonderous Compose
+PRODUCT_BUNDLE_IDENTIFIER=dev.shreyash.wonderouscompose$(TEAM_ID)

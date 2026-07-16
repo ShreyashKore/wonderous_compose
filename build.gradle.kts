@@ -9,3 +9,16 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinxSerialization) apply false
 }
+
+tasks.register("generateIosVersionConfig") {
+    doLast {
+        val configDir = file("iosApp/Configuration")
+        configDir.mkdirs()
+        file("$configDir/Version.xcconfig").writeText(
+            """
+            CURRENT_PROJECT_VERSION=${libs.versions.versionCode.get()}
+            MARKETING_VERSION=${libs.versions.versionName.get()}
+            """.trimIndent()
+        )
+    }
+}

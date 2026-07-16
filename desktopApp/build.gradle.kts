@@ -30,12 +30,16 @@ compose.desktop {
             modules("java.net.http")
 
             macOS {
+                bundleID = "com.shreyashkore.wonderouscompose"
+                packageName = "Wonderous Compose"
                 iconFile.set(project.file("./launcher_icons/app_icon.icns"))
             }
             windows {
+                packageName = "Wonderous Compose"
                 iconFile.set(project.file("./launcher_icons/app_icon.ico"))
             }
             linux {
+                packageName = "Wonderous Compose"
                 iconFile.set(project.file("./launcher_icons/app_icon.png"))
             }
         }

@@ -30,8 +30,8 @@ import dev.shreyash.wonderouscompose.ui.theme.Raleway
 import dev.shreyash.wonderouscompose.ui.theme.accent1
 import dev.shreyash.wonderouscompose.ui.theme.black
 import dev.shreyash.wonderouscompose.ui.theme.offWhite
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.app_logo_plain
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.app_logo_plain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -70,10 +70,10 @@ import dev.shreyash.wonderouscompose.ui.theme.greyMedium
 import dev.shreyash.wonderouscompose.ui.theme.greyStrong
 import dev.shreyash.wonderouscompose.ui.theme.offWhite
 import dev.shreyash.wonderouscompose.ui.theme.white
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.artifactsButtonBrowse
-import wonderous_compose.shared.generated.resources.artifactsTitleArtifacts
-import wonderous_compose.shared.generated.resources.icon_search
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.artifactsButtonBrowse
+import wonderouscompose.shared.generated.resources.artifactsTitleArtifacts
+import wonderouscompose.shared.generated.resources.icon_search
 import kotlin.math.absoluteValue
 
 

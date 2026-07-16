@@ -3,9 +3,9 @@ package dev.shreyash.wonderouscompose.ui.composables
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.circleButtonsSemanticBack
-import wonderous_compose.shared.generated.resources.icon_prev
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.circleButtonsSemanticBack
+import wonderouscompose.shared.generated.resources.icon_prev
 
 
 @Composable

@@ -100,10 +100,10 @@ import dev.shreyash.wonderouscompose.ui.utils.lerp
 import dev.shreyash.wonderouscompose.utils.StringUtils.getEra
 import dev.shreyash.wonderouscompose.utils.StringUtils.getYrSuffix
 import dev.shreyash.wonderouscompose.utils.dashedBorder
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.circleButtonsSemanticClose
-import wonderous_compose.shared.generated.resources.icon_prev
-import wonderous_compose.shared.generated.resources.timelineTitleGlobalTimeline
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.circleButtonsSemanticClose
+import wonderouscompose.shared.generated.resources.icon_prev
+import wonderouscompose.shared.generated.resources.timelineTitleGlobalTimeline
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 

@@ -27,19 +27,19 @@ fun filePainterResource(resource: String): Painter {
             items = setOf(
                 ResourceItem(
                     setOf(DensityQualifier.HDPI),
-                    "composeResources/wonderous_compose.shared.generated.resources/$parentFolder/hdpi/$resourceFile",
+                    "composeResources/wonderouscompose.shared.generated.resources/$parentFolder/hdpi/$resourceFile",
                     -1,
                     -1
                 ),
                 ResourceItem(
                     setOf(DensityQualifier.XXHDPI),
-                    "composeResources/wonderous_compose.shared.generated.resources/$parentFolder/xxhdpi/$resourceFile",
+                    "composeResources/wonderouscompose.shared.generated.resources/$parentFolder/xxhdpi/$resourceFile",
                     -1,
                     -1
                 ),
                 ResourceItem(
                     setOf(),
-                    "composeResources/wonderous_compose.shared.generated.resources/$resource",
+                    "composeResources/wonderouscompose.shared.generated.resources/$resource",
                     -1,
                     -1
                 ),

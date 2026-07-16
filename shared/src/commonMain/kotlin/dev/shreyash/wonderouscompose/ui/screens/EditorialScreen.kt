@@ -127,16 +127,16 @@ import dev.shreyash.wonderouscompose.ui.theme.quoteFont
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
 import dev.shreyash.wonderouscompose.utils.StringUtils
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.appBarTitleConstruction
-import wonderous_compose.shared.generated.resources.appBarTitleFactsHistory
-import wonderous_compose.shared.generated.resources.appBarTitleLocation
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelDate
-import wonderous_compose.shared.generated.resources.construction
-import wonderous_compose.shared.generated.resources.geography
-import wonderous_compose.shared.generated.resources.history
-import wonderous_compose.shared.generated.resources.icon_next
-import wonderous_compose.shared.generated.resources.semanticsNext
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.appBarTitleConstruction
+import wonderouscompose.shared.generated.resources.appBarTitleFactsHistory
+import wonderouscompose.shared.generated.resources.appBarTitleLocation
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelDate
+import wonderouscompose.shared.generated.resources.construction
+import wonderouscompose.shared.generated.resources.geography
+import wonderouscompose.shared.generated.resources.history
+import wonderouscompose.shared.generated.resources.icon_next
+import wonderouscompose.shared.generated.resources.semanticsNext
 
 
 @OptIn(

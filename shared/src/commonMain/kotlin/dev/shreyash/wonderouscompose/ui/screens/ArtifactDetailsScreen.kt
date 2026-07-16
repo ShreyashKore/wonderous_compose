@@ -70,17 +70,17 @@ import dev.shreyash.wonderouscompose.ui.theme.greyStrong
 import dev.shreyash.wonderouscompose.ui.theme.offWhite
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.utils.prependProxy
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelClassification
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelDate
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelDimension
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelGeography
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelMedium
-import wonderous_compose.shared.generated.resources.artifactDetailsLabelPeriod
-import wonderous_compose.shared.generated.resources.artifactsSearchLabelNotFound
-import wonderous_compose.shared.generated.resources.circleButtonsSemanticBack
-import wonderous_compose.shared.generated.resources.homeMenuAboutMet
-import wonderous_compose.shared.generated.resources.icon_prev
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelClassification
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelDate
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelDimension
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelGeography
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelMedium
+import wonderouscompose.shared.generated.resources.artifactDetailsLabelPeriod
+import wonderouscompose.shared.generated.resources.artifactsSearchLabelNotFound
+import wonderouscompose.shared.generated.resources.circleButtonsSemanticBack
+import wonderouscompose.shared.generated.resources.homeMenuAboutMet
+import wonderouscompose.shared.generated.resources.icon_prev
 
 val imageMaxHeight = 400.dp
 val imageMinHeight = 250.dp

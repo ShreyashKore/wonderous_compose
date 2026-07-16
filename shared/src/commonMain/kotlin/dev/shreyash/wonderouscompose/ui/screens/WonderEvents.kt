@@ -49,10 +49,10 @@ import dev.shreyash.wonderouscompose.ui.screens.timeline.components.TimelineEven
 import dev.shreyash.wonderouscompose.ui.theme.accent2
 import dev.shreyash.wonderouscompose.ui.theme.black
 import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.eventsListButtonOpenGlobal
-import wonderous_compose.shared.generated.resources.tab_timeline
-import wonderous_compose.shared.generated.resources.timelineTitleGlobalTimeline
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.eventsListButtonOpenGlobal
+import wonderouscompose.shared.generated.resources.tab_timeline
+import wonderouscompose.shared.generated.resources.timelineTitleGlobalTimeline
 
 @OptIn(
     ExperimentalMaterial3Api::class

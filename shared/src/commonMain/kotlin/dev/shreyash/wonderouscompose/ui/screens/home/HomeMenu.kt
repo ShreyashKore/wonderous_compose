@@ -59,17 +59,17 @@ import dev.shreyash.wonderouscompose.ui.theme.greyStrong
 import dev.shreyash.wonderouscompose.ui.theme.offWhite
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.circleButtonsSemanticClose
-import wonderous_compose.shared.generated.resources.compass_full
-import wonderous_compose.shared.generated.resources.homeMenuButtonAbout
-import wonderous_compose.shared.generated.resources.homeMenuButtonExplore
-import wonderous_compose.shared.generated.resources.homeMenuButtonView
-import wonderous_compose.shared.generated.resources.icon_close
-import wonderous_compose.shared.generated.resources.icon_collection
-import wonderous_compose.shared.generated.resources.icon_info
-import wonderous_compose.shared.generated.resources.icon_timeline
-import wonderous_compose.shared.generated.resources.language
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.circleButtonsSemanticClose
+import wonderouscompose.shared.generated.resources.compass_full
+import wonderouscompose.shared.generated.resources.homeMenuButtonAbout
+import wonderouscompose.shared.generated.resources.homeMenuButtonExplore
+import wonderouscompose.shared.generated.resources.homeMenuButtonView
+import wonderouscompose.shared.generated.resources.icon_close
+import wonderouscompose.shared.generated.resources.icon_collection
+import wonderouscompose.shared.generated.resources.icon_info
+import wonderouscompose.shared.generated.resources.icon_timeline
+import wonderouscompose.shared.generated.resources.language
 
 
 @Composable

@@ -53,11 +53,11 @@ import dev.shreyash.wonderouscompose.ui.theme.accent1
 import dev.shreyash.wonderouscompose.ui.theme.black
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.utils.prependProxy
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.artifactsSearchLabelFound
-import wonderous_compose.shared.generated.resources.artifactsSearchTitleBrowse
-import wonderous_compose.shared.generated.resources.searchInputHintSearch
-import wonderous_compose.shared.generated.resources.searchInputTitleSuggestions
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.artifactsSearchLabelFound
+import wonderouscompose.shared.generated.resources.artifactsSearchTitleBrowse
+import wonderouscompose.shared.generated.resources.searchInputHintSearch
+import wonderouscompose.shared.generated.resources.searchInputTitleSuggestions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

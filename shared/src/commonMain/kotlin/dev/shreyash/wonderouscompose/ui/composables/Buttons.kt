@@ -34,9 +34,9 @@ import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.shreyash.wonderouscompose.ui.theme.greyStrong
 import dev.shreyash.wonderouscompose.ui.theme.white
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.github_logo
-import wonderous_compose.shared.generated.resources.icon_prev
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.github_logo
+import wonderouscompose.shared.generated.resources.icon_prev
 
 
 @Composable

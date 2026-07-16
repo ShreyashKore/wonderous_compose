@@ -91,12 +91,12 @@ import dev.shreyash.wonderouscompose.ui.mainImageName
 import dev.shreyash.wonderouscompose.ui.theme.black
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.icon_menu
-import wonderous_compose.shared.generated.resources.animatedArrowSemanticSwipe
-import wonderous_compose.shared.generated.resources.homeSemanticOpenMain
-import wonderous_compose.shared.generated.resources.roller_1_white
-import wonderous_compose.shared.generated.resources.roller_2_white
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.icon_menu
+import wonderouscompose.shared.generated.resources.animatedArrowSemanticSwipe
+import wonderouscompose.shared.generated.resources.homeSemanticOpenMain
+import wonderouscompose.shared.generated.resources.roller_1_white
+import wonderouscompose.shared.generated.resources.roller_2_white
 import kotlin.math.roundToInt
 
 enum class SwipeState {

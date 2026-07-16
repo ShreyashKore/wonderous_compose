@@ -50,8 +50,8 @@ import dev.shreyash.wonderouscompose.ui.composables.IllustrationPiece
 import dev.shreyash.wonderouscompose.ui.getAssetPath
 import dev.shreyash.wonderouscompose.ui.screens.home.components.CelestialBodyConfig
 import dev.shreyash.wonderouscompose.ui.theme.fgColor
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.cloud_white
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.cloud_white
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 import kotlin.random.Random

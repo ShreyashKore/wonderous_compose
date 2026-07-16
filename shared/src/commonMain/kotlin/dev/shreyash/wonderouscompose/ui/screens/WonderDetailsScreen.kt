@@ -59,20 +59,20 @@ import dev.shreyash.wonderouscompose.ui.theme.fgColor
 import dev.shreyash.wonderouscompose.ui.theme.white
 import dev.shreyash.wonderouscompose.ui.utils.filePainterResource
 import dev.shreyash.wonderouscompose.ui.wonderButtonPath
-import wonderous_compose.shared.generated.resources.Res
-import wonderous_compose.shared.generated.resources.tab_artifacts
-import wonderous_compose.shared.generated.resources.tab_artifacts_active
-import wonderous_compose.shared.generated.resources.tab_editorial
-import wonderous_compose.shared.generated.resources.tab_editorial_active
-import wonderous_compose.shared.generated.resources.tab_photos
-import wonderous_compose.shared.generated.resources.tab_photos_active
-import wonderous_compose.shared.generated.resources.tab_timeline
-import wonderous_compose.shared.generated.resources.tab_timeline_active
-import wonderous_compose.shared.generated.resources.wonderDetailsTabLabelArtifacts
-import wonderous_compose.shared.generated.resources.wonderDetailsTabLabelEvents
-import wonderous_compose.shared.generated.resources.wonderDetailsTabLabelImages
-import wonderous_compose.shared.generated.resources.wonderDetailsTabLabelInformation
-import wonderous_compose.shared.generated.resources.wonderDetailsTabSemanticBack
+import wonderouscompose.shared.generated.resources.Res
+import wonderouscompose.shared.generated.resources.tab_artifacts
+import wonderouscompose.shared.generated.resources.tab_artifacts_active
+import wonderouscompose.shared.generated.resources.tab_editorial
+import wonderouscompose.shared.generated.resources.tab_editorial_active
+import wonderouscompose.shared.generated.resources.tab_photos
+import wonderouscompose.shared.generated.resources.tab_photos_active
+import wonderouscompose.shared.generated.resources.tab_timeline
+import wonderouscompose.shared.generated.resources.tab_timeline_active
+import wonderouscompose.shared.generated.resources.wonderDetailsTabLabelArtifacts
+import wonderouscompose.shared.generated.resources.wonderDetailsTabLabelEvents
+import wonderouscompose.shared.generated.resources.wonderDetailsTabLabelImages
+import wonderouscompose.shared.generated.resources.wonderDetailsTabLabelInformation
+import wonderouscompose.shared.generated.resources.wonderDetailsTabSemanticBack
 
 
 @OptIn(ExperimentalSharedTransitionApi::class)

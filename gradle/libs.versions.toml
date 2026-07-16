@@ -1,7 +1,7 @@
 [versions]
 ## Project Version
-versionCode = "105"
-versionName = "1.0.5"
+versionCode = "110"
+versionName = "1.1.0"
 
 ## Frameworks and Libraries
 agp = "9.0.1"

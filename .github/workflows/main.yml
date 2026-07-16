@@ -39,13 +39,13 @@ jobs:
         run: |
           echo -n "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > $RUNNER_TEMP/key.jks
       - name: Build APK
-        run: ./gradlew composeApp:assembleRelease
+        run: ./gradlew androidApp:assembleRelease
       - name: Build Deb
-        run: ./gradlew composeApp:packageDeb
+        run: ./gradlew desktopApp:packageDeb
       - name: Build WASM
-        run: ./gradlew composeApp:wasmJsBrowserDistribution
+        run: ./gradlew webApp:wasmJsBrowserDistribution
       - name: Build JS
-        run: ./gradlew composeApp:jsBrowserDistribution
+        run: ./gradlew webApp:jsBrowserDistribution
       - name: Generate release assets
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         env:
@@ -53,17 +53,17 @@ jobs:
         run: |
           JS_ZIP="com.shreyashkore.wonderouscompose_$VERSION-JS.zip"
           WASM_ZIP="com.shreyashkore.wonderouscompose_$VERSION-WASM.zip"
-          (cd ./composeApp/build/dist && zip -r $JS_ZIP js)
-          (cd ./composeApp/build/dist && zip -r $WASM_ZIP wasmJs)
+          (cd ./webApp/build/dist && zip -r $JS_ZIP js)
+          (cd ./webApp/build/dist && zip -r $WASM_ZIP wasmJs)
       - name: Release
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: softprops/action-gh-release@v2.0.8
         with:
           token: ${{ secrets.TOKEN }}
           files: |
-            ./composeApp/build/outputs/apk/release/composeApp-release.apk
-            ./composeApp/build/compose/binaries/main/deb/*.deb
-            ./composeApp/build/dist/*.zip
+            ./androidApp/build/outputs/apk/release/androidApp-release.apk
+            ./desktopApp/build/compose/binaries/main/deb/*.deb
+            ./webApp/build/dist/*.zip
 
       - name: Deploy Wasm
         if: ${{ github.event_name == 'release' }}
@@ -71,7 +71,7 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
           branch: main
-          folder: composeApp/build/dist/wasmJs/productionExecutable
+          folder: webApp/build/dist/wasmJs/productionExecutable
           repository-name: ShreyashKore/wonderous-compose-wasm
       - name: Deploy JS
         if: ${{ github.event_name == 'release' }}
@@ -79,7 +79,7 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
           branch: main
-          folder: composeApp/build/dist/js/productionExecutable
+          folder: webApp/build/dist/js/productionExecutable
           repository-name: ShreyashKore/wonderous-compose-js
 
   build_windows:
@@ -103,14 +103,14 @@ jobs:
         run: echo "sdk.dir=some_location" > ./local.properties
       - name: Build MSI
         run: |
-          ./gradlew composeApp:packageMsi
+          ./gradlew desktopApp:packageMsi
       - name: Upload Release Asset
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: softprops/action-gh-release@v2.0.8
         with:
           token: ${{ secrets.TOKEN }}
           files: |
-            ./composeApp/build/compose/binaries/main/msi/*.msi
+            ./desktopApp/build/compose/binaries/main/msi/*.msi
 
   #  build_ios:
   #    runs-on: macos-latest
